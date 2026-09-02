@@ -3,8 +3,8 @@
 
 | | |
 |---|---|
-| **Versi** | 2.0 (revisi: tanggal menetas, tanpa kota asal, akun pemilik tunggal) |
-| **Tanggal** | 2 September 2026 |
+| **Versi** | 3.0 (rev.3: + jenis foto wajib full badan/kepala/kaki, umur otomatis tetap ditampilkan) |
+| **Tanggal** | 2 September 2026 · rev.3 |
 | **Lampiran** | DDL lengkap → [`schema.sql`](schema.sql) · diagram vektor → [`diagrams/erd.svg`](diagrams/erd.svg) |
 
 ---
@@ -84,6 +84,7 @@ erDiagram
         INT lebar_px
         INT tinggi_px
         VARCHAR alt_text
+        ENUM jenis_foto "FULL_BADAN|KEPALA|KAKI|BULU|LAINNYA"
         BOOLEAN is_primary
         INT urutan
         TIMESTAMP created_at
@@ -179,11 +180,14 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 | ukuran_kb | INT | opsional | |
 | lebar_px / tinggi_px | INT | opsional | dimensi asli |
 | alt_text | VARCHAR(255) | opsional | aksesibilitas & SEO |
+| jenis_foto | ENUM(`FULL_BADAN`,`KEPALA`,`KAKI`,`BULU`,`LAINNYA`) | opsional | jenis/posisi foto (lihat aturan wajib) |
 | is_primary | BOOLEAN | default 0 | foto utama kartu (maks. 1 per ayam) |
 | urutan | INT | default 0 | urutan galeri |
 | created_at | TIMESTAMP | | |
 
-> Aturan: tiap ayam wajib **minimal 1 gambar** sebelum dipublikasikan. Bila foto utama dihapus, gambar berikutnya naik menjadi utama.
+> **Aturan foto wajib (PRD §5):** sebelum ayam dapat dipublikasikan, galeri harus memuat minimal satu foto berjenis **FULL_BADAN**, satu **KEPALA**, dan satu **KAKI** — selain syarat minimal 1 gambar.
+> Setiap gambar diberi `jenis_foto` (Full badan / Kepala / Kaki / Bulu & ekor / Lainnya). Satu ayam boleh punya lebih dari satu gambar per jenis.
+> Bila foto utama dihapus, gambar berikutnya (urutan terkecil) naik menjadi utama.
 
 ### 3.5 `permintaan` — Form "Saya Tertarik" (dikirim pengunjung via web)
 
@@ -223,6 +227,7 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 5. **Usia = turunan dari `tanggal_menetas`** (komputasi saat tampil), bukan kolom `umur` agar tidak basi.
 6. Harga bertipe `DECIMAL` (bukan float); tampilan memakai pemisah ribuan (`Rp 3.500.000`).
 7. **Indeks** untuk query yang sering: status publikasi, kategori, status jual, tanggal menetas; unik pada `email`, `slug`, `kode_ring` (jika terisi).
+8. **Efek hitam-putih saat "Terjual" adalah murni tampilan (CSS `grayscale`)** di sisi aplikasi — file gambar asli selalu disimpan berwarna. Jika status dikembalikan (mis. `terjual → tersedia` karena batal), foto otomatis berwarna kembali tanpa kehilangan data apa pun.
 
 ---
 

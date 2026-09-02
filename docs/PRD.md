@@ -3,15 +3,17 @@
 
 | | |
 |---|---|
-| **Versi** | 2.0 (revisi sesuai masukan pemilik) |
+| **Versi** | 3.0 (revisi sesuai masukan pemilik) |
 | **Tanggal** | 2 September 2026 |
-| **Status** | Menunggu persetujuan sebelum pengembangan (M0 → M1) |
+| **Status** | Menunggu persetujuan sebelum pengembangan (M0 → M1) · rev.3 |
 | **Produk** | "Jalu" — nama kerja, dapat diganti |
 
-**Ringkasan revisi 2.0:**
-1. **Umur tidak disimpan bulat** — yang dicatat hanya **tanggal menetas (perkiraan)**; usia dihitung otomatis sistem sehingga selalu terbaru.
-2. **Satu peternakan** — kolom & tampilan "asal kota" dihapus; lokasi kandang cukup di halaman Tentang.
-3. **Pemilik = penjual = pengelola tunggal** — tidak ada role petugas/multi-admin; cukup satu akun login pemilik.
+**Ringkasan revisi 2.0:** umur dari tanggal menetas (otomatis); satu peternakan tanpa "asal kota"; pemilik tunggal tanpa role.
+
+**Ringkasan revisi 3.0:**
+1. **Sold out = sekali klik, foto otomatis hitam-putih.** Saat status jual dipilih **Terjual**, seluruh foto ayam itu tampil hitam-putih di katalog/galeri & panel. File asli tetap berwarna; bila status dikembalikan, foto kembali berwarna. (Tampilan aplikasi, bukan perubahan file.)
+2. **Ketentuan jenis foto wajib.** Tiap foto memiliki label jenis: **Full badan · Kepala · Kaki · Bulu/ekor · Lainnya**. Syarat publikasi: minimal ada **Full badan, Kepala, dan Kaki** (boleh lebih dari satu per jenis; opsional tambah Bulu/ekor & Lainnya).
+3. **Usia tetap tampil.** Selain tanggal menetas, kartu/galeri menampilkan **usia ± (bulan) yang dihitung otomatis** dari tanggal menetas — bukan angka yang diketik manual, sehingga selalu terbaru.
 
 ---
 
@@ -69,7 +71,7 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 | ID | Kebutuhan | Prioritas |
 |---|---|---|
 | PF-01 | **Beranda:** sapaan singkat (hero), ayam unggulan/featured (maks. 3), kategori, ajakan menghubungi kandang. | P0 |
-| PF-02 | **Katalog:** grid kartu ayam berisi foto utama, nama/kode, kategori, tanggal menetas, berat, harga (atau "Hubungi kami"), badge status. | P0 |
+| PF-02 | **Katalog:** grid kartu ayam berisi foto utama, nama/kode, kategori, **tanggal menetas + usia ± otomatis**, berat, harga (atau "Hubungi kami"), badge status. | P0 |
 | PF-03 | **Pencarian & filter:** teks (nama/kode), kategori, jenis kelamin, status ketersediaan; urutkan (terbaru/termahal/termurah/nama). Ayam "terjual" dapat ditampilkan sebagai riwayat (opsi). | P1 |
 | PF-04 | **Halaman detail:** galeri multi-foto (perbesar + thumbnail), spesifikasi (kategori, kelamin, tanggal menetas, **usia otomatis**, berat, warna bulu, ring), keunggulan, deskripsi, harga & status, tombol "Saya Tertarik". | P0 |
 | PF-05 | **Form "Saya Tertarik":** nama, nomor WhatsApp, kota pembeli (opsional), pesan/penawaran (opsional) → tersimpan sebagai permintaan + tautan WhatsApp. | P0 |
@@ -85,7 +87,7 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 | AF-01 | **Login** satu akun (email + kata sandi, hash). | P0 |
 | AF-02 | **Dashboard ringkasan:** total ayam, tersedia, dipesan, permintaan baru. | P1 |
 | AF-03 | **CRUD Ayam:** buat/ubah/arsip (soft delete)/pulihkan/hapus permanen. Field: kode/nomor ring, nama, kategori, jenis kelamin, **tanggal menetas (perkiraan)** → usia otomatis, berat (kg), warna bulu, keunggulan, deskripsi, harga (kosong = "Hubungi kami"), status jual, status tampil (draft/publikasi), unggulan. | P0 |
-| AF-04 | **Galeri multi-foto:** unggah banyak, foto utama, urutan, hapus, alt text; validasi tipe/ukuran; thumbnail otomatis. | P0 |
+| AF-04 | **Galeri multi-foto:** unggah banyak; setiap foto diberi **jenis foto** (Full badan/Kepala/Kaki/Bulu & ekor/Lainnya); atur foto utama & urutan; hapus; alt text; validasi tipe/ukuran; thumbnail otomatis. | P0 |
 | AF-05 | **Daftar ayam (tabel):** thumbnail, kode/nama, kategori, status, harga, tanggal menetas/berat; pencarian & filter; aksi. | P0 |
 | AF-06 | **Kelola kategori** (CRUD kecil); hapus dicegah bila masih terpakai. | P1 |
 | AF-07 | **Kelola permintaan:** daftar minat pembeli; ubah status `baru → dihubungi → deal/batal`; tautan cepat WhatsApp. | P1 |
@@ -96,16 +98,18 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 
 ## 5. Aturan Bisnis (Business Rules)
 
-1. **Usia otomatis:** aplikasi menyimpan `tanggal_menetas`; **usia tidak disimpan sebagai angka**. Saat ditampilkan, usia dihitung dari tanggal menetas hingga hari ini → selalu akurat/terbaru. Jika tanggal menetas kosong, bagian usia tidak ditampilkan.
-2. **Alur status jual:** `tersedia → dipesan → terjual`. `dipesan` dapat kembali ke `tersedia` bila batal (oleh pemilik). `terjual` final.
-3. **Harga kosong** = "Hubungi kami" (tidak dijual terbuka / nego via chat).
-4. **Tampil publik** hanya jika `status_tampil = publikasi`; arsip/draft tidak pernah tampil.
-5. **Featured** maks. 3 ayam tampil di beranda.
-6. **Satu foto utama** per ayam; **minimal 1 foto** sebelum dipublikasikan.
-7. **Tanpa kota asal ayam**: satu kandang, satu lokasi. Hanya data pelanggan (domisili pembeli) yang boleh berisi kota lain.
-8. **Nomor ring/kode** unik bila diisi.
-9. **Permintaan** tidak terhapus otomatis; `batal` tetap tersimpan sebagai riwayat.
-10. **Satu akun** pemilik yang dapat mengubah data; seluruh perubahan dicatat di log.
+1. **Usia otomatis & selalu tampil:** aplikasi menyimpan `tanggal_menetas`; **usia tidak disimpan sebagai angka**. Setiap tampilan (kartu/galeri/detail) menampilkan **usia ± (bulan) yang dihitung dari tanggal menetas** sampai hari ini. Jika tanggal menetas kosong, bagian usia tidak ditampilkan.
+2. **Sold out otomatis hitam-putih:** memilih status **`TERJUAL`** cukup sekali klik → seluruh foto ayam itu tampil **hitam-putih** di katalog, galeri publik, dan panel. Ini efek tampilan (grayscale) — **file asli selalu tersimpan berwarna**. Jika status diubah dari `terjual` (mis. karena batal), foto otomatis berwarna kembali.
+3. **Alur status jual:** `tersedia → dipesan → terjual`. `dipesan` dapat kembali ke `tersedia` bila batal (oleh pemilik). `terjual` adalah status final dari sisi penjualan.
+4. **Harga kosong** = "Hubungi kami" (tidak dijual terbuka / nego via chat).
+5. **Tampil publik** hanya jika `status_tampil = publikasi`; arsip/draft tidak pernah tampil.
+6. **Featured** maks. 3 ayam tampil di beranda.
+7. **Jenis foto & syarat publikasi:** setiap foto memiliki `jenis_foto` (Full badan/Kepala/Kaki/Bulu & ekor/Lainnya). Ayam **baru dapat dipublikasikan** bila galerinya memuat minimal **satu Full badan, satu Kepala, dan satu Kaki**. Satu ayam boleh punya banyak foto per jenis.
+8. **Satu foto utama** per ayam; bila dihapus, foto urutan berikutnya naik jadi utama.
+9. **Tanpa kota asal ayam**: satu kandang, satu lokasi. Hanya data pelanggan (domisili pembeli) yang boleh berisi kota lain.
+10. **Nomor ring/kode** unik bila diisi.
+11. **Permintaan** tidak terhapus otomatis; `batal` tetap tersimpan sebagai riwayat.
+12. **Satu akun** pemilik yang dapat mengubah data; seluruh perubahan dicatat di log.
 
 ---
 
@@ -171,7 +175,8 @@ Detil atribut & relasi → [`docs/ERD.md`](ERD.md) · diagram → [`docs/diagram
 ## 10. Kriteria Penerimaan Penting (Contoh "Definition of Done")
 
 1. Pemilik login dan dapat menambah ayam + 3 foto; ayam langsung tampil publik setelah "publikasi".
-2. Usia yang tampil **selalu dihitung ulang** dari tanggal menetas — tanpa perlu diedit manual.
+2. Usia yang tampil **selalu dihitung ulang** dari tanggal menetas dan tetap ditampilkan (contoh: "± 18 bulan · menetas 13 Maret 2025") — tanpa perlu diedit manual.
+2b. Saat status diubah ke **Terjual**, seluruh foto ayam itu otomatis tampil hitam-putih; saat dikembalikan ke Tersedia, foto berwarna kembali. File asli tidak berubah.
 3. Tidak ada tampilan/kolom "asal kota" ayam; lokasi kandang hanya di halaman Tentang.
 4. Pengunjung memfilter katalog (kategori + status) & melihat galeri detail tanpa error.
 5. Permintaan dari form "Saya Tertarik" muncul di panel pemilik berstatus `baru`.
@@ -179,6 +184,7 @@ Detil atribut & relasi → [`docs/ERD.md`](ERD.md) · diagram → [`docs/diagram
 7. Halaman inti rapi di ponsel (≥360 px) dan mengikuti sistem desain.
 8. Upload non-gambar / >5 MB ditolak ramah; tidak ada crash.
 9. Log mencatat: siapa, kapan, aksi apa pada entitas apa.
+10. Sistem memblokir publikasi ayam bila galeri belum punya Full badan, Kepala, dan Kaki sekaligus — dengan pesan ramah yang menyebut jenis yang kurang.
 
 ---
 

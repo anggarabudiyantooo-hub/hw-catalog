@@ -130,7 +130,7 @@
   .up-pre{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:14px}
   .up-chip{position:relative;border:1px solid var(--krem-300);background:var(--card)}
   .up-chip img{aspect-ratio:4/5;object-fit:cover;width:100%}
-  .up-chip .tag{position:absolute;left:4px;bottom:4px;background:rgba(26,8,5,.66);color:#F6E7CE;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px}
+  .up-chip .tag{position:absolute;left:4px;top:4px;background:rgba(26,8,5,.66);color:#F6E7CE;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px}
   .up-chip .del{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#A83226;color:#fff;border:0;font-size:11px;line-height:1;cursor:pointer}
   .up-chip.prim{border-color:var(--emas-500);box-shadow:0 0 0 2px rgba(184,137,47,.25)}
   .form-actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
@@ -139,6 +139,13 @@
   .tips ul{margin:8px 0 0 18px}
   .tips li{margin:4px 0}
   .tips .lock{margin-top:12px;padding-top:10px;border-top:1px dashed var(--krem-300);font-size:12px;color:var(--ink-faint)}
+  .t-ayam img.sold{filter:grayscale(1)}
+  .up-chip{display:flex;flex-direction:column}
+  .up-chip select.jf{width:100%;border:1px solid var(--krem-300);border-top:0;background:#FBF3E1;font-family:var(--sans);font-size:10px;padding:4px 4px;color:var(--ink-muted);border-radius:0 0 4px 4px;outline:none}
+  .req-note{margin-top:12px;font-size:12.5px;color:var(--ink-muted)}
+  .req-note b{color:var(--bata-700);font-weight:600}
+  .req-note .tag{display:inline-block;background:#FBF3DF;border:1px solid var(--krem-300);padding:1px 8px;margin:2px 4px 2px 0;border-radius:3px;font-size:11.5px}
+  .hint-inline{font-size:11px;font-style:italic;color:var(--ink-faint);letter-spacing:0;text-transform:none;font-weight:400}
   .role-note{display:flex;gap:10px;align-items:flex-start;background:#F0E6F6;border:1px solid #D6C3E0;color:#5b3a6b;font-size:12.5px;padding:10px 14px;margin-bottom:18px}
 
   @media (max-width:1120px){.tiles{grid-template-columns:repeat(2,1fr)}}
@@ -237,7 +244,7 @@
             <td><div class="aksi"><button class="u">Ubah</button><button class="a">Arsip</button><button class="d">Hapus</button></div></td>
           </tr>
           <tr>
-            <td><div class="t-ayam"><img src="@@AT6@@" alt="Sekar Arum"><span><b>Sekar Arum</b><small>BKB-021 · Babon F1</small></span></div></td>
+            <td><div class="t-ayam"><img src="@@AT6@@" alt="Sekar Arum" class="sold"><span><b>Sekar Arum</b><small>BKB-021 · Babon F1</small></span></div></td>
             <td>Betina / Indukan</td><td><span class="st terjual"><i></i>Terjual</span></td>
             <td class="money">Rp 1.250.000</td><td>5 Jan 2025 · 2,60 kg</td><td style="color:var(--ink-faint)">22 Agu 2026</td>
             <td><div class="aksi"><button class="u">Ubah</button><button class="a">Arsip</button><button class="d">Hapus</button></div></td>
@@ -261,11 +268,11 @@
               <div class="f"><label for="fring">Kode / Nomor ring</label><input id="fring" placeholder="mis. BKT-022 / 2026-SLO-01"></div>
               <div class="f"><label for="fkat">Kategori <i>*</i></label><select id="fkat"><option>Bangkok Tulen</option><option>Bangkok Birma</option><option>Bangkok Thailand F1</option><option>Bangkok Lokal</option><option>Betina / Indukan</option></select></div>
               <div class="f"><label>Jenis kelamin <i>*</i></label><div class="radios"><label><input type="radio" name="kel" checked> Jantan</label><label><input type="radio" name="kel"> Betina</label></div></div>
-              <div class="f"><label for="fmenetas">Tanggal menetas (perkiraan) <i>*</i></label><input id="fmenetas" type="date" value="2025-03-13"><small class="fhlp">Usia dihitung otomatis dari tanggal ini — selalu terbaru.</small></div>
+              <div class="f"><label for="fmenetas">Tanggal menetas (perkiraan) <i>*</i></label><input id="fmenetas" type="date" value="2025-03-13"><small class="fhlp">Usia dihitung otomatis dari tanggal ini — selalu terbaru (saat ini ± 18 bulan).</small></div>
               <div class="f"><label for="fberat">Berat (kg) <i>*</i></label><input id="fberat" type="text" placeholder="3,60"></div>
               <div class="f"><label for="fwarna">Warna bulu</label><input id="fwarna" placeholder="Hitam legam, dada merah bata"></div>
                             <div class="f"><label for="fharga">Harga (Rp) — kosongkan jika “Hubungi kami”</label><input id="fharga" type="text" placeholder="3500000"></div>
-              <div class="f"><label for="fstatus">Status jual <i>*</i></label><select id="fstatus"><option>Tersedia</option><option>Dipesan</option><option>Terjual</option></select></div>
+              <div class="f"><label for="fstatus">Status jual <i>*</i></label><select id="fstatus"><option>Tersedia</option><option>Dipesan</option><option>Terjual</option></select><small class="hint-inline">Pilih “Terjual” → foto galeri otomatis tampil hitam-putih (asli tetap tersimpan berwarna).</small></div>
               <div class="f full"><label for="fkeung">Keunggulan (satu per baris)</label><textarea id="fkeung" rows="2" placeholder="Postur tegak, tulang besar&#10;Pukulan keras &amp; sambung rapat"></textarea></div>
               <div class="f full"><label for="fdesc">Deskripsi / catatan kandang</label><textarea id="fdesc" rows="3" placeholder="Kisah ayam, riwayat laga/uji, catatan kesehatan…"></textarea></div>
               <div class="f full"><label>Status tampil &amp; unggulan</label><div class="radios" style="flex-wrap:wrap"><label><input type="radio" name="tampil" checked> Publikasi di katalog</label><label><input type="radio" name="tampil"> Simpan sebagai Draf</label><label style="margin-left:6px"><input type="checkbox"> Jadikan unggulan beranda (maks. 3)</label></div></div>
@@ -277,10 +284,14 @@
               <div><b>Seret foto ke sini</b> atau klik untuk memilih<br><small>JPG / PNG · maks. 5 MB per file · beberapa file sekaligus diperbolehkan</small></div>
             </div>
             <div class="up-pre">
-              <div class="up-chip prim"><img src="@@AT1@@" alt="pratinjau 1"><span class="tag">Foto utama</span><button class="del" type="button">×</button></div>
-              <div class="up-chip"><img src="@@AT2@@" alt="pratinjau 2"><span class="tag">Urutan 2</span><button class="del" type="button">×</button></div>
-              <div class="up-chip"><img src="@@AT4@@" alt="pratinjau 3"><span class="tag">Urutan 3</span><button class="del" type="button">×</button></div>
+              <div class="up-chip prim"><img src="@@AT1@@" alt="pratinjau 1"><span class="tag">Foto utama</span><button class="del" type="button">×</button><select class="jf"><option>Full badan</option><option>Kepala</option><option>Kaki</option><option>Bulu / ekor</option><option>Lainnya</option></select></div>
+              <div class="up-chip"><img src="@@AT2@@" alt="pratinjau 2"><span class="tag">Urutan 2</span><button class="del" type="button">×</button><select class="jf"><option>Full badan</option><option selected>Kepala</option><option>Kaki</option><option>Bulu / ekor</option><option>Lainnya</option></select></div>
+              <div class="up-chip"><img src="@@AT4@@" alt="pratinjau 3"><span class="tag">Urutan 3</span><button class="del" type="button">×</button><select class="jf"><option>Full badan</option><option>Kepala</option><option selected>Kaki</option><option>Bulu / ekor</option><option>Lainnya</option></select></div>
             </div>
+            <div class="req-note">Syarat publikasi — jenis foto wajib terpenuhi:
+              <span class="tag">✓ Full badan</span><span class="tag">✓ Kepala</span><span class="tag">✓ Kaki</span>
+              <span class="tag">Bulu / ekor</span><span class="tag">Lainnya</span>
+              (yang wajib dicentang ✓; lainnya opsional, boleh lebih dari satu per jenis)</div>
             <div class="form-actions">
               <button class="btn primary" type="submit">Simpan &amp; Publikasikan</button>
               <button class="btn sec" type="button">Simpan sebagai Draf</button>

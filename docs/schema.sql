@@ -1,11 +1,15 @@
 -- =====================================================================
 --  JALU — Galeri Ayam Bangkok
---  Skema Basis Data MySQL 8.x  (DDL)  — rev.2 sesuai keputusan pemilik
+--  Skema Basis Data MySQL 8.x  (DDL)  — rev.3 sesuai keputusan pemilik
 --  Perubahan rev.2:
 --    1. Umur TIDAK disimpan (angka cepat basi) — cukup tanggal menetas,
 --       usia dihitung otomatis oleh aplikasi saat ditampilkan.
 --    2. Kolom "asal kota" dihapus — satu peternakan, satu lokasi.
 --    3. Multi-user (admin/petugas) disederhanakan -> SATU akun pemilik.
+--    4. ayam_images.jenis_foto (full badan/kepala/kaki/bulu/lainnya) untuk
+--       ketentuan foto wajib sebelum publikasi.
+--    Catatan: efek "Terjual -> foto hitam-putih" adalah tampilan aplikasi,
+--       bukan kolom basis data (file asli selalu berwarna).
 --  Sumber referensi: docs/PRD.md dan docs/ERD.md
 -- =====================================================================
 
@@ -88,6 +92,7 @@ CREATE TABLE ayam_images (
     lebar_px        INT             NULL,
     tinggi_px       INT             NULL,
     alt_text        VARCHAR(255)    NULL,
+    jenis_foto      ENUM('FULL_BADAN','KEPALA','KAKI','BULU','LAINNYA') NULL, -- posisi foto; wajib: full badan, kepala, kaki
     is_primary      TINYINT(1)      NOT NULL DEFAULT 0, -- foto utama kartu (maks. 1 per ayam)
     urutan          INT             NOT NULL DEFAULT 0,
     created_at      TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
