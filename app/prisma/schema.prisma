@@ -1,0 +1,133 @@
+// ============================================================
+// JALU — Galeri Ayam Bangkok
+// Prisma schema (SQLite untuk demo lokal tanpa setup).
+// Refleksi docs/schema.sql (MySQL 8) — lihat docs/ untuk DDL penuh.
+// Untuk produksi: provider "mysql" + DATABASE_URL MySQL.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  nama         String
+  email        String   @unique
+  passwordHash String
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  logs         Log[]
+}
+
+model Kategori {
+  id        Int     @id @default(autoincrement())
+  nama      String  @unique
+  slug      String  @unique
+  deskripsi String?
+  urutan    Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ayam      Ayam[]
+}
+
+model Ayam {
+  id              Int        @id @default(autoincrement())
+  slug            String     @unique
+  kodeRing        String?    @unique // nomor ring; boleh kosong
+  nama            String
+  kategoriId      Int?
+  kategori        Kategori?  @relation(fields: [kategoriId], references: [id], onDelete: SetNull)
+  jenisKelamin    String // JANTAN | BETINA
+  tanggalMenetas  DateTime? // perkiraan; usia = dihitung aplikasi
+  beratKg         Float
+  warnaBulu       String?
+  postur          String? // ukuran & ciri yang lazim ditanya pembeli
+  tinggiCm        Float?
+  kakiSisik       String?
+  jalu            String? // BELUM | TUNGGAL | GANDA
+  keunggulan      String?
+  deskripsi       String?
+  harga           Int? // NULL = "Hubungi kami"
+  statusJual      String   @default("TERSEDIA") // TERSEDIA | DIPESAN | TERJUAL
+  statusTampil    String   @default("DRAFT") // DRAFT | PUBLIKASI
+  isFeatured      Boolean  @default(false)
+  isArsip         Boolean  @default(false) // soft delete
+  publishedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  images          AyamImage[]
+  permintaan      Permintaan[]
+  laporan         Laporan[]
+  riwayat         RiwayatTarung[]
+}
+
+model AyamImage {
+  id         Int      @id @default(autoincrement())
+  ayamId     Int
+  ayam       Ayam     @relation(fields: [ayamId], references: [id], onDelete: Cascade)
+  filePath   String
+  ukuranKb   Int?
+  altText    String?
+  jenisFoto  String? // FULL_BADAN | KEPALA | KAKI | BULU | LAINNYA
+  isPrimary  Boolean  @default(false)
+  urutan     Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model Permintaan {
+  id              Int      @id @default(autoincrement())
+  ayamId          Int?
+  ayam            Ayam?    @relation(fields: [ayamId], references: [id], onDelete: SetNull)
+  namaPengunjung  String
+  noWa            String
+  kota            String?
+  pesan           String?
+  status          String   @default("BARU") // BARU | DIHUBUNGI | DEAL | BATAL
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Laporan {
+  id         Int      @id @default(autoincrement())
+  ayamId     Int?
+  ayam       Ayam?    @relation(fields: [ayamId], references: [id], onDelete: SetNull)
+  namaPelapor String?
+  noWa       String?
+  jenis      String   @default("LAINNYA")
+  isi        String?
+  status     String   @default("BARU") // BARU | DITINDAKLANJUTI | SELESAI | TUTUP
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model RiwayatTarung {
+  id          Int      @id @default(autoincrement())
+  ayamId      Int
+  ayam        Ayam     @relation(fields: [ayamId], references: [id], onDelete: Cascade)
+  tanggal     DateTime
+  jenisLaga   String   @default("UJI_TERBATAS") // UJI_TERBATAS | ADU_RESMI
+  namaLawan   String?
+  beratLawan  Float?
+  ronde       Int?
+  hasil       String // MENANG | KALAH | SERI
+  catatan     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  aksi      String // LOGIN | CREATE | UPDATE | DELETE | ARSIP | PULIHKAN | UBAH_STATUS | LAINNYA
+  entitas   String
+  entitasId Int?
+  detail    String?
+  createdAt DateTime @default(now())
+}

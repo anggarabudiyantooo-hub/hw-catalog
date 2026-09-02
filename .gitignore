@@ -31,3 +31,9 @@ Thumbs.db
 
 # Artefak sementara
 tmp/
+
+# Prisma sqlite demo
+prisma/dev.db*
+
+# Database sqlite demo (subfolder app)
+app/prisma/dev.db*
