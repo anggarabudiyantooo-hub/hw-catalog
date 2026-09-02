@@ -1,49 +1,81 @@
+import { readFile } from "fs/promises";
+import path from "path";
 import sharp from "sharp";
-
-/** Teks tanda air — ubah di sini bila ingin merek lain (mis. "JALU Catalog"). */
-export const WATERMARK_TEKS = "HW Catalog";
 
 export type FotoExt = ".jpg" | ".png" | ".webp";
 
-function esc(t: string) {
-  return t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+/** Lokasi logo watermark (PNG transparan) di dalam public/. */
+const LOGO_PATH = path.join(process.cwd(), "public", "brand", "hw-logo.png");
+
+// Uji cepat bahwa logo ada (dipanggil sekali saat modul dipakai).
+let logoCache: Promise<Buffer> | null = null;
+function logoBuf(): Promise<Buffer> {
+  if (!logoCache) logoCache = readFile(LOGO_PATH);
+  return logoCache;
+}
+
+function bbox(grid: { left: number; top: number }[], w: number, h: number, side: number) {
+  // hanya untuk memastikan ada tile yang masuk area
+  return grid.some((g) => g.left < w && g.top < h && g.left + side > 0 && g.top + side > 0);
 }
 
 /**
- * Menempelkan watermark diagonal halus ke gambar (buffer) lalu mengembalikan
- * buffer baru dengan format sama seperti aslinya. Dipakai saat unggah foto.
+ * Menempelkan watermark logo (diagonal, diulang) ke buffer foto lalu
+ * mengembalikan buffer dengan format sama seperti aslinya.
+ * Dipanggil otomatis setiap kali foto diunggah.
  */
-export async function beriWatermark(buf: Buffer, ext: FotoExt, teks = WATERMARK_TEKS): Promise<Buffer> {
+export async function beriWatermark(
+  buf: Buffer,
+  ext: FotoExt,
+  _legacyText?: string
+): Promise<Buffer> {
   const img = sharp(buf, { failOn: "none" });
   const meta = await img.metadata();
   const w = meta.width ?? 1200;
   const h = meta.height ?? 1200;
 
-  const fs = Math.max(18, Math.round(Math.min(w, h) * 0.055));
-  const tw = Math.ceil(fs * 7.8); // lebar ubin pola (≈ lebar teks + jarak)
-  const th = Math.ceil(fs * 3.2); // tinggi ubin pola
-  const cx = tw / 2;
-  const cy = th / 2;
+  let logo: Buffer;
+  try {
+    logo = await logoBuf();
+  } catch {
+    // bila file logo belum ada, jangan gagalkan unggahan — kirim asli
+    console.error("logo watermark tidak ditemukan:", LOGO_PATH);
+    return buf;
+  }
+  const lm = await sharp(logo).metadata();
+  const lw0 = lm.width ?? 654;
+  const lh0 = lm.height ?? 683;
 
-  const t = esc(teks);
-  const font = `font-family="Georgia, 'Times New Roman', 'DejaVu Serif', serif" font-style="italic" font-weight="600" font-size="${fs}" letter-spacing="${Math.round(fs * 0.07)}"`;
-  const anchor = `text-anchor="middle" dominant-baseline="central"`;
+  // ukuran logo di foto: ±15% dari sisi terpendek
+  const lh = Math.max(40, Math.round(Math.min(w, h) * 0.15));
+  const lw = Math.max(38, Math.round((lh * lw0) / lh0));
 
-  // dua lapis: bayangan gelap tipis + lapis terang, agar terbaca di foto
-  // terang maupun gelap, namun tetap samar (bukan menutupi detail ayam).
-  const svg = `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <pattern id="wm" width="${tw}" height="${th}" patternUnits="userSpaceOnUse" patternTransform="rotate(-30 0 0)">
-      <g ${anchor}>
-        <text x="${cx}" y="${cy + 1.4}" ${font} fill="rgba(26,8,5,0.20)">${t}</text>
-        <text x="${cx}" y="${cy}" ${font} fill="rgba(255,249,232,0.16)">${t}</text>
-      </g>
-    </pattern>
-  </defs>
-  <rect width="100%" height="100%" fill="url(#wm)"/>
-</svg>`;
+  const logoResized = await sharp(logo).resize(lw, lh, { fit: "fill" }).png().toBuffer();
+  // siluet gelap untuk kontras di foto terang (bayangan tipis)
+  const shadow = await sharp(logoResized).flatten({ background: "#221408" }).png().toBuffer();
 
-  const komposit = img.rotate().composite([{ input: Buffer.from(svg), top: 0, left: 0 }]);
+  // rakit posisi tile secara diagonal (mengikuti kemiringan -20°)
+  const sx = Math.round(lw * 1.45);
+  const sy = Math.round(lh * 2.1);
+  const gold: { input: Buffer; left: number; top: number; opacity: number }[] = [];
+  const shd: { input: Buffer; left: number; top: number; opacity: number }[] = [];
+  const halfLw = lw / 2;
+
+  // jumlah baris menjamin menutupi; offset antar kolom memberi efek miring
+  const nCols = Math.ceil(w / sx) + 2;
+  const rows = Math.ceil(h / sy) + 2;
+  for (let c = -1; c < nCols; c++) {
+    for (let r = -1; r < rows; r++) {
+      const x = Math.round(c * sx - halfLw + (r % 2) * (sx * 0.5));
+      const y = Math.round(r * sy - lh);
+      if (x + lw < 0 || y + lh < 0 || x > w || y > h) continue;
+      shd.push({ input: shadow, left: x + 1, top: y + 1, opacity: 0.42 });
+      gold.push({ input: logoResized, left: x, top: y, opacity: 0.85 });
+    }
+  }
+  if (!bbox([...gold, ...shd], w, h, lw)) return buf;
+
+  const komposit = img.rotate().composite([...shd, ...gold]);
 
   switch (ext) {
     case ".jpg":

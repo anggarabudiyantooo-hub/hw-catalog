@@ -40,7 +40,7 @@ export default async function HomePage() {
       <section className="hero">
         <div className="wrap hero-in">
           <div className="hero-copy">
-            <div className="hero-kicker">Kandang Juara · Sejak {SITE.sejak}</div>
+            <div className="hero-kicker">{SITE.sejak ? `Kandang Juara · Sejak ${SITE.sejak}` : "Kandang Juara"} · Klaten</div>
             <h1>
               Ayam Bangkok <em>Berkelas</em>,
               <br />
@@ -124,7 +124,7 @@ export default async function HomePage() {
               Seekor ayam yang baik bukan sekadar menang di laga — ia membawa nama baik pemiliknya. Maka kami memelihara dengan kehormatan.
             </blockquote>
             <figcaption>
-              <span className="who">{SITE.pemilik}</span> · <span className="role">Pendiri {SITE.nama}, Solo</span>
+              <span className="who">{SITE.pemilik}</span> · <span className="role">Pemilik {SITE.nama}, Klaten</span>
             </figcaption>
           </figure>
         </div>
@@ -136,7 +136,7 @@ export default async function HomePage() {
           <div className="sec-head">
             <span className="cap">Sebelum Berkunjung</span>
             <h2>Lokasi &amp; Kunjungan Kandang</h2>
-            <p>Kandang berada di Banjarsari, Surakarta. Supaya Anda tidak sia-sia datang, kunjungan kami layani dengan janji temu.</p>
+            <p>Kandang berada di Pedan, Klaten. Supaya Anda tidak sia-sia datang, kunjungan kami layani dengan janji temu.</p>
           </div>
           <div className="loc-grid">
             <div className="loc-stack">
@@ -150,9 +150,9 @@ export default async function HomePage() {
                   {SITE.alamatBaris2}
                 </address>
                 <ul className="loc-list">
-                  <li>± 15 menit dari pusat Kota Solo (arah utara).</li>
+                  <li>Terletak di Kec. Pedan, Kab. Klaten — mudah diakses dari jalur Solo–Yogyakarta.</li>
                   <li>Parkir di halaman kandang — cukup untuk mobil kecil.</li>
-                  <li>Dapat dijangkau ojek online (tulis “{SITE.nama} Solo”).</li>
+                  <li>Dapat dijangkau ojek online / kendaraan pribadi (tujuan: Pedan, Klaten).</li>
                 </ul>
                 <a className="btn btn-outline btn-sm" href={SITE.mapsUrl} target="_blank" rel="noopener">Buka Peta di Google Maps</a>
               </div>

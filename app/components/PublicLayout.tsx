@@ -44,7 +44,7 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
             <div>
               <Logo light />
               <p style={{ marginTop: 16 }}>
-                Etalase satu kandang ayam bangkok pilihan di Kota Surakarta. Melayani kolektor &amp; penyuka ayam laga dari seluruh Indonesia.
+                Etalase satu kandang ayam bangkok pilihan di Pedan, Klaten. Melayani kolektor &amp; penyuka ayam laga dari seluruh Indonesia.
               </p>
             </div>
             <div>
@@ -56,8 +56,9 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
             </div>
             <div>
               <h4>Hubungi Kami</h4>
-              <a className="dim" href={waLink()} target="_blank" rel="noopener">{SITE.waDisplay} (WhatsApp)</a>
-              <a className="dim" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+              <a className="dim" href={waLink()} target="_blank" rel="noopener">{SITE.waDisplay} (WhatsApp) — {SITE.pemilik}</a>
+              {SITE.email ? <a className="dim" href={`mailto:${SITE.email}`}>{SITE.email}</a> : <span className="dim soon">Email — segera menyusul</span>}
+              {SITE.sosmed ? <a className="dim" href={SITE.sosmed} target="_blank" rel="noopener">Media sosial</a> : <span className="dim soon">Media sosial — segera menyusul</span>}
               <a className="dim" href="/#lokasi">Kunjungan: wajib reservasi dulu</a>
             </div>
             <div>
