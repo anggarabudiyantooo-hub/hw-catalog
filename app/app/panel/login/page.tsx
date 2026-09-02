@@ -27,10 +27,10 @@ export default async function LoginPage({
         </Link>
       </div>
       <div className="login-card">
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-          <LogoMark />
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+          <LogoMark size={52} />
           <div>
-            <div style={{ fontSize: 20, letterSpacing: ".3em", fontWeight: 600, color: "var(--bata-700)" }}>JALU</div>
+            <div style={{ fontSize: 21, letterSpacing: ".14em", fontWeight: 700, color: "var(--bata-700)" }}>{SITE.brand}</div>
             <div style={{ fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase", color: "var(--ink-muted)" }}>
               Panel Pengelola
             </div>

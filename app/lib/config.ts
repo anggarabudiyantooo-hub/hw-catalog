@@ -5,7 +5,7 @@
 
 export const SITE = {
   nama: "HW Catalog",
-  brand: "JALU",
+  brand: "HW Catalog",
   tagline: "Galeri Ayam Bangkok · Klaten",
   // Pemilik / pengelola tunggal
   pemilik: "Pemilik Demo",

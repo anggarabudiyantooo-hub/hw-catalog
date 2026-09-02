@@ -5,10 +5,11 @@ import { SITE } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE.brand} — Galeri Ayam Bangkok · ${SITE.nama}`,
+    default: `${SITE.brand} — ${SITE.tagline}`,
     template: `%s · ${SITE.brand}`,
   },
-  description: `Etalase ayam bangkok pilihan dari ${SITE.nama}, Surakarta. Lihat katalog, galeri foto, riwayat laga, usia otomatis, dan info penjualan. Kunjungan wajib reservasi.`,
+  description: `Etalase ayam bangkok pilihan dari ${SITE.nama} (Pedan, Klaten). Lihat katalog, galeri foto, riwayat laga, usia otomatis, dan info penjualan. Kunjungan wajib reservasi.`,
+  icons: { icon: "/brand/hw-logo.png", apple: "/brand/hw-logo.png" },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

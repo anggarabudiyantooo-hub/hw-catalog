@@ -6,6 +6,8 @@ import { getOwner, userFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import ConfirmInit from "@/components/ConfirmInit";
 import PanelSession from "@/components/PanelSession";
+import { LogoMark } from "@/components/Logo";
+import { SITE } from "@/lib/config";
 
 const NAV = [
   { group: "Ringkasan" },
@@ -39,11 +41,9 @@ export default async function PanelLayout({ children }: { children: ReactNode })
     <div className="shell">
       <aside className="side">
         <Link href="/panel" className="brand">
-          <span className="brand-mark">
-            <svg viewBox="0 0 24 24" width={22} height={22} fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M12 2 22 12 12 22 2 12Z" /><path d="M12 7.5 16.5 12 12 16.5 7.5 12Z" strokeWidth="1" /></svg>
-          </span>
+          <LogoMark size={42} />
           <span>
-            <span className="brand-name" style={{ fontSize: 19 }}>JALU</span>
+            <span className="brand-name" style={{ fontSize: 17 }}>{SITE.brand}</span>
             <span className="brand-sub">Panel Pengelola</span>
           </span>
         </Link>
