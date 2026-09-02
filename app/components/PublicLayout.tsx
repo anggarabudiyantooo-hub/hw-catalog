@@ -80,7 +80,13 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
           </div>
           <div className="foot-bottom">
             <span>© {new Date().getFullYear()} {SITE.nama}. Seluruh hak cipta.</span>
-            <span>Desain merah bata &amp; krem — warisan Nusantara.</span>
+            <span className="foot-bottom-right">
+              <span>Desain merah bata &amp; krem — warisan Nusantara.</span>
+              <a className="owner" href="/panel/login" title="Login pengelola kandang">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="4" y="10" width="16" height="10" rx="1.5" /><path d="M8 10V7a4 4 0 1 1 8 0v3" /></svg>
+                Area Pemilik
+              </a>
+            </span>
           </div>
         </div>
       </footer>

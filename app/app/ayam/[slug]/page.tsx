@@ -5,13 +5,13 @@ import type { ReactNode } from "react";
 import PublicLayout from "@/components/PublicLayout";
 import PermintaanForm from "@/components/PermintaanForm";
 import LaporTrigger from "@/components/LaporTrigger";
+import GalleryView from "@/components/GalleryView";
 import { prisma } from "@/lib/prisma";
 import {
   formatRupiah,
   formatTanggal,
   usiaInfo,
   rekapDari,
-  labelJenisFoto,
 } from "@/lib/format";
 import { waLink, SITE } from "@/lib/config";
 
@@ -74,34 +74,13 @@ export default async function DetailPage({ params }: { params: { slug: string } 
         </p>
 
         <div className="detailgrid">
-          {/* ===== galeri ===== */}
-          <div className="gallery">
-            <div className="gmain">
-              <div className="gframe">
-                {main ? (
-                  <img src={main.filePath} alt={`${ayam.nama} — foto utama`} style={sold ? { filter: "grayscale(1)" } : undefined} />
-                ) : (
-                  <div style={{ aspectRatio: "4/5", background: "var(--krem-200)", display: "grid", placeItems: "center", color: "var(--ink-faint)" }}>
-                    Belum ada foto
-                  </div>
-                )}
-              </div>
-              {ayam.statusJual === "TERSEDIA" && <span className="badge-st badge-tersedia"><i /> Tersedia</span>}
-              {ayam.statusJual === "DIPESAN" && <span className="badge-st badge-dipesan"><i /> Dipesan</span>}
-              {sold && <span className="badge-st badge-terjual"><i /> Terjual</span>}
-            </div>
-            {images.length > 1 && (
-              <div className="gthumbs">
-                {images.map((im) => (
-                  <a key={im.id} href={im.filePath} target="_blank" className={im.id === main?.id ? "on" : ""} style={{ position: "relative", display: "block" }}>
-                    <img src={im.filePath} alt={im.altText || `${ayam.nama} — ${labelJenisFoto(im.jenisFoto)}`} style={sold ? { filter: "grayscale(1)" } : undefined} />
-                    {im.jenisFoto && <span className="g-label">{labelJenisFoto(im.jenisFoto)}</span>}
-                  </a>
-                ))}
-              </div>
-            )}
-            {sold && <p className="g-note">Ayam ini sudah <b>terjual</b> — foto ditampilkan hitam-putih sebagai riwayat.</p>}
-          </div>
+          {/* ===== galeri (klik untuk perbesar) ===== */}
+          <GalleryView
+            namaAyam={ayam.nama}
+            images={images}
+            sold={sold}
+            statusJual={ayam.statusJual}
+          />
 
           {/* ===== info ===== */}
           <div className="info">
