@@ -149,6 +149,29 @@
 
   @media (max-width:960px){.detail{grid-template-columns:1fr;gap:36px}.gallery{position:static}.spec{grid-template-columns:1fr}.sim{grid-template-columns:1fr 1fr}}
   @media (max-width:760px){nav.links{display:none}.foot-in{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.keung ul{grid-template-columns:1fr}.sim{grid-template-columns:1fr}}
+
+  /* laporan — tersembunyi & ringkas, muncul saat dibutuhkan */
+  .rep-mini{text-align:center;margin:8px 0 4px;padding:0 0 6px}
+  .rep-mini p{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-style:italic;color:var(--ink-faint)}
+  .rep-mini .sep{width:30px;height:1px;background:var(--krem-300)}
+  .rep-mini button.link{background:none;border:0;padding:0;color:var(--bata-700);font:inherit;font-size:12.5px;font-style:italic;text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
+  .rep-mini button.link:hover{color:var(--bata-500)}
+  .rmodal{position:fixed;inset:0;background:rgba(30,10,6,.45);display:none;align-items:center;justify-content:center;z-index:300;padding:16px}
+  .rmodal.show{display:flex}
+  .rmodal-card{background:var(--card);border:1px solid var(--krem-300);border-top:4px solid var(--bata-700);width:100%;max-width:430px;padding:20px 22px;box-shadow:0 18px 46px rgba(30,8,4,.35)}
+  .rmodal-card .rh{display:flex;align-items:center;gap:10px}
+  .rmodal-card .rh h3{font-size:17px;font-weight:600;color:var(--ink)}
+  .rmodal-card .rh button{margin-left:auto;background:none;border:0;font-size:20px;line-height:1;color:var(--ink-faint);cursor:pointer;padding:2px 4px}
+  .rmodal-card .rs{font-size:12px;color:var(--ink-muted);font-style:italic;margin:2px 0 13px}
+  .rmodal-card .f{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+  .rmodal-card .f label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);font-weight:600}
+  .rmodal-card .f select,.rmodal-card .f textarea{font-family:Georgia,serif;font-size:13.5px;background:var(--paper);border:1px solid var(--krem-300);border-radius:5px;padding:9px 11px;color:var(--ink);outline:none;resize:vertical}
+  .rmodal-card .f select:focus,.rmodal-card .f textarea:focus{border-color:var(--bata-600);box-shadow:0 0 0 3px rgba(163,44,32,.1)}
+  .rmodal-card .rf{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px}
+  .rmodal-card .btn{padding:9px 15px;font-size:11.5px}
+  .rmodal-card .rf .hint{font-size:11px;color:var(--ink-faint)}
+  .rmodal-card .r-ok{display:none;margin-top:11px;border:1px solid #C9D6C4;background:#ECF3E9;color:#33503E;font-size:13px;padding:9px 13px}
+
 </style>
 </head>
 <body>
@@ -267,33 +290,6 @@
   </div>
 </section>
 
-<!-- laporan masalah -->
-<section class="wrap form-sec" id="lapor" style="padding-bottom:0">
-  <div class="panel">
-    <h2>Ada Masalah dengan Kartu Ini?</h2>
-    <p>Temukan data yang tidak update (mis. sudah laku tapi masih tampil, harga/foto keliru)? Laporkan — pengelola akan segera memperbaikinya.</p>
-    <form id="reportFormDetail" onsubmit="return false">
-      <div class="fgrid">
-        <div class="f"><label for="jLapor">Jenis masalah <i>*</i></label>
-          <select id="jLapor">
-            <option>Info tidak diperbarui (mis. sudah laku / harga beda)</option>
-            <option>Sudah terjual tapi masih tampil tersedia</option>
-            <option>Foto atau data keliru</option>
-            <option>Lainnya</option>
-          </select>
-        </div>
-        <div class="f"><label for="kLapor">Nomor WhatsApp (opsional)</label><input id="kLapor" type="tel" placeholder="08xx-xxxx-xxxx — bila perlu dihubungi"></div>
-        <div class="f full"><label for="tLapor">Keterangan</label><textarea id="tLapor" rows="3" placeholder="Ceritakan singkat masalahnya…"></textarea></div>
-      </div>
-      <div class="form-foot">
-        <button class="btn primary" type="submit">Kirim Laporan</button>
-        <span class="hint">Laporan hanya pemberitahuan ke pengelola — tidak mengubah data secara otomatis.</span>
-      </div>
-    </form>
-    <div class="ok-note" id="ok-lapor">Terima kasih — laporan Anda terkirim ke pengelola (contoh).</div>
-  </div>
-</section>
-
 <!-- ayam serupa -->
 <section class="wrap" style="padding-bottom:30px">
   <div class="sec-head" style="margin-bottom:24px">
@@ -317,6 +313,9 @@
     </div>
   </div>
 </section>
+
+<!-- laporan — tautan kecil; form hanya muncul saat dibutuhkan -->
+<div class="wrap"><div class="rep-mini"><span class="sep"></span><p id="repStatus">Menemukan data yang keliru atau tidak diperbarui? <button type="button" class="link" id="openReport">Laporkan masalah</button></p><span class="sep"></span></div></div>
 
 <footer>
   <div class="wrap">
@@ -353,19 +352,45 @@
 </footer>
 
 <script>
-  // contoh perilaku notifikasi form (mockup)
-  document.querySelectorAll('form[onsubmit]').forEach(function(f){
-    f.addEventListener('submit', function(){
-      var target=f.getAttribute('data-ok')||'ok';
-      var ok=document.getElementById(target);
-      if(ok){ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'});}
-    });
-  });
-  var fDetail=document.getElementById('reportFormDetail');
-  if(fDetail) fDetail.setAttribute('data-ok','ok-lapor');
+  // (mockup) notifikasi sukses form "Saya Tertarik"
   var fMinat=document.getElementById('tertarikForm');
-  if(fMinat) fMinat.setAttribute('data-ok','ok');
+  if(fMinat) fMinat.addEventListener('submit',function(e){e.preventDefault();var ok=document.getElementById('ok');if(ok){ok.style.display='block';ok.scrollIntoView({behavior:'smooth',block:'center'});}});
+  // laporan ringkas: hanya muncul saat diklik
+  var modal=document.getElementById('reportModal');
+  function openM(){modal.classList.add('show');}
+  function closeM(){modal.classList.remove('show');}
+  var ob=document.getElementById('openReport'); if(ob) ob.addEventListener('click',openM);
+  var c1=document.getElementById('reportClose'); if(c1) c1.addEventListener('click',closeM);
+  var c2=document.getElementById('reportBatal'); if(c2) c2.addEventListener('click',closeM);
+  if(modal) modal.addEventListener('click',function(e){if(e.target===modal)closeM();});
+  var rf=document.getElementById('reportMini');
+  if(rf) rf.addEventListener('submit',function(e){e.preventDefault();closeM();var st=document.getElementById('repStatus');if(st)st.innerHTML='Laporan terkirim — terima kasih.';});
 </script>
+
+<!-- modal laporan (muncul saat dibutuhkan) -->
+<div class="rmodal" id="reportModal" role="dialog" aria-modal="true" aria-label="Laporkan masalah">
+  <div class="rmodal-card">
+    <div class="rh"><h3>Laporkan masalah</h3><button type="button" id="reportClose" aria-label="Tutup">×</button></div>
+    <p class="rs">Memberi tahu pengelola bila ada yang tidak beres — mis. sudah laku tapi masih tampil, atau datanya tidak diperbarui.</p>
+    <form id="reportMini" onsubmit="return false">
+      <div class="f"><label for="jMini">Jenis masalah</label>
+        <select id="jMini">
+          <option>Info tidak diperbarui (mis. sudah laku / harga beda)</option>
+          <option>Sudah terjual tapi masih tampil tersedia</option>
+          <option>Foto atau data keliru</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+      <div class="f"><label for="tMini">Keterangan (opsional)</label><textarea id="tMini" rows="3" placeholder="Ceritakan singkat…"></textarea></div>
+      <div class="rf">
+        <button class="btn primary" type="submit">Kirim Laporan</button>
+        <button class="btn outline" type="button" id="reportBatal">Batal</button>
+        <span class="hint">Hanya pemberitahuan ke pengelola.</span>
+      </div>
+    </form>
+    <div class="r-ok" id="rOk">Terima kasih — laporan Anda terkirim ke pengelola (contoh).</div>
+  </div>
+</div>
 
 </body>
 </html>
