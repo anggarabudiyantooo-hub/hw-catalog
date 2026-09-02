@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { rekapDari, formatTanggal, labelJenisFoto } from "@/lib/format";
+import PublicPreview from "@/components/PublicPreview";
+import PublicPreviewContent from "@/components/PublicPreviewContent";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +56,15 @@ export default async function AyamEditPage({
           </div>
         </div>
         <div className="right">
-          <Link className="btn btn-sec" href={`/ayam/${ayam.slug}`} target="_blank">Lihat Halaman Publik</Link>
+          <PublicPreview
+            note={
+              ayam.statusTampil === "PUBLIKASI" && !ayam.isArsip
+                ? undefined
+                : "Draf / arsip — belum tampil di situs publik."
+            }
+          >
+            <PublicPreviewContent ayam={ayam} />
+          </PublicPreview>
         </div>
       </div>
 
@@ -236,12 +246,19 @@ export default async function AyamEditPage({
           )}
 
           <form method="post" action={`/api/panel/ayam/${ayam.id}`} encType="multipart/form-data">
-            <div className="dz" style={{ marginBottom: 10 }}>
-              <input type="file" name="newImages" multiple accept="image/*" id="newImg" style={{ position: "absolute", opacity: 0 }} />
+            <label htmlFor="newImg" className="dz" style={{ marginBottom: 10, cursor: "pointer", display: "block", position: "relative" }}>
+              <input
+                type="file"
+                name="newImages"
+                multiple
+                accept="image/*"
+                id="newImg"
+                style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", zIndex: 2 }}
+              />
               <svg viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6" /><path d="M4 20h16" /></svg>
-              <div><b>Tambah foto baru</b> ke galeri ayam ini</div>
-              <small>Pilih file di atas, lalu isi jenisnya:</small>
-            </div>
+              <div><b>Klik untuk memilih foto</b> — bisa beberapa sekaligus (JPG/PNG/WebP, maks. 5 MB)</div>
+              <small>Setelah memilih, pilih jenis foto di bawah lalu tekan “Unggah + Simpan Data”.</small>
+            </label>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
               <select name="newJenis" style={{ padding: "8px 11px", fontSize: 13.5, border: "1px solid var(--krem-300)", borderRadius: 5, background: "var(--paper)" }}>
                 <option value="FULL_BADAN">Full badan</option>

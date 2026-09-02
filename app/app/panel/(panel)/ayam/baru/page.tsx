@@ -132,10 +132,16 @@ export default async function AyamBaruPage({
             <span className="sub">Bisa beberapa file sekaligus · JPG/PNG/WebP · maks. 5 MB per file</span>
           </div>
           <div className="card-body">
-            <label className="dz" style={{ display: "block" }}>
-              <input type="file" name="images" multiple accept="image/*" style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
+            <label className="dz" style={{ display: "block", cursor: "pointer", position: "relative" }}>
+              <input
+                type="file"
+                name="images"
+                multiple
+                accept="image/*"
+                style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", zIndex: 2 }}
+              />
               <svg viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6" /><path d="M4 20h16" /></svg>
-              <div><b>Pilih / seret foto ke sini</b></div>
+              <div><b>Klik untuk memilih foto</b> — bisa beberapa sekaligus (JPG/PNG/WebP, maks. 5 MB)</div>
               <small>Foto pertama yang dipilih akan menjadi foto utama. Setelah tersimpan, atur jenis foto (Full badan / Kepala / Kaki) di halaman kelola.</small>
             </label>
             <div className="req-note">
