@@ -15,7 +15,9 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const u = new URL(ref, BASE);
     if (ok) u.searchParams.set("ok", ok);
     if (err) u.searchParams.set("err", err);
-    return NextResponse.redirect(u.toString(), 303);
+    const sTok = new URL(req.url).searchParams.get("s");
+    if (sTok) u.searchParams.set("s", sTok);
+    return redirectLocal(u.pathname + u.search);
   };
 
   if (!["BARU", "DITINDAKLANJUTI", "SELESAI", "TUTUP"].includes(status)) return go(undefined, "Status tidak valid.");

@@ -14,7 +14,9 @@ export async function POST(req: Request) {
     const u = new URL(ref, BASE);
     if (ok) u.searchParams.set("ok", ok);
     if (err) u.searchParams.set("err", err);
-    return NextResponse.redirect(u.toString(), 303);
+    const sTok = new URL(req.url).searchParams.get("s");
+    if (sTok) u.searchParams.set("s", sTok);
+    return redirectLocal(u.pathname + u.search);
   };
 
   try {
@@ -54,7 +56,7 @@ export async function POST(req: Request) {
       }
     }
 
-    return redirectLocal(`/panel/ayam/${ayam.id}?ok=Tersimpan.+Atur+jenis+foto+lalu+publikasikan.`);
+    return redirectLocal(`/panel/ayam/${ayam.id}?ok=Tersimpan.+Atur+jenis+foto+lalu+publikasikan.${new URL(req.url).searchParams.get("s") ? `&s=${new URL(req.url).searchParams.get("s")}` : ""}`);
   } catch {
     return back(undefined, "Terjadi kesalahan saat menyimpan.");
   }

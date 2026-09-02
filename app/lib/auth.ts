@@ -100,12 +100,37 @@ export function reqBase(req: Request): string {
   return `${proto}://${host}`;
 }
 
+function uidFromToken(token: string | null | undefined): number | null {
+  if (!token) return null;
+  const data = verify(decodeURIComponent(token));
+  return data ? data.uid : null;
+}
+
 export function readOwnerFromRequest(req: Request) {
   const header = req.headers.get("cookie") || "";
   const match = header.split(";").map((c) => c.trim()).find((c) => c.startsWith(`${COOKIE}=`));
-  if (!match) return null;
-  const data = verify(decodeURIComponent(match.split("=").slice(1).join("=")));
-  return data ? data.uid : null;
+  if (match) {
+    const uid = uidFromToken(match.split("=").slice(1).join("="));
+    if (uid) return uid;
+  }
+  // Fallback demo: sesi lewat ?s=TOKEN bila cookie diblokir (mis. iframe lintas-situs)
+  try {
+    const s = new URL(req.url).searchParams.get("s");
+    if (s) return uidFromToken(s);
+  } catch {
+    /* abaikan URL tak valid */
+  }
+  return null;
+}
+
+export async function userFromToken(token: string | null | undefined) {
+  const uid = uidFromToken(token);
+  if (!uid) return null;
+  try {
+    return await prisma.user.findUnique({ where: { id: uid } });
+  } catch {
+    return null;
+  }
 }
 
 export async function logAksi(aksi: string, entitas: string, entitasId: number | null, detail?: string, userId?: number | null) {

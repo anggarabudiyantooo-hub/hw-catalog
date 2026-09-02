@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getOwner } from "@/lib/auth";
+import { headers } from "next/headers";
+import { getOwner, userFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import ConfirmInit from "@/components/ConfirmInit";
+import PanelSession from "@/components/PanelSession";
 
 const NAV = [
   { group: "Ringkasan" },
@@ -20,7 +22,11 @@ const NAV = [
 ];
 
 export default async function PanelLayout({ children }: { children: ReactNode }) {
-  const user = await getOwner();
+  // fallback demo: bila cookie diblokir, izinkan sesi lewat token ?s= di URL
+  const xp = headers().get("x-path") || "";
+  const sTok = xp.includes("?") ? new URLSearchParams(xp.slice(xp.indexOf("?") + 1)).get("s") : null;
+  let user = await getOwner();
+  if (!user && sTok) user = await userFromToken(sTok);
   if (!user) redirect("/panel/login");
 
   const [countPermintaan, countLaporan, countAyam] = await Promise.all([
@@ -72,6 +78,7 @@ export default async function PanelLayout({ children }: { children: ReactNode })
       </aside>
       <main className="panel-main">{children}</main>
       <ConfirmInit />
+      <PanelSession />
     </div>
   );
 }
