@@ -143,6 +143,11 @@ Latar `marun-900` dengan **tekstur bata** (SVG pattern garis-garis silang sangat
 
 ---
 
+### 5.6 Footer, Lokasi & Info Kunjungan
+- Footer publik memuat 4 kolom: brand, Jelajahi, Hubungi, dan **Lokasi & Alamat** — kolom lokasi berisi **peta skematis (SVG inline)**, alamat lengkap, tautan "Buka di Google Maps", serta catatan **"Kunjungan wajib reservasi"** dengan ikon garis.
+- Peta digambar SVG polos (jalan, blok, penanda pin merah bata) — selalu tampil tanpa koneksi internet; aplikasi nyata dapat menggantinya dengan peta interaktif saat online.
+- Beranda memuat seksi **Lokasi & Kunjungan**: alamat + info arah di kiri, peta besar di kanan, dan kartu "Syarat Kunjungan: Reservasi Dulu" bernomor 1–3.
+
 ## 6. Grid & Spacing
 
 - Kontainer maks 1180 px, padding halaman 24 px (desktop) / 16 px.

@@ -3,9 +3,9 @@
 
 | | |
 |---|---|
-| **Versi** | 4.0 (revisi sesuai masukan pemilik) |
+| **Versi** | 5.0 (revisi sesuai masukan pemilik) |
 | **Tanggal** | 2 September 2026 |
-| **Status** | Menunggu persetujuan sebelum pengembangan (M0 → M1) · rev.4 |
+| **Status** | Menunggu persetujuan sebelum pengembangan (M0 → M1) · rev.5 |
 | **Produk** | "Jalu" — nama kerja, dapat diganti |
 
 **Ringkasan revisi 2.0:** umur dari tanggal menetas (otomatis); satu peternakan tanpa "asal kota"; pemilik tunggal tanpa role.
@@ -19,6 +19,9 @@
 1. **Ukuran & hal yang lazim ditanya pembeli** ditambahkan sebagai kolom opsional pada ayam: **postur/ukuran badan, tinggi punggung, kaki & sisik, jalu**. Bila terisi, tampil di halaman detail (dan ringkas di kartu bila relevan).
 2. **Setiap kartu katalog selalu menampilkan tombol "Hubungi"** (WhatsApp pemilik kandang) — kontak tidak pernah hilang, sekaligus menyiapkan kemungkinan penitip iklan/ayam dari pihak lain yang semuanya tetap ditangani satu pengelola.
 3. **Bendera "Laporkan" per kartu katalog**: pengunjung bisa melaporkan info yang tidak diperbarui/keliru (mis. sudah laku tapi masih tampil) → masuk ke tabel `laporan`, dikelola pemilik di panel. Laporan tidak mengubah data otomatis.
+**Ringkasan revisi 5.0:**
+1. **Lokasi & alamat dipertegas**: seksi "Lokasi & Kunjungan" di beranda dan **peta + alamat di footer** seluruh halaman publik, agar calon pembeli tahu posisi kandang.
+2. **Kunjungan wajib reservasi (janji temu).** Pengunjung harus menghubungi pemilik lebih dulu untuk mencocokkan jadwal; tanpa janji tidak dilayani datang langsung. Alur: chat WhatsApp → konfirmasi jadwal → datang pada jam disepakati.
 
 ---
 
@@ -80,13 +83,14 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 | PF-03 | **Pencarian & filter:** teks (nama/kode), kategori, jenis kelamin, status ketersediaan; urutkan (terbaru/termahal/termurah/nama). Ayam "terjual" dapat ditampilkan sebagai riwayat (opsi). | P1 |
 | PF-04 | **Halaman detail:** galeri multi-foto berlabel jenis (full badan/kepala/kaki/bulu/lainnya), spesifikasi inti (kelamin, tanggal menetas, **usia otomatis**, berat, warna bulu, ring), harga & status, tombol "Saya Tertarik". | P0 |
 | PF-05 | **Form "Saya Tertarik":** nama, nomor WhatsApp, kota pembeli (opsional), pesan/penawaran (opsional) → tersimpan sebagai permintaan + tautan WhatsApp. | P0 |
-| PF-06 | **Tentang & kontak:** narasi kandang, alamat (satu lokasi), WhatsApp/telepon, jam layanan. | P2 |
+| PF-06 | **Tentang, kontak & lokasi:** narasi kandang, alamat lengkap, **peta lokasi di footer & seksi beranda**, WhatsApp/telepon, jam layanan. | P1 |
 | PF-07 | **Detail memuat ukuran & ciri yang lazim ditanya** bila diisi: postur/ukuran badan, tinggi punggung, kaki & sisik, jalu — selain data inti. | P1 |
 | PF-08 | **Bendera "Laporkan"** pada setiap kartu/detail ayam: pilih jenis masalah (info tidak update, sudah terjual tapi masih tampil, data/foto keliru, lainnya) + keterangan → tersimpan sebagai laporan untuk pemilik. | P1 |
 | PF-09 | Halaman 404 ramah & halaman status kosong. | P2 |
 | PF-10 | **Responsif** (desktop/tablet/ponsel). | P0 |
 | PF-11 | SEO dasar & kinerja gambar (thumbnail/webp). | P1/P2 |
 | PF-12 | Seluruh kartu menyiapkan kontak bagi pihak yang ingin **menitipkan ayam/iklan** — diproses manual pemilik (tetap satu pengelola; kandidat v2 bila menjadi rutin). | P3 |
+| PF-13 | **Informasi kunjungan yang jelas:** alamat + peta selalu tampil; keterangan **"kunjungan wajib reservasi"** beserta alur (chat → konfirmasi jadwal → datang) terlihat di seksi lokasi & footer. | P1 |
 
 ### 4.B Sisi Pemilik (login)
 
@@ -118,6 +122,7 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 10. **Nomor ring/kode** unik bila diisi.
 11. **Permintaan** tidak terhapus otomatis; `batal` tetap tersimpan sebagai riwayat.
 12. **Satu akun** pemilik yang dapat mengubah data; seluruh perubahan dicatat di log.
+13. **Kunjungan kandang hanya dengan reservasi (janji temu).** Alamat & peta lokasi selalu tampil (footer & halaman Tentang/beranda). Pengunjung wajib menghubungi pemilik untuk mencocokkan jadwal sebelum datang; tanpa janji tidak dilayani.
 
 ---
 
