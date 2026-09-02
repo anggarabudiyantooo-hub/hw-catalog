@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Next.js build & cache
+.next/
+out/
+.turbo/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Data upload (lokal) — di produksi pakai storage terkelola/object storage
+public/uploads/
+uploads/
+
+# Logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Sensitif (jika repo publik) — jangan commit file kredensial
+*.pem
+*.key
+
+# Artefak sementara
+tmp/

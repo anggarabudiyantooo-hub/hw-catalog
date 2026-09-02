@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JALU — Galeri Ayam Bangkok · Beranda (Mockup Desain)</title>
+<style>
+  :root{
+    --marun-900:#3A0F0B; --marun-800:#5C1410; --bata-700:#8A1E1A; --bata-600:#A32C20;
+    --bata-500:#C14A32; --bata-tua:#7C3B24;
+    --krem-100:#F9F0DF; --krem-200:#F1E3C8; --krem-300:#E3CEA9; --tanah-400:#C9A67B;
+    --card:#FFF9EC; --paper:#FFF6E4;
+    --emas-500:#B8892F; --emas-300:#E0BC6C; --emas-700:#8F6A1F;
+    --ink:#3D2A22; --ink-muted:#7A6657; --ink-faint:#A3907F;
+    --st-tersedia:#3F6B4F; --st-tersedia-bg:#E7EFE2;
+    --st-dipesan:#96691E; --st-dipesan-bg:#F5EAD2;
+    --st-terjual:#5B4636; --st-terjual-bg:#E9E0D4;
+    --line:#E2CFA9;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--krem-100);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  .cap{font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:600}
+
+  /* ---------- navigasi ---------- */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(249,240,223,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--krem-300)}
+  .nav-in{display:flex;align-items:center;gap:34px;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{width:40px;height:40px;background:var(--bata-700);display:grid;place-items:center;color:var(--emas-300);border:1px solid rgba(224,188,108,.55)}
+  .brand-mark svg{width:22px;height:22px}
+  .brand-name{font-size:23px;letter-spacing:.34em;color:var(--bata-700);font-family:Georgia,serif;font-weight:600;line-height:1}
+  .brand-sub{font-size:9.5px;letter-spacing:.3em;color:var(--ink-muted);text-transform:uppercase;margin-top:3px}
+  nav.links{margin-left:auto;display:flex;gap:26px;align-items:center}
+  nav.links a{font-size:14px;color:var(--ink);letter-spacing:.02em;border-bottom:2px solid transparent;padding:4px 0;transition:.18s}
+  nav.links a:hover,nav.links a.on{color:var(--bata-700);border-color:var(--emas-500)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding:12px 22px;border-radius:6px;cursor:pointer;transition:.18s;font-family:Georgia,serif}
+  .btn.primary{background:var(--bata-700);color:#F9EFD9;border:1px solid var(--bata-700)}
+  .btn.primary:hover{background:var(--bata-600);transform:translateY(-1px);box-shadow:0 6px 16px rgba(138,30,26,.25)}
+  .btn.ghost{background:transparent;color:#F6E7CE;border:1px solid rgba(246,231,206,.55)}
+  .btn.ghost:hover{background:rgba(246,231,206,.08)}
+  .btn.outline{background:transparent;color:var(--bata-700);border:1.5px solid var(--bata-700)}
+  .btn.outline:hover{background:var(--bata-700);color:#F9EFD9}
+  .btn.sm{padding:8px 15px;font-size:11px}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;overflow:hidden;background:
+    radial-gradient(1100px 480px at 88% -10%, rgba(193,74,50,.28), transparent 60%),
+    radial-gradient(900px 520px at -10% 110%, rgba(224,188,108,.12), transparent 55%),
+    linear-gradient(115deg, var(--marun-900) 0%, var(--marun-800) 62%, #4A120D 100%);color:#F6E7CE}
+  .hero::before{content:"";position:absolute;inset:0;opacity:.05;
+    background:repeating-linear-gradient(45deg,transparent 0 22px,rgba(240,220,180,.9) 22px 24px),
+               repeating-linear-gradient(-45deg,transparent 0 44px,rgba(240,220,180,.7) 44px 46px)}
+  .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;
+    background:linear-gradient(90deg,var(--emas-500),var(--emas-300) 30%,transparent 30%,transparent 45%,var(--emas-500) 45%,var(--emas-300) 62%,transparent 62%)}
+  .hero-in{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;padding:84px 0 96px}
+  .hero-kicker{color:var(--emas-300);letter-spacing:.34em;font-size:11px;display:flex;align-items:center;gap:14px}
+  .hero-kicker::before{content:"";width:52px;height:1px;background:var(--emas-500)}
+  .hero h1{font-size:clamp(38px,5vw,66px);line-height:1.08;color:#FAF1DD;font-weight:400;margin:26px 0 6px;letter-spacing:.01em}
+  .hero h1 em{font-style:italic;color:var(--emas-300)}
+  .hero .orn{display:flex;align-items:center;gap:14px;margin:22px 0;color:var(--emas-500)}
+  .hero .orn span{height:1px;background:linear-gradient(90deg,transparent,var(--emas-500));flex:1}
+  .hero p.lede{max-width:52ch;color:#E9D9BC;font-size:17px}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+  .stats{display:flex;gap:44px;margin-top:44px;flex-wrap:wrap}
+  .stat b{display:block;font-size:30px;color:#FAF1DD;font-weight:400;letter-spacing:.02em}
+  .stat b i{font-style:normal;color:var(--emas-300);font-size:20px}
+  .stat span{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#CDAF8B}
+  .hero-fig{position:relative;justify-self:end}
+  .frame{position:relative;padding:14px;border:1px solid rgba(224,188,108,.5);background:rgba(0,0,0,.14)}
+  .frame::before,.frame::after{content:"";position:absolute;width:30px;height:30px;border:2px solid var(--emas-500)}
+  .frame::before{top:-3px;left:-3px;border-right:0;border-bottom:0}
+  .frame::after{bottom:-3px;right:-3px;border-left:0;border-top:0}
+  .frame img{width:min(400px,44vw);aspect-ratio:4/5;object-fit:cover;outline:1px solid rgba(240,230,200,.35);outline-offset:-10px}
+  .plate{position:absolute;left:-30px;bottom:-26px;background:var(--card);color:var(--ink);padding:14px 22px;border-left:4px solid var(--emas-500);box-shadow:0 14px 30px rgba(20,5,2,.35);max-width:270px}
+  .plate b{font-size:17px;color:var(--bata-700);font-weight:600;letter-spacing:.03em}
+  .plate span{display:block;font-size:11px;letter-spacing:.2em;color:var(--ink-muted);text-transform:uppercase;margin-top:2px}
+
+  /* ---------- ornament pembatas ---------- */
+  .band{display:flex;align-items:center;justify-content:center;gap:18px;padding:34px 0 6px;color:var(--tanah-400)}
+  .band .d{width:7px;height:7px;background:var(--tanah-400);transform:rotate(45deg)}
+  .band .l{height:1px;width:70px;background:linear-gradient(90deg,transparent,var(--tanah-400))}
+  .band .r{height:1px;width:70px;background:linear-gradient(90deg,var(--tanah-400),transparent)}
+
+  /* ---------- seksi unggulan ---------- */
+  section{padding:64px 0}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto 46px}
+  .sec-head .cap{color:var(--emas-700)}
+  .sec-head h2{font-size:clamp(28px,3.4vw,42px);font-weight:400;color:var(--ink);margin:14px 0 10px;letter-spacing:.01em}
+  .sec-head p{color:var(--ink-muted);font-style:italic}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+  .bird-card{position:relative;background:var(--card);border:1px solid var(--krem-300);box-shadow:0 1px 3px rgba(60,30,10,.07);display:flex;flex-direction:column;transition:.22s}
+  .bird-card:hover{transform:translateY(-5px);box-shadow:0 16px 34px rgba(90,45,15,.14)}
+  .bc-img{position:relative;overflow:hidden}
+  .bc-img img{aspect-ratio:4/5;object-fit:cover;transition:.5s}
+  .bird-card:hover .bc-img img{transform:scale(1.035)}
+  .badge{position:absolute;top:14px;left:14px;display:inline-flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;padding:6px 12px;background:rgba(253,248,236,.92);color:var(--ink);font-weight:600}
+  .badge i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .badge.tersedia i{background:var(--st-tersedia)}
+  .badge.dipesan i{background:var(--st-dipesan)}
+  .badge.terjual i{background:var(--st-terjual)}
+  .badge.feat{right:14px;left:auto;background:var(--marun-800);color:var(--emas-300);border:1px solid rgba(224,188,108,.5)}
+  .bc-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+  .bc-kat{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--emas-700);font-weight:600}
+  .bc-name{font-size:22px;color:var(--ink);font-weight:600;margin:6px 0 2px;letter-spacing:.01em}
+  .bc-kode{font-size:12.5px;color:var(--ink-faint);font-style:italic}
+  .bc-meta{display:flex;flex-wrap:wrap;gap:6px 16px;margin:14px 0;font-size:13px;color:var(--ink-muted)}
+  .bc-meta span{display:inline-flex;align-items:center;gap:6px}
+  .bc-meta svg{width:13px;height:13px;stroke:var(--tanah-400);fill:none;stroke-width:1.6}
+  .bc-foot{margin-top:auto;border-top:1px dashed var(--krem-300);padding-top:14px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+  .harga .price{font-size:20px;color:var(--bata-700);font-weight:700;line-height:1.2}
+  .harga .price.ask{font-size:15px;font-weight:600;letter-spacing:.02em}
+  .harga small{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+
+  /* ---------- kategori ---------- */
+  .kat-sec{background:var(--krem-200)}
+  .kat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  .kat-tile{background:var(--card);border:1px solid var(--krem-300);padding:30px 26px;position:relative;transition:.2s}
+  .kat-tile:hover{border-color:var(--emas-500)}
+  .kat-tile::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--emas-500),var(--emas-300))}
+  .kat-tile b{font-size:20px;color:var(--ink);font-weight:600;display:block;letter-spacing:.01em}
+  .kat-tile .count{font-size:12px;color:var(--bata-600);letter-spacing:.16em;text-transform:uppercase;margin-top:4px;display:block}
+  .kat-tile p{font-size:13.5px;color:var(--ink-muted);margin-top:10px;font-style:italic}
+
+  /* ---------- kutipan ---------- */
+  .quote-sec{background:linear-gradient(120deg,var(--marun-900),var(--marun-800));color:#EFDDBE}
+  .quote{max-width:820px;margin:0 auto;text-align:center;padding:26px 0}
+  .quote .qmark{font-size:54px;line-height:0;color:var(--emas-500);font-family:Georgia,serif}
+  .quote blockquote{font-size:clamp(19px,2.4vw,26px);font-style:italic;color:#F3E5C8;margin:18px 0 20px}
+  .quote figcaption .who{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--emas-300)}
+  .quote figcaption .role{font-size:12px;color:#CBAF8B;font-style:italic}
+
+  /* ---------- CTA ---------- */
+  .cta-panel{background:var(--card);border:1px solid var(--krem-300);border-left:6px solid var(--bata-700);display:flex;align-items:center;gap:26px;padding:38px 40px;flex-wrap:wrap}
+  .cta-panel h3{font-size:26px;font-weight:600;color:var(--ink)}
+  .cta-panel p{color:var(--ink-muted);margin-top:4px}
+  .cta-panel .btn{margin-left:auto}
+
+  /* ---------- footer ---------- */
+  footer{background:linear-gradient(120deg,#2E0B08,#4A120D);color:#D8C4A4;margin-top:24px}
+  .foot-in{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:44px;padding:58px 0 40px}
+  footer .brand-name{color:#F2E4C6}
+  footer .brand-sub{color:#B99F78}
+  .foot-in p{font-size:14px;color:#C7AF8D}
+  .foot-in h4{font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--emas-300);margin-bottom:16px}
+  .foot-in a{display:block;font-size:14px;color:#D8C4A4;padding:3px 0}
+  .foot-in a:hover{color:#F6E7CE}
+  .foot-bottom{border-top:1px solid rgba(224,188,108,.18);padding:18px 0;font-size:12.5px;color:#A98F6C;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .mini{font-size:11px;color:#8a7460}
+
+  @media (max-width:1020px){ .hero-in{grid-template-columns:1fr}.frame{justify-self:center;margin-top:20px}.grid3{grid-template-columns:repeat(2,1fr)}.kat-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:760px){ nav.links{display:none} .foot-in{grid-template-columns:1fr} .cta-panel .btn{margin-left:0} }
+  @media (max-width:560px){ .grid3{grid-template-columns:1fr}.kat-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<!-- ======== NAVIGASI ======== -->
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 22 12 12 22 2 12Z"/><path d="M12 7.5 16.5 12 12 16.5 7.5 12Z" stroke-width="1"/></svg>
+      </span>
+      <span>
+        <span class="brand-name">JALU</span>
+        <span class="brand-sub">Galeri Ayam Bangkok · Solo</span>
+      </span>
+    </a>
+    <nav class="links">
+      <a class="on" href="#">Beranda</a>
+      <a href="#">Katalog</a>
+      <a href="#">Tentang</a>
+      <a href="#">Kontak</a>
+      <a class="btn outline sm" href="#">Panel Admin</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ======== HERO ======== -->
+<section class="hero">
+  <div class="wrap hero-in">
+    <div>
+      <div class="hero-kicker">Kandang Juara · Sejak 1996</div>
+      <h1>Ayam Bangkok <em>Berkelas</em>,<br>Warisan Darah Juara.</h1>
+      <div class="orn"><span></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z"/></svg>
+        <span style="transform:scaleX(-1)"></span></div>
+      <p class="lede">Setiap ekor yang kami tampilkan melewati seleksi postur, tulang, dan garis keturunan. Dibesarkan dengan disiplin — dipersembahkan untuk kolektor yang menghargai ketangguhan sejati.</p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#">Jelajahi Katalog</a>
+        <a class="btn ghost" href="#">Hubungi Kandang</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>28<i>+</i></b><span>Ayam &amp; indukan</span></div>
+        <div class="stat"><b>16</b><span>Siap dijual</span></div>
+        <div class="stat"><b>4</b><span>Garis juara Thailand</span></div>
+      </div>
+    </div>
+    <figure class="hero-fig">
+      <div class="frame">
+        <img src="@@AM@@" alt="Ayam Bangkok jantan, BKT-001 Rajawali">
+      </div>
+      <figcaption class="plate">
+        <b>BKT-001 · Rajawali</b>
+        <span>Bangkok Tulen — unggulan kandang</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<div class="wrap"><div class="band"><span class="l"></span><span class="d"></span><span class="r"></span></div></div>
+
+<!-- ======== UNGGULAN ======== -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="cap">Pilihan Kandang</span>
+      <h2>Si Unggulan Saat Ini</h2>
+      <p>Kami hadirkan tiga ayam dengan postur &amp; prestasi terbaik bulan ini.</p>
+    </div>
+    <div class="grid3">
+
+      <article class="bird-card">
+        <div class="bc-img">
+          <img src="@@A1@@" alt="Rajawali, ayam bangkok tulen jantan">
+          <span class="badge tersedia"><i></i>Tersedia</span>
+          <span class="badge feat">Unggulan</span>
+        </div>
+        <div class="bc-body">
+          <span class="bc-kat">Bangkok Tulen</span>
+          <h3 class="bc-name">Rajawali</h3>
+          <span class="bc-kode">BKT-001 · garis Thailand F1</span>
+          <div class="bc-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>18 bulan</span>
+            <span><svg viewBox="0 0 24 24"><path d="M3 17l3-3 4 4 8-8 3 3"/><path d="M14 6h4v4"/></svg>3,60 kg</span>
+            <span><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.3-7-11a7 7 0 1 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>Blitar</span>
+          </div>
+          <div class="bc-foot">
+            <div class="harga"><span class="price">Rp 3.500.000</span><small>Tawar menawar terbuka</small></div>
+            <a class="btn outline sm" href="#">Detail</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="bird-card">
+        <div class="bc-img">
+          <img src="@@A4@@" alt="Ronggolawe, ayam bangkok thailand F1 jantan">
+          <span class="badge tersedia"><i></i>Tersedia</span>
+          <span class="badge feat">Unggulan</span>
+        </div>
+        <div class="bc-body">
+          <span class="bc-kat">Bangkok Thailand F1</span>
+          <h3 class="bc-name">Ronggolawe</h3>
+          <span class="bc-kode">BKX-019 · impor langsung</span>
+          <div class="bc-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>10 bulan</span>
+            <span><svg viewBox="0 0 24 24"><path d="M3 17l3-3 4 4 8-8 3 3"/><path d="M14 6h4v4"/></svg>3,15 kg</span>
+            <span><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.3-7-11a7 7 0 1 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>Madiun</span>
+          </div>
+          <div class="bc-foot">
+            <div class="harga"><span class="price">Rp 4.500.000</span><small>Garansi surat asal</small></div>
+            <a class="btn outline sm" href="#">Detail</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="bird-card">
+        <div class="bc-img">
+          <img src="@@A2@@" alt="Sang Pamenan, ayam bangkok tulen jantan">
+          <span class="badge tersedia"><i></i>Tersedia</span>
+        </div>
+        <div class="bc-body">
+          <span class="bc-kat">Bangkok Tulen</span>
+          <h3 class="bc-name">Sang Pamenan</h3>
+          <span class="bc-kode">BKT-007 · jalu tunggal</span>
+          <div class="bc-meta">
+            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>14 bulan</span>
+            <span><svg viewBox="0 0 24 24"><path d="M3 17l3-3 4 4 8-8 3 3"/><path d="M14 6h4v4"/></svg>3,35 kg</span>
+            <span><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.3-7-11a7 7 0 1 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>Kediri</span>
+          </div>
+          <div class="bc-foot">
+            <div class="harga"><span class="price">Rp 2.750.000</span><small>Baru 2 minggu di kandang</small></div>
+            <a class="btn outline sm" href="#">Detail</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======== KATEGORI ======== -->
+<section class="kat-sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="cap">Telusuri Koleksi</span>
+      <h2>Menurut Garis &amp; Golongan</h2>
+      <p>Setiap garis memiliki watak dan keunggulannya sendiri.</p>
+    </div>
+    <div class="kat-grid">
+      <a class="kat-tile" href="#"><b>Bangkok Tulen</b><span class="count">9 ekor</span><p>Darah asli Thailand, seleksi ketat garis juara.</p></a>
+      <a class="kat-tile" href="#"><b>Bangkok Birma</b><span class="count">6 ekor</span><p>Pukulan keras, tenaga panjang yang sabar.</p></a>
+      <a class="kat-tile" href="#"><b>Bangkok Thailand F1</b><span class="count">4 ekor</span><p>Impor generasi pertama, postur ideal laga.</p></a>
+      <a class="kat-tile" href="#"><b>Betina &amp; Indukan</b><span class="count">9 ekor</span><p>Indukan terpilih untuk program pembibitan.</p></a>
+    </div>
+  </div>
+</section>
+
+<!-- ======== KUTIPAN ======== -->
+<section class="quote-sec">
+  <div class="wrap">
+    <figure class="quote">
+      <span class="qmark">“</span>
+      <blockquote>Seekor ayam yang baik bukan sekadar menang di laga — ia membawa nama baik pemiliknya. Maka kami memelihara dengan kehormatan.</blockquote>
+      <figcaption><span class="who">H. Suroto</span> · <span class="role">Pendiri Kandang Jalu, Solo</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======== CTA ======== -->
+<section>
+  <div class="wrap">
+    <div class="cta-panel">
+      <div>
+        <h3>Berminat memiliki ayam juara?</h3>
+        <p>Sampaikan kriteria Anda — kami bantu pilihkan yang paling cocok dari kandang.</p>
+      </div>
+      <a class="btn primary" href="#">Hubungi via WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FOOTER ======== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-in">
+      <div>
+        <a class="brand" href="#">
+          <span class="brand-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2 22 12 12 22 2 12Z"/><path d="M12 7.5 16.5 12 12 16.5 7.5 12Z" stroke-width="1"/></svg>
+          </span>
+          <span><span class="brand-name">JALU</span><span class="brand-sub">Galeri Ayam Bangkok · Solo</span></span>
+        </a>
+        <p style="margin-top:18px">Kandang ayam bangkok pilihan di Kota Surakarta. Melayani kolektor &amp; penyuka ayam laga dari seluruh Indonesia.</p>
+      </div>
+      <div>
+        <h4>Jelajahi</h4>
+        <a href="#">Beranda</a>
+        <a href="#">Katalog Ayam</a>
+        <a href="#">Tentang Kandang</a>
+        <a href="#">Kontak &amp; Kunjungan</a>
+      </div>
+      <div>
+        <h4>Hubungi Kami</h4>
+        <a href="#">+62 812-3456-7890 (WhatsApp)</a>
+        <a href="#">jalu@kandang.example</a>
+        <a href="#">Jl. Pahlawan No. 12, Surakarta, Jawa Tengah</a>
+        <a href="#">Kunjungan: Sabtu–Minggu, 08.00–15.00 WIB</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Kandang Jalu. Seluruh hak cipta.</span>
+      <span>Desain dirancang khusus — merah bata &amp; krem, warisan Nusantara.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
