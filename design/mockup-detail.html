@@ -172,6 +172,33 @@
   .rmodal-card .rf .hint{font-size:11px;color:var(--ink-faint)}
   .rmodal-card .r-ok{display:none;margin-top:11px;border:1px solid #C9D6C4;background:#ECF3E9;color:#33503E;font-size:13px;padding:9px 13px}
 
+
+  /* rekap pertarungan */
+  .laga{background:var(--card);border:1px solid var(--krem-300);margin-top:28px}
+  .laga-h{display:flex;align-items:baseline;gap:10px;padding:16px 20px 0}
+  .laga-h h3{font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--bata-700);font-weight:600}
+  .laga-h span{font-size:12.5px;color:var(--ink-faint);font-style:italic;margin-left:auto}
+  .laga-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 20px}
+  .laga-sum .s{background:var(--paper);border:1px solid var(--krem-300);text-align:center;padding:14px 8px}
+  .laga-sum .n{font-size:30px;font-weight:700;line-height:1;font-family:Georgia,serif}
+  .laga-sum .n.w{color:#2c5a3f}.laga-sum .n.l{color:#a02f24}.laga-sum .n.d{color:#7c5a14}
+  .laga-sum .t{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);margin-top:5px}
+  .laga-rate{font-size:12.5px;color:var(--ink-muted);font-style:italic;padding:0 20px 14px}
+  .laga-rate b{color:var(--emas-700);font-weight:600}
+  .laga-list{border-top:1px solid var(--krem-300)}
+  .lrow{display:grid;grid-template-columns:118px 1fr auto;gap:14px;padding:12px 20px;border-bottom:1px dashed var(--krem-300);align-items:center}
+  .lrow:last-child{border-bottom:0}
+  .lrow .dt{font-size:13px;color:var(--ink-muted);font-weight:600}
+  .lrow .dd b{display:block;font-size:14.5px;color:var(--ink);font-weight:600}
+  .lrow .dd span{font-size:12.5px;color:var(--ink-muted)}
+  .lrow .dd .ct{font-size:12px;color:var(--ink-faint);font-style:italic;margin-top:2px}
+  .res{font-size:10px;font-weight:700;letter-spacing:.1em;padding:5px 12px;border-radius:3px;text-transform:uppercase;white-space:nowrap}
+  .res.win{background:var(--st-tersedia-bg);color:#2c5a3f}
+  .res.loss{background:#F6E3E0;color:#9c2f24}
+  .res.draw{background:var(--st-dipesan-bg);color:#7c5a14}
+  .laga-note{padding:12px 20px;font-size:12px;color:var(--ink-faint);font-style:italic}
+  @media (max-width:620px){.lrow{grid-template-columns:1fr;gap:6px}.lrow .res{justify-self:start}}
+
 </style>
 </head>
 <body>
@@ -247,6 +274,24 @@
       <div class="desc">
         <h3>Catatan Kandang</h3>
         <p>Rajawali adalah jagoan andalan garis F1 kami — anak dari indukan juara yang telah lama kami pelihara di kandang ini. Ia telah dua kali diuji tanding terbatas dan menang penuh tanpa cacat. Cocok bagi kolektor yang mencari jantan siap laga sekaligus pejantan untuk program pembibitan.</p>
+      </div>
+
+      <!-- rekap pertarungan -->
+      <div class="laga">
+        <div class="laga-h"><h3>Rekap Pertarungan</h3><span>10 laga tercatat · rekap otomatis</span></div>
+        <div class="laga-sum">
+          <div class="s"><div class="n w">8</div><div class="t">Menang</div></div>
+          <div class="s"><div class="n l">1</div><div class="t">Kalah</div></div>
+          <div class="s"><div class="n d">1</div><div class="t">Seri</div></div>
+        </div>
+        <div class="laga-rate">Rasio kemenangan <b>80%</b> · dihitung otomatis dari daftar laga di bawah (seluruh uji bersifat <b>terbatas/ramah ayam</b> — tanpa cedera berat).</div>
+        <div class="laga-list">
+          <div class="lrow"><div class="dt">12 Jun 2026</div><div class="dd"><b>Bima Blitar</b><span>Uji terbatas · 3,45 kg · ronde 3</span><div class="ct">Pukulan kanan rapat, tahan pukulan baik.</div></div><span class="res win">Menang</span></div>
+          <div class="lrow"><div class="dt">3 Mei 2026</div><div class="dd"><b>Jago Klaten</b><span>Uji terbatas · 3,55 kg · ronde 2</span><div class="ct">Kuncian leher rapat sejak ronde awal.</div></div><span class="res win">Menang</span></div>
+          <div class="lrow"><div class="dt">17 Feb 2026</div><div class="dd"><b>Jalu Selatan</b><span>Uji terbatas · 3,60 kg · ronde 5</span><div class="ct">Dihentikan kedua pihak — kondisi aman.</div></div><span class="res draw">Seri</span></div>
+          <div class="lrow"><div class="dt">9 Des 2025</div><div class="dd"><b>Hitam Magelang</b><span>Uji terbatas · 3,50 kg · ronde 4</span><div class="ct">Lelah di ronde akhir — bahan evaluasi stamina.</div></div><span class="res loss">Kalah</span></div>
+        </div>
+        <div class="laga-note">Seluruh hasil ditulis apa adanya oleh pemilik sebagai poin penilaian — silakan tanyakan detail via WhatsApp.</div>
       </div>
 
       <div class="buy">

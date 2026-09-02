@@ -49,6 +49,11 @@ FIELDS = {
              ('no_wa','','VARCHAR(25)'),('jenis','','ENUM INFO_TDK_UPD/DLL'),
              ('isi','','TEXT'),('status','','ENUM BARU/DITINDAKLANJUTI'),
              ('created_at','','TIMESTAMP'),('updated_at','','TIMESTAMP')],
+ 'RIWAYAT_TARUNG': [('id','PK','BIGINT'),('ayam_id','FK ayam','BIGINT'),('tanggal','','DATE'),
+                     ('jenis_laga','','ENUM UJI/ADU'),('nama_lawan','','VARCHAR(120)'),
+                     ('berat_lawan','','DECIMAL(5,2)'),('ronde','','INT'),
+                     ('hasil','','ENUM M/K/S'),('catatan','','VARCHAR(255)'),
+                     ('created_at','','TIMESTAMP'),('updated_at','','TIMESTAMP')],
  'AKTIVITAS_LOG': [('id','PK','BIGINT'),('user_id','FK users','BIGINT'),('aksi','','ENUM'),
                    ('entitas','','VARCHAR(50)'),('entitas_id','','BIGINT'),('detail','','JSON'),
                    ('created_at','','TIMESTAMP')],
@@ -63,6 +68,7 @@ RECTS = {
  'ayam':       dict(x=610, y=330, name='AYAM',           sub='entitas pusat katalog',             star=True),
  'images':     dict(x=1120,y=330, name='AYAM_IMAGES',    sub='galeri foto · 1 ayam → banyak',     star=False),
  'permintaan': dict(x=50,  y=600, name='PERMINTAAN',     sub='form “Saya Tertarik” · via web publik',   star=False),
+ 'riwayat':    dict(x=50,  y=900, name='RIWAYAT_TARUNG', sub='rekam laga per ayam', star=False),
  'log':        dict(x=1120,y=640, name='AKTIVITAS_LOG',  sub='jejak perubahan (untuk pemilik)',         star=False),
  'laporan':    dict(x=1120,y=880, name='LAPORAN', sub='bendera laporan pengunjung', star=False),
  'laporan':    dict(x=1120,y=880, name='LAPORAN', sub='bendera laporan pengunjung', star=False),
@@ -140,6 +146,7 @@ REL = [
  ('diminati',    [anchor('permintaan', 'right', 0.55), anchor('ayam', 'left', 0.62)]),
  ('mencatat aksi', [anchor('users', 'right', 0.24), (1522, 95), (1522, 740), anchor('log', 'right', 0.55)]),
  ('laporan', [anchor('ayam', 'bottom', 0.30), (700, 1060), (1120, 1060)]),
+ ('riwayat laga', [anchor('ayam', 'bottom', 0.58), (784, 852), (120, 852), anchor('riwayat', 'top', 0.233)]),
 ]
 
 # --- validasi geometri ---

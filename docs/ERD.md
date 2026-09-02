@@ -3,8 +3,8 @@
 
 | | |
 |---|---|
-| **Versi** | 4.0 (rev.4: + ukuran/ciri yang lazim ditanya + entitas LAPORAN) |
-| **Tanggal** | 2 September 2026 · rev.4 |
+| **Versi** | 5.0 (rev.5: + entitas RIWAYAT_TARUNG utk rekap menang/kalah/seri) |
+| **Tanggal** | 2 September 2026 · rev.5 |
 | **Lampiran** | DDL lengkap → [`schema.sql`](schema.sql) · diagram vektor → [`diagrams/erd.svg`](diagrams/erd.svg) |
 
 ---
@@ -35,7 +35,22 @@ erDiagram
 
     AYAM ||--|{ AYAM_IMAGES : "galeri"
     AYAM |o--o{ PERMINTAAN : "diminati"
+    AYAM |o--o{ RIWAYAT_TARUNG : "riwayat laga"
     AYAM |o--o{ LAPORAN : "dilaporkan"
+
+    RIWAYAT_TARUNG {
+        BIGINT id PK
+        BIGINT ayam_id FK
+        DATE tanggal
+        ENUM jenis_laga "UJI_TERBATAS|ADU_RESMI"
+        VARCHAR nama_lawan
+        DECIMAL berat_lawan
+        INT ronde
+        ENUM hasil "MENANG|KALAH|SERI"
+        VARCHAR catatan
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
 
     LAPORAN {
         BIGINT id PK
@@ -224,7 +239,24 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 | status | ENUM(`BARU`,`DIHUBUNGI`,`DEAL`,`BATAL`) | wajib | dikelola pemilik di panel |
 | created_at / updated_at | TIMESTAMP | | |
 
-### 3.6 `laporan` — Bendera laporan dari pengunjung
+### 3.6 `riwayat_tarung` — Rekaman laga/uji (menang/kalah/seri)
+
+| Kolom | Tipe | Ketentuan | Catatan |
+|---|---|---|---|
+| id | BIGINT | PK | |
+| ayam_id | BIGINT | **FK → ayam** (wajib) | laga milik ayam mana |
+| tanggal | DATE | wajib | tanggal laga/uji |
+| jenis_laga | ENUM(`UJI_TERBATAS`,`ADU_RESMI`) | wajib | default uji terbatas |
+| nama_lawan | VARCHAR(120) | opsional | mis. *Bima Blitar* |
+| berat_lawan | DECIMAL(5,2) | opsional | kg |
+| ronde | INT | opsional | ronde terakhir |
+| hasil | ENUM(`MENANG`,`KALAH`,`SERI`) | wajib | |
+| catatan | VARCHAR(255) | opsional | kondisi / catatan singkat |
+| created_at / updated_at | TIMESTAMP | | |
+
+> **Kunci desain:** rekap menang/kalah/seri **tidak disimpan** sebagai angka — dihitung otomatis (`COUNT` hasil) dari baris `riwayat_tarung` setiap kali ditampilkan. Karena ayam betina/indukan umumnya tidak diadu, ayam tanpa baris laga otomatis tidak menampilkan rekap (label "bukan ayam laga / tidak diadu").
+
+### 3.7 `laporan` — Bendera laporan dari pengunjung
 
 | Kolom | Tipe | Ketentuan | Catatan |
 |---|---|---|---|
@@ -239,7 +271,7 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 
 > **Fungsi:** setiap kartu katalog memiliki tombol bendera "Laporkan". Pengunjung menggunakannya bila data dirasa tidak update (mis. sudah laku tapi masih tampil, harga/foto keliru). Laporan **tidak mengubah data apa pun secara otomatis** — hanya pemberitahuan yang masuk ke panel pemilik.
 
-### 3.7 `aktivitas_log` — Jejak perubahan
+### 3.8 `aktivitas_log` — Jejak perubahan
 
 | Kolom | Tipe | Ketentuan | Catatan |
 |---|---|---|---|
@@ -267,6 +299,8 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 8. **Efek hitam-putih saat "Terjual" adalah murni tampilan (CSS `grayscale`)** di sisi aplikasi — file gambar asli selalu disimpan berwarna. Jika status dikembalikan (mis. `terjual → tersedia` karena batal), foto otomatis berwarna kembali tanpa kehilangan data apa pun.
 9. **`laporan.ayam_id` nullable & `ON DELETE SET NULL`** — riwayat laporan tetap ada meski ayam dihapus; pemilik tetap bisa menelusuri.
 10. Ukuran/ciri (postur, tinggi, kaki & sisik, jalu) disimpan di `ayam` karena satu kandang, dan selalu ditampilkan publik bila terisi — membantu transaksi yang biasa menanyakan hal tersebut.
+11. **`riwayat_tarung.ayam_id` `ON DELETE CASCADE`** — menghapus ayam menghapus riwayat laganya (data laga tak bermakna tanpa ayam). Penghapusan permanen oleh pemilik tetap tercatat di log.
+12. **Rekap laga = tampilan terhitung** (COUNT dari riwayat_tarung): kartu menampilkan Menang/Kalah/Seri; halaman detail menampilkan rekap + daftar kronologis. Admin cukup menambah satu baris hasil (tanggal, lawan, hasil) — tidak perlu menghitung manual.
 
 ---
 
@@ -280,6 +314,7 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 | ayam_images | Galeri multi-foto & foto utama (PF-04, AF-04) |
 | permintaan | Form "Saya Tertarik" (PF-05, AF-09) |
 | laporan | Bendera "Laporkan" pada kartu katalog (PF-08, AF-06) |
+| riwayat_tarung | Rekap & riwayat laga — poin penilaian pembeli (PF-14/15, AF-12) |
 | aktivitas_log | Log perubahan (AF-10) |
 
 ---

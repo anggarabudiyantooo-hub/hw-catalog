@@ -1,6 +1,6 @@
 -- =====================================================================
 --  JALU — Galeri Ayam Bangkok
---  Skema Basis Data MySQL 8.x  (DDL)  — rev.4 sesuai keputusan pemilik
+--  Skema Basis Data MySQL 8.x  (DDL)  — rev.5 sesuai keputusan pemilik
 --  Perubahan rev.2:
 --    1. Umur TIDAK disimpan (angka cepat basi) — cukup tanggal menetas,
 --       usia dihitung otomatis oleh aplikasi saat ditampilkan.
@@ -11,6 +11,8 @@
 --    5. ayam + kolom ukuran/ciri yang lazim ditanya pembeli (opsional):
 --       postur, tinggi_cm, kaki_sisik, jalu.
 --    6. tabel laporan: bendera laporan pengunjung bila info tidak update.
+--    7. tabel riwayat_tarung: rekam tiap laga/uji (hasil M/K/S) -> rekap menang/
+--       kalah/seri dihitung otomatis dan jadi poin penilaian pembeli.
 --    Catatan: efek "Terjual -> foto hitam-putih" adalah tampilan aplikasi,
 --       bukan kolom basis data (file asli selalu berwarna).
 --  Sumber referensi: docs/PRD.md dan docs/ERD.md
@@ -152,7 +154,29 @@ CREATE TABLE laporan (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- 7. AKTIVITAS_LOG — jejak perubahan (dilihat pemilik)
+-- 7. RIWAYAT_TARUNG — rekaman tiap laga/uji ayam (hasil & catatan)
+--    Rekap menang/kalah/seri TIDAK disimpan; dihitung otomatis dari baris ini.
+-- ---------------------------------------------------------------------
+CREATE TABLE riwayat_tarung (
+    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    ayam_id     BIGINT UNSIGNED NOT NULL,
+    tanggal     DATE            NOT NULL,
+    jenis_laga  ENUM('UJI_TERBATAS','ADU_RESMI') NOT NULL DEFAULT 'UJI_TERBATAS',
+    nama_lawan  VARCHAR(120)    NULL,
+    berat_lawan DECIMAL(5,2)    NULL,            -- kg, opsional
+    ronde       INT             NULL,            -- ronde terakhir yg dijalani (opsional)
+    hasil       ENUM('MENANG','KALAH','SERI') NOT NULL,
+    catatan     VARCHAR(255)    NULL,            -- kondisi, catatan singkat
+    created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_rt_ayam_tgl (ayam_id, tanggal),
+    CONSTRAINT fk_rt_ayam FOREIGN KEY (ayam_id)
+        REFERENCES ayam (id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- 8. AKTIVITAS_LOG — jejak perubahan (dilihat pemilik)
 -- ---------------------------------------------------------------------
 CREATE TABLE aktivitas_log (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
