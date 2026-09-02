@@ -50,10 +50,10 @@ export async function setSessionCookie(userId: number): Promise<void> {
   const store = await cookies();
   store.set(COOKIE, createSession(userId), {
     httpOnly: true,
-    sameSite: "lax",
-    // CATATAN DEMO: Secure dimatikan agar sesi tetap jalan walau preview/http.
-    // Saat produksi pakai HTTPS murni, set secure: true.
-    secure: false,
+    // SameSite=None + Secure supaya sesi tersimpan walau situs dibuka di dalam
+    // iframe lintas-situs (preview Arena). Wajib HTTPS — preview & produksi HTTPS.
+    sameSite: "none",
+    secure: true,
     path: "/",
     maxAge: MAX_AGE,
   });
@@ -61,7 +61,14 @@ export async function setSessionCookie(userId: number): Promise<void> {
 
 export async function clearSessionCookie(): Promise<void> {
   const store = await cookies();
-  store.delete(COOKIE);
+  // padamkan dengan atribut sama supaya browser benar-benar membuang cookie
+  store.set(COOKIE, "", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    path: "/",
+    maxAge: 0,
+  });
 }
 
 /** Mengambil User pemilik dari cookie sesi; null bila belum login. */
