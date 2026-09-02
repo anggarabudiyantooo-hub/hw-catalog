@@ -3,8 +3,8 @@
 
 | | |
 |---|---|
-| **Versi** | 3.0 (rev.3: + jenis foto wajib full badan/kepala/kaki, umur otomatis tetap ditampilkan) |
-| **Tanggal** | 2 September 2026 · rev.3 |
+| **Versi** | 4.0 (rev.4: + ukuran/ciri yang lazim ditanya + entitas LAPORAN) |
+| **Tanggal** | 2 September 2026 · rev.4 |
 | **Lampiran** | DDL lengkap → [`schema.sql`](schema.sql) · diagram vektor → [`diagrams/erd.svg`](diagrams/erd.svg) |
 
 ---
@@ -35,6 +35,19 @@ erDiagram
 
     AYAM ||--|{ AYAM_IMAGES : "galeri"
     AYAM |o--o{ PERMINTAAN : "diminati"
+    AYAM |o--o{ LAPORAN : "dilaporkan"
+
+    LAPORAN {
+        BIGINT id PK
+        BIGINT ayam_id FK
+        VARCHAR nama_pelapor
+        VARCHAR no_wa
+        ENUM jenis "INFO_TIDAK_UPDATE|..."
+        TEXT isi
+        ENUM status "BARU|DITINDAKLANJUTI|SELESAI|TUTUP"
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
 
     USERS {
         BIGINT id PK
@@ -64,6 +77,10 @@ erDiagram
         DATE tanggal_menetas "perkiraan"
         DECIMAL berat_kg
         VARCHAR warna_bulu
+        VARCHAR postur
+        DECIMAL tinggi_cm
+        VARCHAR kaki_sisik
+        ENUM jalu "BELUM|TUNGGAL|GANDA"
         TEXT keunggulan
         TEXT deskripsi
         DECIMAL harga
@@ -156,6 +173,10 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 | tanggal_menetas | DATE | nullable (perkiraan) | **usia dihitung otomatis** aplikasi dari tanggal ini |
 | berat_kg | DECIMAL(5,2) | wajib | berat terakhir yang dicatat |
 | warna_bulu | VARCHAR(80) | opsional | mis. *Hitam, dada merah tembaga* |
+| postur | VARCHAR(80) | opsional | label postur/ukuran, mis. *Besar & kekar, dada bidang* |
+| tinggi_cm | DECIMAL(5,1) | opsional | tinggi punggung (± cm) |
+| kaki_sisik | VARCHAR(80) | opsional | mis. *sisik halus rapat, kering* |
+| jalu | ENUM(`BELUM`,`TUNGGAL`,`GANDA`) | opsional | kondisi jalu |
 | keunggulan | TEXT | opsional | bullet singkat (garis bawah, pukulan…) |
 | deskripsi | TEXT | opsional | catatan kandang |
 | harga | DECIMAL(12,0) | nullable | **NULL = "Hubungi kami"** |
@@ -168,6 +189,7 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 
 > **Alasan desain:** umur **tidak disimpan** sebagai angka (mis. "18 bulan") karena cepat usang. Yang disimpan adalah `tanggal_menetas`; tampilan usia ("± X bulan") dihitung aplikasi pada saat render sehingga **selalu terbaru**. Jika tanggal menetas kosong, usia tidak ditampilkan.
 > Kolom `asal` (kota) **tidak ada**: satu peternakan, satu lokasi. Lokasi kandang cukup dituliskan di halaman "Tentang".
+> Kolom **ukuran/ciri di atas bersifat opsional** dan mewakili hal yang lazim ditanyakan pembeli (postur, tinggi, kaki & sisik, jalu). Bila kosong, baris terkait tidak ditampilkan di publik.
 
 ### 3.4 `ayam_images` — Galeri foto (satu ayam → banyak gambar)
 
@@ -202,7 +224,22 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 | status | ENUM(`BARU`,`DIHUBUNGI`,`DEAL`,`BATAL`) | wajib | dikelola pemilik di panel |
 | created_at / updated_at | TIMESTAMP | | |
 
-### 3.6 `aktivitas_log` — Jejak perubahan
+### 3.6 `laporan` — Bendera laporan dari pengunjung
+
+| Kolom | Tipe | Ketentuan | Catatan |
+|---|---|---|---|
+| id | BIGINT | PK | |
+| ayam_id | BIGINT | **FK → ayam** (nullable) | ayam yang dilaporkan |
+| nama_pelapor | VARCHAR(120) | opsional | |
+| no_wa | VARCHAR(25) | opsional | bila perlu dihubungi balik |
+| jenis | ENUM(`INFO_TIDAK_UPDATE`,`MASIH_TAMPIL_PADAHAL_TERJUAL`,`DATA_KELIRU`,`LAINNYA`) | wajib | dipilih pengunjung |
+| isi | TEXT | opsional | keterangan |
+| status | ENUM(`BARU`,`DITINDAKLANJUTI`,`SELESAI`,`TUTUP`) | wajib | dikelola pemilik |
+| created_at / updated_at | TIMESTAMP | | |
+
+> **Fungsi:** setiap kartu katalog memiliki tombol bendera "Laporkan". Pengunjung menggunakannya bila data dirasa tidak update (mis. sudah laku tapi masih tampil, harga/foto keliru). Laporan **tidak mengubah data apa pun secara otomatis** — hanya pemberitahuan yang masuk ke panel pemilik.
+
+### 3.7 `aktivitas_log` — Jejak perubahan
 
 | Kolom | Tipe | Ketentuan | Catatan |
 |---|---|---|---|
@@ -228,6 +265,8 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 6. Harga bertipe `DECIMAL` (bukan float); tampilan memakai pemisah ribuan (`Rp 3.500.000`).
 7. **Indeks** untuk query yang sering: status publikasi, kategori, status jual, tanggal menetas; unik pada `email`, `slug`, `kode_ring` (jika terisi).
 8. **Efek hitam-putih saat "Terjual" adalah murni tampilan (CSS `grayscale`)** di sisi aplikasi — file gambar asli selalu disimpan berwarna. Jika status dikembalikan (mis. `terjual → tersedia` karena batal), foto otomatis berwarna kembali tanpa kehilangan data apa pun.
+9. **`laporan.ayam_id` nullable & `ON DELETE SET NULL`** — riwayat laporan tetap ada meski ayam dihapus; pemilik tetap bisa menelusuri.
+10. Ukuran/ciri (postur, tinggi, kaki & sisik, jalu) disimpan di `ayam` karena satu kandang, dan selalu ditampilkan publik bila terisi — membantu transaksi yang biasa menanyakan hal tersebut.
 
 ---
 
@@ -237,10 +276,11 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 |---|---|
 | users (pemilik) | Login pengelola tunggal (PRD AF-01) |
 | kategori | Filter & kelompok ayam (PF-03, AF-06) |
-| ayam + tanggal_menetas + status_jual + is_featured | Display katalog, usia otomatis & info penjualan (PF-01..04, AF-03) |
+| ayam + tanggal_menetas + status_jual + is_featured + kolom ukuran/ciri | Display katalog, usia otomatis & info penjualan (PF-01..04, AF-03) |
 | ayam_images | Galeri multi-foto & foto utama (PF-04, AF-04) |
-| permintaan | Form "Saya Tertarik" (PF-05, AF-07) |
-| aktivitas_log | Log perubahan (AF-08) |
+| permintaan | Form "Saya Tertarik" (PF-05, AF-09) |
+| laporan | Bendera "Laporkan" pada kartu katalog (PF-08, AF-06) |
+| aktivitas_log | Log perubahan (AF-10) |
 
 ---
 *Bersama [`schema.sql`](schema.sql) sebagai sumber DDL definitif.*

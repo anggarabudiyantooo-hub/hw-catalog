@@ -3,9 +3,9 @@
 
 | | |
 |---|---|
-| **Versi** | 3.0 (revisi sesuai masukan pemilik) |
+| **Versi** | 4.0 (revisi sesuai masukan pemilik) |
 | **Tanggal** | 2 September 2026 |
-| **Status** | Menunggu persetujuan sebelum pengembangan (M0 → M1) · rev.3 |
+| **Status** | Menunggu persetujuan sebelum pengembangan (M0 → M1) · rev.4 |
 | **Produk** | "Jalu" — nama kerja, dapat diganti |
 
 **Ringkasan revisi 2.0:** umur dari tanggal menetas (otomatis); satu peternakan tanpa "asal kota"; pemilik tunggal tanpa role.
@@ -14,6 +14,11 @@
 1. **Sold out = sekali klik, foto otomatis hitam-putih.** Saat status jual dipilih **Terjual**, seluruh foto ayam itu tampil hitam-putih di katalog/galeri & panel. File asli tetap berwarna; bila status dikembalikan, foto kembali berwarna. (Tampilan aplikasi, bukan perubahan file.)
 2. **Ketentuan jenis foto wajib.** Tiap foto memiliki label jenis: **Full badan · Kepala · Kaki · Bulu/ekor · Lainnya**. Syarat publikasi: minimal ada **Full badan, Kepala, dan Kaki** (boleh lebih dari satu per jenis; opsional tambah Bulu/ekor & Lainnya).
 3. **Usia tetap tampil.** Selain tanggal menetas, kartu/galeri menampilkan **usia ± (bulan) yang dihitung otomatis** dari tanggal menetas — bukan angka yang diketik manual, sehingga selalu terbaru.
+
+**Ringkasan revisi 4.0:**
+1. **Ukuran & hal yang lazim ditanya pembeli** ditambahkan sebagai kolom opsional pada ayam: **postur/ukuran badan, tinggi punggung, kaki & sisik, jalu**. Bila terisi, tampil di halaman detail (dan ringkas di kartu bila relevan).
+2. **Setiap kartu katalog selalu menampilkan tombol "Hubungi"** (WhatsApp pemilik kandang) — kontak tidak pernah hilang, sekaligus menyiapkan kemungkinan penitip iklan/ayam dari pihak lain yang semuanya tetap ditangani satu pengelola.
+3. **Bendera "Laporkan" per kartu katalog**: pengunjung bisa melaporkan info yang tidak diperbarui/keliru (mis. sudah laku tapi masih tampil) → masuk ke tabel `laporan`, dikelola pemilik di panel. Laporan tidak mengubah data otomatis.
 
 ---
 
@@ -71,30 +76,33 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 | ID | Kebutuhan | Prioritas |
 |---|---|---|
 | PF-01 | **Beranda:** sapaan singkat (hero), ayam unggulan/featured (maks. 3), kategori, ajakan menghubungi kandang. | P0 |
-| PF-02 | **Katalog:** grid kartu ayam berisi foto utama, nama/kode, kategori, **tanggal menetas + usia ± otomatis**, berat, harga (atau "Hubungi kami"), badge status. | P0 |
+| PF-02 | **Katalog:** grid kartu ayam berisi foto utama, nama/kode, kategori, **tanggal menetas + usia ± otomatis**, berat, harga (atau "Hubungi kami"), badge status, dan **tombol "Hubungi" yang selalu tampil** pada setiap kartu. | P0 |
 | PF-03 | **Pencarian & filter:** teks (nama/kode), kategori, jenis kelamin, status ketersediaan; urutkan (terbaru/termahal/termurah/nama). Ayam "terjual" dapat ditampilkan sebagai riwayat (opsi). | P1 |
-| PF-04 | **Halaman detail:** galeri multi-foto (perbesar + thumbnail), spesifikasi (kategori, kelamin, tanggal menetas, **usia otomatis**, berat, warna bulu, ring), keunggulan, deskripsi, harga & status, tombol "Saya Tertarik". | P0 |
+| PF-04 | **Halaman detail:** galeri multi-foto berlabel jenis (full badan/kepala/kaki/bulu/lainnya), spesifikasi inti (kelamin, tanggal menetas, **usia otomatis**, berat, warna bulu, ring), harga & status, tombol "Saya Tertarik". | P0 |
 | PF-05 | **Form "Saya Tertarik":** nama, nomor WhatsApp, kota pembeli (opsional), pesan/penawaran (opsional) → tersimpan sebagai permintaan + tautan WhatsApp. | P0 |
 | PF-06 | **Tentang & kontak:** narasi kandang, alamat (satu lokasi), WhatsApp/telepon, jam layanan. | P2 |
-| PF-07 | Halaman 404 ramah & halaman status kosong. | P2 |
-| PF-08 | **Responsif** (desktop/tablet/ponsel). | P0 |
-| PF-09 | SEO dasar & kinerja gambar (thumbnail/webp). | P1/P2 |
+| PF-07 | **Detail memuat ukuran & ciri yang lazim ditanya** bila diisi: postur/ukuran badan, tinggi punggung, kaki & sisik, jalu — selain data inti. | P1 |
+| PF-08 | **Bendera "Laporkan"** pada setiap kartu/detail ayam: pilih jenis masalah (info tidak update, sudah terjual tapi masih tampil, data/foto keliru, lainnya) + keterangan → tersimpan sebagai laporan untuk pemilik. | P1 |
+| PF-09 | Halaman 404 ramah & halaman status kosong. | P2 |
+| PF-10 | **Responsif** (desktop/tablet/ponsel). | P0 |
+| PF-11 | SEO dasar & kinerja gambar (thumbnail/webp). | P1/P2 |
+| PF-12 | Seluruh kartu menyiapkan kontak bagi pihak yang ingin **menitipkan ayam/iklan** — diproses manual pemilik (tetap satu pengelola; kandidat v2 bila menjadi rutin). | P3 |
 
 ### 4.B Sisi Pemilik (login)
 
 | ID | Kebutuhan | Prioritas |
 |---|---|---|
 | AF-01 | **Login** satu akun (email + kata sandi, hash). | P0 |
-| AF-02 | **Dashboard ringkasan:** total ayam, tersedia, dipesan, permintaan baru. | P1 |
+| AF-02 | **Dashboard ringkasan:** total ayam, tersedia, dipesan, permintaan baru, laporan baru. | P1 |
 | AF-03 | **CRUD Ayam:** buat/ubah/arsip (soft delete)/pulihkan/hapus permanen. Field: kode/nomor ring, nama, kategori, jenis kelamin, **tanggal menetas (perkiraan)** → usia otomatis, berat (kg), warna bulu, keunggulan, deskripsi, harga (kosong = "Hubungi kami"), status jual, status tampil (draft/publikasi), unggulan. | P0 |
 | AF-04 | **Galeri multi-foto:** unggah banyak; setiap foto diberi **jenis foto** (Full badan/Kepala/Kaki/Bulu & ekor/Lainnya); atur foto utama & urutan; hapus; alt text; validasi tipe/ukuran; thumbnail otomatis. | P0 |
-| AF-05 | **Daftar ayam (tabel):** thumbnail, kode/nama, kategori, status, harga, tanggal menetas/berat; pencarian & filter; aksi. | P0 |
-| AF-06 | **Kelola kategori** (CRUD kecil); hapus dicegah bila masih terpakai. | P1 |
-| AF-07 | **Kelola permintaan:** daftar minat pembeli; ubah status `baru → dihubungi → deal/batal`; tautan cepat WhatsApp. | P1 |
-| AF-08 | **Log aktivitas:** catatan perubahan pemilik (siapa/kapan/aksi). | P2 |
-| AF-09 | **Anti salah-klik:** konfirmasi hapus; hapus permanen minta ketik ulang kata kunci. | P2 |
-
----
+| AF-05 | **Kolom ukuran/ciri (opsional)** pada form ayam: postur/ukuran badan, tinggi punggung, kaki & sisik, jalu — disarankan diisi (lazim ditanya pembeli). | P1 |
+| AF-06 | **Kelola laporan katalog:** daftar laporan bendera dari pengunjung; ubah status `baru → ditindaklanjuti → selesai/tutup`; akses cepat ke ayam terkait. | P1 |
+| AF-07 | **Daftar ayam (tabel):** thumbnail, kode/nama, kategori, status, harga, tanggal menetas/berat; pencarian & filter; aksi. | P0 |
+| AF-08 | **Kelola kategori** (CRUD kecil); hapus dicegah bila masih terpakai. | P1 |
+| AF-09 | **Kelola permintaan:** daftar minat pembeli; ubah status `baru → dihubungi → deal/batal`; tautan cepat WhatsApp. | P1 |
+| AF-10 | **Log aktivitas:** catatan perubahan pemilik (siapa/kapan/aksi). | P2 |
+| AF-11 | **Anti salah-klik:** konfirmasi hapus; hapus permanen minta ketik ulang kata kunci. | P2 |
 
 ## 5. Aturan Bisnis (Business Rules)
 

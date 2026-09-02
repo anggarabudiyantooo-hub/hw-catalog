@@ -30,6 +30,8 @@ FIELDS = {
           ('nama','','VARCHAR(120)'),('kategori_id','FK kategori','BIGINT'),
           ('jenis_kelamin','','ENUM JANTAN/BETINA'),('tanggal_menetas','','DATE'),
           ('berat_kg','','DECIMAL(5,2)'),('warna_bulu','','VARCHAR(80)'),
+          ('postur','','VARCHAR(80)'),('tinggi_cm','','DECIMAL(5,1)'),
+          ('kaki_sisik','','VARCHAR(80)'),('jalu','','ENUM'),
           ('keunggulan','','TEXT'),('deskripsi','','TEXT'),
           ('harga','','DECIMAL(12,0)'),('status_jual','','ENUM TERSEDIA/DIPESAN/TERJUAL'),
           ('status_tampil','','ENUM DRAFT/PUBLIKASI'),('is_featured','','BOOL'),
@@ -38,17 +40,19 @@ FIELDS = {
  'AYAM_IMAGES': [('id','PK','BIGINT'),('ayam_id','FK ayam','BIGINT'),('file_path','','VARCHAR(255)'),
                  ('file_path_thumb','','VARCHAR(255)'),('ukuran_kb','','INT'),('lebar_px','','INT'),
                  ('tinggi_px','','INT'),('alt_text','','VARCHAR(255)'),('jenis_foto','','ENUM WB/KP/KK/BL/LN'),
-('is_primary','','BOOL'),
-                 ('urutan','','INT'),('created_at','','TIMESTAMP')],
+                 ('is_primary','','BOOL'),('urutan','','INT'),('created_at','','TIMESTAMP')],
  'PERMINTAAN': [('id','PK','BIGINT'),('ayam_id','FK ayam','BIGINT'),('nama_pengunjung','','VARCHAR(120)'),
                 ('no_wa','','VARCHAR(25)'),('kota','','VARCHAR(100)'),('pesan','','TEXT'),
                 ('status','','ENUM BARU/DIHUBUNGI/DEAL/BATAL'),
                 ('created_at','','TIMESTAMP'),('updated_at','','TIMESTAMP')],
+ 'LAPORAN': [('id','PK','BIGINT'),('ayam_id','FK ayam','BIGINT'),('nama_pelapor','','VARCHAR(120)'),
+             ('no_wa','','VARCHAR(25)'),('jenis','','ENUM INFO_TDK_UPD/DLL'),
+             ('isi','','TEXT'),('status','','ENUM BARU/DITINDAKLANJUTI'),
+             ('created_at','','TIMESTAMP'),('updated_at','','TIMESTAMP')],
  'AKTIVITAS_LOG': [('id','PK','BIGINT'),('user_id','FK users','BIGINT'),('aksi','','ENUM'),
                    ('entitas','','VARCHAR(50)'),('entitas_id','','BIGINT'),('detail','','JSON'),
                    ('created_at','','TIMESTAMP')],
 }
-
 def box_h(n):
     return 30 + n * 18 + 18
 
@@ -60,6 +64,8 @@ RECTS = {
  'images':     dict(x=1120,y=330, name='AYAM_IMAGES',    sub='galeri foto · 1 ayam → banyak',     star=False),
  'permintaan': dict(x=50,  y=600, name='PERMINTAAN',     sub='form “Saya Tertarik” · via web publik',   star=False),
  'log':        dict(x=1120,y=640, name='AKTIVITAS_LOG',  sub='jejak perubahan (untuk pemilik)',         star=False),
+ 'laporan':    dict(x=1120,y=880, name='LAPORAN', sub='bendera laporan pengunjung', star=False),
+ 'laporan':    dict(x=1120,y=880, name='LAPORAN', sub='bendera laporan pengunjung', star=False),
 }
 for k in RECTS:
     RECTS[k]['h'] = box_h(len(FIELDS[RECTS[k]['name']]))
@@ -133,6 +139,7 @@ REL = [
  ('galeri foto', [anchor('ayam', 'right', 0.30), anchor('images', 'left', 0.42)]),
  ('diminati',    [anchor('permintaan', 'right', 0.55), anchor('ayam', 'left', 0.62)]),
  ('mencatat aksi', [anchor('users', 'right', 0.24), (1522, 95), (1522, 740), anchor('log', 'right', 0.55)]),
+ ('laporan', [anchor('ayam', 'bottom', 0.30), (700, 1060), (1120, 1060)]),
 ]
 
 # --- validasi geometri ---

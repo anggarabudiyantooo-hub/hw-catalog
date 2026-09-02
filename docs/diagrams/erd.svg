@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1530" height="909" viewBox="0 0 1530 909" font-family="Georgia, 'Times New Roman', serif">
-<rect width="1530" height="909" fill="#F7F0E2"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1530" height="1185" viewBox="0 0 1530 1185" font-family="Georgia, 'Times New Roman', serif">
+<rect width="1530" height="1185" fill="#F7F0E2"/>
 <line x1="0" y1="34" x2="1530" y2="34" stroke="#d8c8ac" stroke-width="1"/>
 <text x="50" y="24" font-size="21" font-weight="bold" fill="#8F2318" letter-spacing="1">ERD — “JALU” · Galeri Ayam Bangkok</text>
 <text x="1480" y="24" font-size="12" fill="#8A7A6A" text-anchor="end">v1.0 · 2 Sep 2026 · MySQL 8</text>
@@ -10,27 +10,27 @@
 <line x1="702.2540628420536" y1="283.77634073251863" x2="659.3776340732519" y2="326.17459371579463" stroke="#B97A5A" stroke-width="1.4"/>
 <line x1="702.2540628420536" y1="283.77634073251863" x2="668.6223659267481" y2="333.82540628420537" stroke="#B97A5A" stroke-width="1.4"/>
 <text x="712.0" y="272.0" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">created_by</text>
-<path d="M 350 403.08 L 610 462.6" fill="none" stroke="#B97A5A" stroke-width="1.8" stroke-linecap="round"/>
-<line x1="349.3305483474387" y1="406.00435197691434" x2="348.1032203177429" y2="411.36566393459066" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="349.3305483474387" y1="406.00435197691434" x2="348.1032203177429" y2="411.36566393459066" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="610.8926022034151" y1="458.70086403078085" x2="612.008354957684" y2="453.82694406925697" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="551.5129604617129" y1="449.21096694877366" x2="608.6610966948774" y2="468.4487039538287" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="551.5129604617129" y1="449.21096694877366" x2="611.3389033051226" y2="456.7512960461713" stroke="#B97A5A" stroke-width="1.4"/>
-<text x="480.0" y="432.84000000000003" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">memiliki</text>
-<path d="M 910 447.0 L 1120 440.88" fill="none" stroke="#B97A5A" stroke-width="1.8" stroke-linecap="round"/>
-<line x1="910.0873914682504" y1="449.9987268517284" x2="910.2476091600428" y2="455.49639274656386" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="910.0873914682504" y1="449.9987268517284" x2="910.2476091600428" y2="455.49639274656386" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="1119.8834780423329" y1="436.88169753102875" x2="1119.737825595249" y2="431.8838194448147" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="1060.0254629654316" y1="442.6278293650074" x2="1120.1747829365008" y2="446.8774537034568" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="1060.0254629654316" y1="442.6278293650074" x2="1119.8252170634992" y2="434.8825462965432" stroke="#B97A5A" stroke-width="1.4"/>
-<text x="1015.0" y="443.94" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">galeri foto</text>
-<path d="M 350 715.5 L 610 571.8" fill="none" stroke="#B97A5A" stroke-width="1.8" stroke-linecap="round"/>
-<line x1="351.4511804820044" y1="718.125657100356" x2="354.1116780323458" y2="722.9393617843418" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="351.4511804820044" y1="718.125657100356" x2="354.1116780323458" y2="722.9393617843418" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="608.0650926906608" y1="568.2991238661921" x2="605.6464585539868" y2="563.9230286989322" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="557.4868579928816" y1="600.8236096400881" x2="612.9023609640088" y2="577.0513142007118" stroke="#B97A5A" stroke-width="1.4"/>
-<line x1="557.4868579928816" y1="600.8236096400881" x2="607.0976390359912" y2="566.5486857992881" stroke="#B97A5A" stroke-width="1.4"/>
-<text x="480.0" y="643.65" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">diminati</text>
+<path d="M 350 403.08 L 610 487.08000000000004" fill="none" stroke="#B97A5A" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="349.07770855075" y1="405.93471162863085" x2="347.3868408937917" y2="411.16834961445414" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="349.07770855075" y1="405.93471162863085" x2="347.3868408937917" y2="411.16834961445414" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="611.2297219323333" y1="483.2737178284922" x2="612.7668743477499" y2="478.5158651141074" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="552.9057674273824" y1="468.6341710150005" x2="608.1554171015" y2="492.7894232572618" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="552.9057674273824" y1="468.6341710150005" x2="611.8445828985" y2="481.3705767427383" stroke="#B97A5A" stroke-width="1.4"/>
+<text x="480.0" y="445.08000000000004" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">memiliki</text>
+<path d="M 910 468.6 L 1120 440.88" fill="none" stroke="#B97A5A" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="910.3925944871797" y1="471.5742006604525" x2="911.1123510470093" y2="477.0269018712821" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="910.3925944871797" y1="471.5742006604525" x2="911.1123510470093" y2="477.0269018712821" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="1119.4765406837603" y1="436.91439911939665" x2="1118.822216538461" y2="431.9573980186425" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="1060.51598679095" y1="448.7318897435946" x2="1120.7851889743595" y2="446.828401320905" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="1060.51598679095" y1="448.7318897435946" x2="1119.2148110256405" y2="434.931598679095" stroke="#B97A5A" stroke-width="1.4"/>
+<text x="1015.0" y="454.74" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">galeri foto</text>
+<path d="M 350 715.5 L 610 616.44" fill="none" stroke="#B97A5A" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="351.0681025596637" y1="718.3034187917683" x2="353.0262905857139" y2="723.4430199100102" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="351.0681025596637" y1="718.3034187917683" x2="353.0262905857139" y2="723.4430199100102" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="608.5758632537817" y1="612.7021082776423" x2="606.7956923210088" y2="608.0297436246951" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="553.9316241646335" y1="637.8020511932747" x2="612.1362051193274" y2="622.0468375835367" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="553.9316241646335" y1="637.8020511932747" x2="607.8637948806726" y2="610.8331624164634" stroke="#B97A5A" stroke-width="1.4"/>
+<text x="480.0" y="665.97" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">diminati</text>
 <path d="M 910 81.75999999999999 L 1522 95 L 1522 740 L 1420 735.7" fill="none" stroke="#B97A5A" stroke-width="1.8" stroke-linecap="round"/>
 <line x1="909.935113221899" y1="84.75929820225126" x2="909.8161541287138" y2="90.25801157304524" stroke="#B97A5A" stroke-width="1.4"/>
 <line x1="909.935113221899" y1="84.75929820225126" x2="909.8161541287138" y2="90.25801157304524" stroke="#B97A5A" stroke-width="1.4"/>
@@ -38,8 +38,15 @@
 <line x1="1479.9467549276033" y1="738.227167119497" x2="1420.2527167119497" y2="729.7053245072398" stroke="#B97A5A" stroke-width="1.4"/>
 <line x1="1479.9467549276033" y1="738.227167119497" x2="1419.7472832880503" y2="741.6946754927603" stroke="#B97A5A" stroke-width="1.4"/>
 <text x="1343.5" y="413.115" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">mencatat aksi</text>
-<text x="50" y="831" font-size="13" font-weight="bold" fill="#46291F">Legenda</text>
-<text x="50" y="851" font-size="11.5" fill="#46291F">Teks tebal merah = kunci utama (PK) · teks oranye = kunci tamu (FK → tabel) · UQ = unik</text>
-<text x="50" y="869" font-size="11.5" fill="#46291F">Relasi 1 — N : ujung garis bergaris-garis = sisi “banyak”; ujung bertanda dua garis = sisi “satu”.</text>
-<text x="50" y="887" font-size="10.5" fill="#8A7A6A" font-style="italic">Diagram dihasilkan dari skema — sumber definitif: docs/schema.sql · generator: design/_tools/gen_erd.py</text>
+<path d="M 700.0 792 L 700 1060 L 1120 1060" fill="none" stroke="#B97A5A" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="697.0" y1="792.0" x2="691.5" y2="792.0" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="697.0" y1="792.0" x2="691.5" y2="792.0" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="1120.0" y1="1056.0" x2="1120.0" y2="1051.0" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="1060.0" y1="1060.0" x2="1120.0" y2="1066.0" stroke="#B97A5A" stroke-width="1.4"/>
+<line x1="1060.0" y1="1060.0" x2="1120.0" y2="1054.0" stroke="#B97A5A" stroke-width="1.4"/>
+<text x="840.0" y="970.6666666666666" font-size="11.5" font-style="italic" fill="#7a4a34" text-anchor="middle" paint-order="stroke" stroke="#F7F0E2" stroke-width="5">laporan</text>
+<text x="50" y="1107" font-size="13" font-weight="bold" fill="#46291F">Legenda</text>
+<text x="50" y="1127" font-size="11.5" fill="#46291F">Teks tebal merah = kunci utama (PK) · teks oranye = kunci tamu (FK → tabel) · UQ = unik</text>
+<text x="50" y="1145" font-size="11.5" fill="#46291F">Relasi 1 — N : ujung garis bergaris-garis = sisi “banyak”; ujung bertanda dua garis = sisi “satu”.</text>
+<text x="50" y="1163" font-size="10.5" fill="#8A7A6A" font-style="italic">Diagram dihasilkan dari skema — sumber definitif: docs/schema.sql · generator: design/_tools/gen_erd.py</text>
 </svg>

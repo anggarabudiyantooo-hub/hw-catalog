@@ -1,6 +1,6 @@
 -- =====================================================================
 --  JALU — Galeri Ayam Bangkok
---  Skema Basis Data MySQL 8.x  (DDL)  — rev.3 sesuai keputusan pemilik
+--  Skema Basis Data MySQL 8.x  (DDL)  — rev.4 sesuai keputusan pemilik
 --  Perubahan rev.2:
 --    1. Umur TIDAK disimpan (angka cepat basi) — cukup tanggal menetas,
 --       usia dihitung otomatis oleh aplikasi saat ditampilkan.
@@ -8,6 +8,9 @@
 --    3. Multi-user (admin/petugas) disederhanakan -> SATU akun pemilik.
 --    4. ayam_images.jenis_foto (full badan/kepala/kaki/bulu/lainnya) untuk
 --       ketentuan foto wajib sebelum publikasi.
+--    5. ayam + kolom ukuran/ciri yang lazim ditanya pembeli (opsional):
+--       postur, tinggi_cm, kaki_sisik, jalu.
+--    6. tabel laporan: bendera laporan pengunjung bila info tidak update.
 --    Catatan: efek "Terjual -> foto hitam-putih" adalah tampilan aplikasi,
 --       bukan kolom basis data (file asli selalu berwarna).
 --  Sumber referensi: docs/PRD.md dan docs/ERD.md
@@ -59,6 +62,10 @@ CREATE TABLE ayam (
     tanggal_menetas  DATE            NULL,            -- perkiraan; usia = dihitung aplikasi
     berat_kg         DECIMAL(5,2)    NOT NULL,        -- berat terakhir yang dicatat
     warna_bulu       VARCHAR(80)     NULL,
+    postur           VARCHAR(80)     NULL,            -- mis. "Besar & kekar, dada bidang" (opsional)
+    tinggi_cm        DECIMAL(5,1)    NULL,            -- tinggi punggung (opsional)
+    kaki_sisik       VARCHAR(80)     NULL,            -- mis. "sisik halus rapat, kering" (opsional)
+    jalu             ENUM('BELUM','TUNGGAL','GANDA') NULL, -- kondisi jalu (opsional)
     keunggulan       TEXT            NULL,
     deskripsi        TEXT            NULL,
     harga            DECIMAL(12,0)   NULL,            -- NULL = "Hubungi kami"
@@ -124,7 +131,28 @@ CREATE TABLE permintaan (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- 6. AKTIVITAS_LOG — jejak perubahan (dilihat pemilik)
+-- 6. LAPORAN — bendera laporan dari pengunjung (info tidak update, dll.)
+-- ---------------------------------------------------------------------
+CREATE TABLE laporan (
+    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    ayam_id     BIGINT UNSIGNED NULL,                 -- ayam yang dilaporkan
+    nama_pelapor VARCHAR(120)   NULL,                 -- opsional
+    no_wa       VARCHAR(25)     NULL,                 -- opsional, bila perlu dihubungi
+    jenis       ENUM('INFO_TIDAK_UPDATE','MASIH_TAMPIL_PADAHAL_TERJUAL',
+                     'DATA_KELIRU','LAINNYA') NOT NULL DEFAULT 'LAINNYA',
+    isi         TEXT            NULL,
+    status      ENUM('BARU','DITINDAKLANJUTI','SELESAI','TUTUP') NOT NULL DEFAULT 'BARU',
+    created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_laporan_ayam (ayam_id),
+    KEY idx_laporan_status (status, created_at),
+    CONSTRAINT fk_laporan_ayam FOREIGN KEY (ayam_id)
+        REFERENCES ayam (id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- 7. AKTIVITAS_LOG — jejak perubahan (dilihat pemilik)
 -- ---------------------------------------------------------------------
 CREATE TABLE aktivitas_log (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

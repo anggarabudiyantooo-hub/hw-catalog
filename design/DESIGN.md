@@ -125,6 +125,7 @@ Tidak memuat font eksternal (offline-friendly); gunakan fallback yang serasi.
 ### 5.2a Kartu Ayam — Status "Terjual" & Jenis Foto
 - Kartu/galeri yang berstatus **Terjual** otomatis menampilkan seluruh fotonya **hitam-putih** (`filter: grayscale(1)`) plus watermark kecil "TERJUAL" di atas foto — kesan etalase yang rapi, bukan barang hilang. File asli tetap berwarna (grayscale hanya efek tampilan).
 - Setiap foto galeri membawa **label jenis**: `Full badan`, `Kepala`, `Kaki`, `Bulu & ekor`, `Lainnya`. Syarat publikasi ayam: wajib ada Full badan, Kepala, dan Kaki (minimal satu masing-masing).
+- Setiap kartu katalog selalu memuat **tombol Hubungi** (WhatsApp pengelola) dan tombol kecil **bendera Laporkan** (garis SVG, bukan emoji) — keduanya netral & konsisten di semua kartu.
 - Info usia kartu menampilkan dua lapis: angka **usia ± (bulan)** (hasil hitung otomatis, lebih tegas) + **tanggal menetas** (italik kecil) — mis. *"± 18 bulan · menetas 13 Maret 2025"*.
 
 ### 5.3 Hero Beranda

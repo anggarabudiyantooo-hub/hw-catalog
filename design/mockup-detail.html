@@ -105,6 +105,11 @@
   .f label i{color:var(--bata-600);font-style:normal}
   .f input,.f textarea{font-family:Georgia,serif;font-size:15px;background:var(--paper);border:1px solid var(--krem-300);border-radius:5px;padding:11px 14px;color:var(--ink);outline:none;transition:.15s;resize:vertical}
   .f input:focus,.f textarea:focus{border-color:var(--bata-600);box-shadow:0 0 0 3px rgba(163,44,32,.1)}
+  .f select{font-family:Georgia,serif;font-size:15px;background:var(--paper);border:1px solid var(--krem-300);border-radius:5px;padding:11px 14px;color:var(--ink);outline:none;transition:.15s}
+  .f select:focus{border-color:var(--bata-600);box-shadow:0 0 0 3px rgba(163,44,32,.1)}
+  .spec dd .ops{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-style:normal;font-weight:400;margin-left:6px;border:1px solid var(--krem-300);padding:0 6px;border-radius:3px}
+  .spec-note{font-size:12px;color:var(--ink-faint);font-style:italic;margin-top:10px}
+  .mini-line{margin-top:14px;font-size:12.5px;color:var(--ink-muted);font-style:italic}
   .form-foot{display:flex;align-items:center;gap:18px;margin-top:22px;flex-wrap:wrap}
   .form-foot .hint{font-size:12px;color:var(--ink-faint)}
   .ok-note{margin-top:16px;border:1px solid #C9D6C4;background:#ECF3E9;color:#33503E;font-size:13.5px;padding:12px 16px;display:none}
@@ -182,10 +187,15 @@
         <div class="cell"><dt>Jenis kelamin</dt><dd><b>Jantan</b></dd></div>
         <div class="cell"><dt>Tanggal menetas</dt><dd>13 Maret 2025 <small class="auto">perkiraan pencatatan kandang</small></dd></div>
         <div class="cell"><dt>Usia saat ini</dt><dd>± 18 bulan <small class="auto">dihitung otomatis dari tanggal menetas — selalu terbaru</small></dd></div>
-        <div class="cell"><dt>Berat</dt><dd>3,60 kg</dd></div>
+        <div class="cell"><dt>Berat badan</dt><dd>3,60 kg</dd></div>
+        <div class="cell"><dt>Postur / ukuran badan</dt><dd>Besar &amp; kekar, dada bidang <span class="ops">opsional</span></dd></div>
+        <div class="cell"><dt>Tinggi (punggung)</dt><dd>± 52 cm <span class="ops">opsional</span></dd></div>
+        <div class="cell"><dt>Kaki &amp; sisik</dt><dd>Sisik halus rapat, kering <span class="ops">opsional</span></dd></div>
+        <div class="cell"><dt>Jalu</dt><dd>Ganda · panjang &amp; kokoh <span class="ops">opsional</span></dd></div>
         <div class="cell"><dt>Warna bulu</dt><dd>Hitam legam, dada merah bata</dd></div>
         <div class="cell"><dt>Nomor ring</dt><dd>2024-SLO-07 (terdaftar)</dd></div>
       </dl>
+      <p class="spec-note">Kolom bertanda “opsional” hanya tampil bila diisi — daftar ini mewakili hal yang lazim ditanyakan pembeli sebelum bertransaksi.</p>
 
       <div class="keung">
         <h3>Keunggulan</h3>
@@ -217,6 +227,7 @@
           <a class="btn" style="background:transparent;color:#F6E7CE;border-color:rgba(246,231,206,.55)" href="#">Tanya via WhatsApp</a>
         </div>
         <div class="note">Biasanya dibalas dalam 1×24 jam pada jam kerja (08.00–17.00 WIB).</div>
+        <p class="mini-line">Kontak ini dikelola langsung pemilik kandang. Jika Anda ingin <b>menitipkan ayam</b> untuk ditampilkan / diiklankan di etalase ini, silakan hubungi nomor yang sama.</p>
       </div>
     </div>
   </div>
@@ -227,7 +238,7 @@
   <div class="panel">
     <h2>Saya Tertarik pada Rajawali</h2>
     <p>Isi singkat di bawah — permintaan langsung tersimpan dan kami balas lewat WhatsApp Anda.</p>
-    <form onsubmit="return false">
+    <form onsubmit="return false" id="tertarikForm">
       <div class="fgrid">
         <div class="f"><label for="fn">Nama Anda <i>*</i></label><input id="fn" type="text" placeholder="mis. Budi Santoso"></div>
         <div class="f"><label for="wa">Nomor WhatsApp <i>*</i></label><input id="wa" type="tel" placeholder="08xx-xxxx-xxxx"></div>
@@ -241,6 +252,33 @@
       </div>
     </form>
     <div class="ok-note" id="ok">Terima kasih — permintaan Anda terkirim (contoh).</div>
+  </div>
+</section>
+
+<!-- laporan masalah -->
+<section class="wrap form-sec" id="lapor" style="padding-bottom:0">
+  <div class="panel">
+    <h2>Ada Masalah dengan Kartu Ini?</h2>
+    <p>Temukan data yang tidak update (mis. sudah laku tapi masih tampil, harga/foto keliru)? Laporkan — pengelola akan segera memperbaikinya.</p>
+    <form id="reportFormDetail" onsubmit="return false">
+      <div class="fgrid">
+        <div class="f"><label for="jLapor">Jenis masalah <i>*</i></label>
+          <select id="jLapor">
+            <option>Info tidak diperbarui (mis. sudah laku / harga beda)</option>
+            <option>Sudah terjual tapi masih tampil tersedia</option>
+            <option>Foto atau data keliru</option>
+            <option>Lainnya</option>
+          </select>
+        </div>
+        <div class="f"><label for="kLapor">Nomor WhatsApp (opsional)</label><input id="kLapor" type="tel" placeholder="08xx-xxxx-xxxx — bila perlu dihubungi"></div>
+        <div class="f full"><label for="tLapor">Keterangan</label><textarea id="tLapor" rows="3" placeholder="Ceritakan singkat masalahnya…"></textarea></div>
+      </div>
+      <div class="form-foot">
+        <button class="btn primary" type="submit">Kirim Laporan</button>
+        <span class="hint">Laporan hanya pemberitahuan ke pengelola — tidak mengubah data secara otomatis.</span>
+      </div>
+    </form>
+    <div class="ok-note" id="ok-lapor">Terima kasih — laporan Anda terkirim ke pengelola (contoh).</div>
   </div>
 </section>
 
@@ -288,8 +326,16 @@
 <script>
   // contoh perilaku notifikasi form (mockup)
   document.querySelectorAll('form[onsubmit]').forEach(function(f){
-    f.addEventListener('submit', function(){ var ok=document.getElementById('ok'); if(ok){ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'});} });
+    f.addEventListener('submit', function(){
+      var target=f.getAttribute('data-ok')||'ok';
+      var ok=document.getElementById(target);
+      if(ok){ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'});}
+    });
   });
+  var fDetail=document.getElementById('reportFormDetail');
+  if(fDetail) fDetail.setAttribute('data-ok','ok-lapor');
+  var fMinat=document.getElementById('tertarikForm');
+  if(fMinat) fMinat.setAttribute('data-ok','ok');
 </script>
 
 </body>

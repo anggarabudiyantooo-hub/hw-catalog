@@ -169,6 +169,8 @@
       <a class="on" href="#"><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.3-7-11a7 7 0 1 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Data Ayam<span class="pill">28</span></a>
       <a href="#"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Kategori</a>
       <a href="#"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.7-.8L3 20l1-5.2a8.4 8.4 0 1 1 17-3.3z"/></svg>Permintaan Masuk<span class="pill">3</span></a>
+      <div class="as-group">Pantauan</div>
+      <a href="#"><svg viewBox="0 0 24 24"><path d="M6 21V4"/><path d="M6 4h10l-1.8 3.3L16 11H6"/></svg>Laporan Katalog<span class="pill">2</span></a>
       <div class="as-group">Catatan</div>
       <a href="#"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Log Aktivitas</a>
     </nav>
@@ -271,6 +273,11 @@
               <div class="f"><label for="fmenetas">Tanggal menetas (perkiraan) <i>*</i></label><input id="fmenetas" type="date" value="2025-03-13"><small class="fhlp">Usia dihitung otomatis dari tanggal ini — selalu terbaru (saat ini ± 18 bulan).</small></div>
               <div class="f"><label for="fberat">Berat (kg) <i>*</i></label><input id="fberat" type="text" placeholder="3,60"></div>
               <div class="f"><label for="fwarna">Warna bulu</label><input id="fwarna" placeholder="Hitam legam, dada merah bata"></div>
+              <div class="f full"><small class="hint-inline">Ukuran &amp; ciri yang lazim ditanya pembeli — semua opsional:</small></div>
+              <div class="f"><label for="fpostur">Postur / ukuran badan</label><input id="fpostur" placeholder="mis. Besar &amp; kekar, dada bidang"></div>
+              <div class="f"><label for="ftinggi">Tinggi punggung (± cm)</label><input id="ftinggi" placeholder="mis. 52"></div>
+              <div class="f"><label for="fkaki">Kaki &amp; sisik</label><input id="fkaki" placeholder="mis. sisik halus rapat, kering"></div>
+              <div class="f"><label for="fjalu">Jalu</label><select id="fjalu"><option>— pilih —</option><option>Tunggal</option><option>Ganda</option><option>Belum tumbuh</option></select></div>
                             <div class="f"><label for="fharga">Harga (Rp) — kosongkan jika “Hubungi kami”</label><input id="fharga" type="text" placeholder="3500000"></div>
               <div class="f"><label for="fstatus">Status jual <i>*</i></label><select id="fstatus"><option>Tersedia</option><option>Dipesan</option><option>Terjual</option></select><small class="hint-inline">Pilih “Terjual” → foto galeri otomatis tampil hitam-putih (asli tetap tersimpan berwarna).</small></div>
               <div class="f full"><label for="fkeung">Keunggulan (satu per baris)</label><textarea id="fkeung" rows="2" placeholder="Postur tegak, tulang besar&#10;Pukulan keras &amp; sambung rapat"></textarea></div>
@@ -308,6 +315,8 @@
               <li>Foto pertama di atas = foto utama kartu.</li>
               <li>Status “Terjual” otomatis menyembunyikan ayam dari daftar tersedia.</li>
               <li>Ayam “Draf” &amp; “Terarsip” tidak pernah tampil publik.</li>
+              <li>Kolom ukuran/ciri (postur, tinggi, kaki &amp; sisik, jalu) bersifat opsional — dianjurkan diisi karena lazim ditanyakan pembeli.</li>
+              <li>Laporan dari bendera “Laporkan” pengunjung muncul di menu <b>Laporan Katalog</b>.</li>
             </ul>
             <div class="lock">Hak akses form ini: Admin &amp; Petugas. Perubahan dicatat otomatis di Log Aktivitas.</div>
           </div>
