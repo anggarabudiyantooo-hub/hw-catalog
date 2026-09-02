@@ -21,11 +21,6 @@ export default async function HomePage() {
     orderBy: { updatedAt: "desc" },
     take: 3,
   });
-  const hero = featured[0] ?? null;
-  const heroImg = hero
-    ? hero.images.find((i) => i.isPrimary) || hero.images[0]
-    : null;
-
   const [tersedia, dipesan, totalPublik, kategori] = await Promise.all([
     prisma.ayam.count({ where: { statusJual: "TERSEDIA", isArsip: false, statusTampil: "PUBLIKASI" } }),
     prisma.ayam.count({ where: { statusJual: "DIPESAN", isArsip: false, statusTampil: "PUBLIKASI" } }),
@@ -44,7 +39,7 @@ export default async function HomePage() {
       {/* ===== HERO ===== */}
       <section className="hero">
         <div className="wrap hero-in">
-          <div>
+          <div className="hero-copy">
             <div className="hero-kicker">Kandang Juara · Sejak {SITE.sejak}</div>
             <h1>
               Ayam Bangkok <em>Berkelas</em>,
@@ -73,17 +68,6 @@ export default async function HomePage() {
               ))}
             </div>
           </div>
-          {hero && heroImg && (
-            <figure className="hero-fig">
-              <div className="frame">
-                <img src={heroImg.filePath} alt={`${hero.nama}, ayam bangkok`} />
-              </div>
-              <figcaption className="plate">
-                <b>{hero.kodeRing ?? hero.nama}</b>
-                <span>{hero.nama} — pilihan kandang</span>
-              </figcaption>
-            </figure>
-          )}
         </div>
       </section>
 

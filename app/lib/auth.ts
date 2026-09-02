@@ -78,6 +78,15 @@ export async function requireOwner() {
   return { user, redirect: null };
 }
 
+/** Asal URL (skema+host) dari sebuah Request — memakai header proxy agar redirect
+ *  tetap valid saat situs diakses lewat domain preview/balik proxy. */
+export function reqBase(req: Request): string {
+  const u = new URL(req.url);
+  const proto = (req.headers.get("x-forwarded-proto") || "").split(",")[0].trim() || u.protocol.replace(":", "");
+  const host = (req.headers.get("x-forwarded-host") || "").split(",")[0].trim() || req.headers.get("host") || u.host;
+  return `${proto}://${host}`;
+}
+
 export function readOwnerFromRequest(req: Request) {
   const header = req.headers.get("cookie") || "";
   const match = header.split(";").map((c) => c.trim()).find((c) => c.startsWith(`${COOKIE}=`));

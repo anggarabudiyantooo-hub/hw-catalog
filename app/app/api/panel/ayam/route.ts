@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { readOwnerFromRequest } from "@/lib/auth";
+import { readOwnerFromRequest, reqBase } from "@/lib/auth";
 import { parseAyam, cekJenisFotoTerpenuhi } from "@/lib/ayamFields";
 import { ambilFiles, simpanGambar } from "@/lib/upload";
 
-const BASE = process.env.APP_URL || "http://localhost:3000";
-
 export async function POST(req: Request) {
+  const BASE = reqBase(req);
   const uid = readOwnerFromRequest(req);
   if (!uid) return NextResponse.redirect(new URL("/panel/login", BASE), 303);
 
