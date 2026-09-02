@@ -55,13 +55,15 @@ export async function beriWatermark(
   const shadow = await sharp(logoResized).flatten({ background: "#221408" }).png().toBuffer();
 
   // rakit posisi tile secara diagonal (mengikuti kemiringan -20°)
-  const sx = Math.round(lw * 1.45);
-  const sy = Math.round(lh * 2.1);
+  // Jarak antar logo diperlebar agar tidak rapat: ±3 lebar-logo horizontal
+  // dan ±3,4 tinggi-logo vertikal (sebelumnya 1,45 / 2,1).
+  const sx = Math.round(lw * 3.0);
+  const sy = Math.round(lh * 3.4);
   const gold: { input: Buffer; left: number; top: number; opacity: number }[] = [];
   const shd: { input: Buffer; left: number; top: number; opacity: number }[] = [];
   const halfLw = lw / 2;
 
-  // jumlah baris menjamin menutupi; offset antar kolom memberi efek miring
+  // jumlah baris menjamin menutupi; offset antar baris memberi efek miring
   const nCols = Math.ceil(w / sx) + 2;
   const rows = Math.ceil(h / sy) + 2;
   for (let c = -1; c < nCols; c++) {
@@ -69,8 +71,8 @@ export async function beriWatermark(
       const x = Math.round(c * sx - halfLw + (r % 2) * (sx * 0.5));
       const y = Math.round(r * sy - lh);
       if (x + lw < 0 || y + lh < 0 || x > w || y > h) continue;
-      shd.push({ input: shadow, left: x + 1, top: y + 1, opacity: 0.42 });
-      gold.push({ input: logoResized, left: x, top: y, opacity: 0.85 });
+      shd.push({ input: shadow, left: x + 1, top: y + 1, opacity: 0.4 });
+      gold.push({ input: logoResized, left: x, top: y, opacity: 0.82 });
     }
   }
   if (!bbox([...gold, ...shd], w, h, lw)) return buf;
