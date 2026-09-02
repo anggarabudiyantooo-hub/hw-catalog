@@ -2,6 +2,9 @@ import { randomBytes } from "crypto";
 import { mkdir, rm, writeFile, unlink } from "fs/promises";
 import path from "path";
 import { beriWatermark } from "./watermark";
+// Penyimpanan objek Vercel Blob dipakai di produksi; di dev tanpa token,
+// import ini tetap aman (library hanya aktif saat fungsi dipanggil).
+import { put, del } from "@vercel/blob";
 
 export const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 const ALLOWED = new Map<string, string>([
@@ -11,9 +14,12 @@ const ALLOWED = new Map<string, string>([
 ]);
 
 export const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
+/** Aktif bila di lingkungan Vercel (token Blob tersedia). */
+export const BLOB_AKTIF = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 
 export interface SavedImage {
-  filePath: string; // path publik mulai "/uploads/..."
+  /** URL publik: "/uploads/..." (lokal) atau "https://…blob.vercel-storage.com/…" */
+  filePath: string;
   fileName: string;
   sizeKb: number;
 }
@@ -28,7 +34,6 @@ export function isAllowed(file: File): { ok: boolean; err?: string } {
 export async function simpanGambar(file: File): Promise<SavedImage> {
   const check = isAllowed(file);
   if (!check.ok) throw new Error(check.err);
-  await mkdir(UPLOAD_DIR, { recursive: true });
   const ext = (ALLOWED.get(file.type) || ".jpg") as ".jpg" | ".png" | ".webp";
   const nama = `${Date.now()}-${randomBytes(4).toString("hex")}${ext}`;
   let buf = Buffer.from(await file.arrayBuffer());
@@ -38,13 +43,34 @@ export async function simpanGambar(file: File): Promise<SavedImage> {
   } catch (e) {
     console.error("watermark gagal, simpan asli:", e);
   }
+  if (BLOB_AKTIF) {
+    // Produksi: simpan ke Vercel Blob → URL permanen.
+    const { url } = await put(`galeri/${nama}`, buf, {
+      access: "public",
+      contentType: file.type || "image/jpeg",
+      addRandomSuffix: false,
+    });
+    return { filePath: url, fileName: nama, sizeKb: Math.round(buf.length / 1024) };
+  }
+  // Dev lokal: tulis ke public/uploads.
+  await mkdir(UPLOAD_DIR, { recursive: true });
   await writeFile(path.join(UPLOAD_DIR, nama), buf);
   return { filePath: `/uploads/${nama}`, fileName: nama, sizeKb: Math.round(buf.length / 1024) };
 }
 
 export async function hapusFile(filePath: string | null | undefined) {
   if (!filePath) return;
-  if (!filePath.startsWith("/uploads/")) return; // hanya hapus file upload lokal
+  // Foto Blob (URL http) → hapus dari Vercel Blob.
+  if (/^https?:\/\//.test(filePath)) {
+    try {
+      await del(filePath);
+    } catch (e) {
+      console.error("gagal hapus blob:", filePath, e);
+    }
+    return;
+  }
+  // File lokal: hanya upload dinamis (/uploads/…), JANGAN foto seed demo.
+  if (!filePath.startsWith("/uploads/") || filePath.startsWith("/uploads/seed/")) return;
   const full = path.join(process.cwd(), "public", filePath);
   try {
     await unlink(full);

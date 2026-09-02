@@ -1,8 +1,7 @@
 // ============================================================
-// JALU — Galeri Ayam Bangkok
-// Prisma schema (SQLite untuk demo lokal tanpa setup).
-// Refleksi docs/schema.sql (MySQL 8) — lihat docs/ untuk DDL penuh.
-// Untuk produksi: provider "mysql" + DATABASE_URL MySQL.
+// HW Catalog — Galeri Ayam Bangkok
+// Prisma schema untuk produksi (PostgreSQL, mis. Neon/Supabase).
+// Jalankan migrasi dengan `prisma migrate deploy` lalu `prisma db seed`.
 // ============================================================
 
 generator client {
@@ -10,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
