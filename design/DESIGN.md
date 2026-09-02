@@ -127,6 +127,8 @@ Tidak memuat font eksternal (offline-friendly); gunakan fallback yang serasi.
 - Setiap foto galeri membawa **label jenis**: `Full badan`, `Kepala`, `Kaki`, `Bulu & ekor`, `Lainnya`. Syarat publikasi ayam: wajib ada Full badan, Kepala, dan Kaki (minimal satu masing-masing).
 - Setiap kartu katalog selalu memuat **tombol Hubungi** (WhatsApp pengelola) dan elemen laporan yang **tidak mencolok**: bendera kecil pada kartu, atau tautan halus "Laporkan masalah" pada halaman detail. Formulir laporan **hanya muncul saat dibutuhkan** dalam modal ringkas — tidak ada panel laporan besar yang selalu tampak.
 - Info usia kartu menampilkan dua lapis: angka **usia ± (bulan)** (hasil hitung otomatis, lebih tegas) + **tanggal menetas** (italik kecil) — mis. *"± 18 bulan · menetas 13 Maret 2025"*.
+- Kartu menyertakan **rekap laga** singkat pada garis bawah data (dibatasi garis putus): `Menang 8 · Kalah 1 · Seri 1` — angka menang hijau kalem, kalah merah bata, seri amber; label kecil "REKAP LAGA". Ayam non-laga memakai teks miring "bukan ayam laga".
+- Halaman detail memiliki **panel Rekap Pertarungan**: tiga angka besar M/K/S + rasio kemenangan + daftar kronologis laga dengan badge hasil (Menang/Kalah/Seri) — memakai warna status yang sama agar konsisten.
 
 ### 5.3 Hero Beranda
 Latar `marun-900` dengan **tekstur bata** (SVG pattern garis-garis silang sangat samar, opacity 4–6%), ornamen garis emas, tipografi besar krem, dan baris data pendek (statistik) dengan pemisah belah ketupat kecil.

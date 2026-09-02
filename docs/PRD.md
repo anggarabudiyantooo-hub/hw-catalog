@@ -3,9 +3,9 @@
 
 | | |
 |---|---|
-| **Versi** | 5.0 (revisi sesuai masukan pemilik) |
+| **Versi** | 6.0 (revisi sesuai masukan pemilik) |
 | **Tanggal** | 2 September 2026 |
-| **Status** | Menunggu persetujuan sebelum pengembangan (M0 → M1) · rev.5 |
+| **Status** | Menunggu persetujuan sebelum pengembangan (M0 → M1) · rev.6 |
 | **Produk** | "Jalu" — nama kerja, dapat diganti |
 
 **Ringkasan revisi 2.0:** umur dari tanggal menetas (otomatis); satu peternakan tanpa "asal kota"; pemilik tunggal tanpa role.
@@ -22,6 +22,11 @@
 **Ringkasan revisi 5.0:**
 1. **Lokasi & alamat dipertegas**: seksi "Lokasi & Kunjungan" di beranda dan **peta + alamat di footer** seluruh halaman publik, agar calon pembeli tahu posisi kandang.
 2. **Kunjungan wajib reservasi (janji temu).** Pengunjung harus menghubungi pemilik lebih dulu untuk mencocokkan jadwal; tanpa janji tidak dilayani datang langsung. Alur: chat WhatsApp → konfirmasi jadwal → datang pada jam disepakati.
+**Ringkasan revisi 6.0:**
+1. **Riwayat pertarungan** sebagai poin penilaian: setiap laga/uji tercatat (tanggal, lawan, jenis laga, ronde, hasil **Menang/Kalah/Seri**, catatan). Rekap dihitung otomatis.
+2. **Kartu katalog** menampilkan rekap ringkas (mis. "Menang 8 · Kalah 1 · Seri 1"); ayam betina/indukan menampilkan "bukan ayam laga".
+3. **Halaman detail** menampilkan panel **Rekap Pertarungan**: angka besar M/K/S + rasio kemenangan + daftar riwayat kronologis.
+4. **Panel pemilik** mendapat menu **Riwayat Tarung** untuk menambah/mengubah/menghapus baris hasil per ayam.
 
 ---
 
@@ -91,6 +96,8 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 | PF-11 | SEO dasar & kinerja gambar (thumbnail/webp). | P1/P2 |
 | PF-12 | Seluruh kartu menyiapkan kontak bagi pihak yang ingin **menitipkan ayam/iklan** — diproses manual pemilik (tetap satu pengelola; kandidat v2 bila menjadi rutin). | P3 |
 | PF-13 | **Informasi kunjungan yang jelas:** alamat + peta selalu tampil; keterangan **"kunjungan wajib reservasi"** beserta alur (chat → konfirmasi jadwal → datang) terlihat di seksi lokasi & footer. | P1 |
+| PF-14 | **Rekap laga pada kartu katalog**: baris ringkas "Menang x · Kalah y · Seri z" (dihitung otomatis) sebagai poin penilaian cepat saat memilih. Ayam tanpa laga menampilkan keterangan sesuai (mis. "bukan ayam laga"). | P1 |
+| PF-15 | **Rekap & riwayat laga pada halaman detail**: angka besar menang/kalah/seri, rasio kemenangan, dan daftar kronologis (tanggal, lawan, jenis laga, ronde, hasil, catatan). | P1 |
 
 ### 4.B Sisi Pemilik (login)
 
@@ -107,6 +114,7 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 | AF-09 | **Kelola permintaan:** daftar minat pembeli; ubah status `baru → dihubungi → deal/batal`; tautan cepat WhatsApp. | P1 |
 | AF-10 | **Log aktivitas:** catatan perubahan pemilik (siapa/kapan/aksi). | P2 |
 | AF-11 | **Anti salah-klik:** konfirmasi hapus; hapus permanen minta ketik ulang kata kunci. | P2 |
+| AF-12 | **Kelola riwayat tarung per ayam:** tambah baris hasil (tanggal, lawan, berat lawan, jenis laga, ronde, hasil M/K/S, catatan); ubah/hapus; rekap menang/kalah/seri & rasio dihitung otomatis. Hanya mencatat laga yang benar-benar terjadi dengan hasil jelas. | P1 |
 
 ## 5. Aturan Bisnis (Business Rules)
 
@@ -123,6 +131,7 @@ Tahap ini (M0) menghasilkan PRD, ERD, skema basis data, sistem desain, dan mocku
 11. **Permintaan** tidak terhapus otomatis; `batal` tetap tersimpan sebagai riwayat.
 12. **Satu akun** pemilik yang dapat mengubah data; seluruh perubahan dicatat di log.
 13. **Kunjungan kandang hanya dengan reservasi (janji temu).** Alamat & peta lokasi selalu tampil (footer & halaman Tentang/beranda). Pengunjung wajib menghubungi pemilik untuk mencocokkan jadwal sebelum datang; tanpa janji tidak dilayani.
+14. **Riwayat laga & rekap:** setiap hasil laga/uji dicatat apa adanya di `riwayat_tarung` (menang/kalah/seri). Rekap di kartu, detail, dan panel **dihitung otomatis** dari baris riwayat — tidak ada angka rekap yang diketik manual. Untuk ayam yang tidak diadu (mis. betina/indukan), bagian rekap tidak ditampilkan / berlabel sesuai.
 
 ---
 
@@ -198,6 +207,7 @@ Detil atribut & relasi → [`docs/ERD.md`](ERD.md) · diagram → [`docs/diagram
 8. Upload non-gambar / >5 MB ditolak ramah; tidak ada crash.
 9. Log mencatat: siapa, kapan, aksi apa pada entitas apa.
 10. Sistem memblokir publikasi ayam bila galeri belum punya Full badan, Kepala, dan Kaki sekaligus — dengan pesan ramah yang menyebut jenis yang kurang.
+11. Setelah pemilik menambah baris hasil laga, rekap "Menang/Kalah/Seri" pada kartu katalog & detail berubah otomatis tanpa edit manual.
 
 ---
 
