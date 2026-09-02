@@ -42,12 +42,18 @@ export function createSession(userId: number): string {
   return `${payload}.${sign(payload)}`;
 }
 
+export function redirectLocal(path: string): Response {
+  return new Response(null, { status: 303, headers: { Location: path } });
+}
+
 export async function setSessionCookie(userId: number): Promise<void> {
   const store = await cookies();
   store.set(COOKIE, createSession(userId), {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    // CATATAN DEMO: Secure dimatikan agar sesi tetap jalan walau preview/http.
+    // Saat produksi pakai HTTPS murni, set secure: true.
+    secure: false,
     path: "/",
     maxAge: MAX_AGE,
   });

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { readOwnerFromRequest, reqBase } from "@/lib/auth";
+import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { parseAyam, cekJenisFotoTerpenuhi } from "@/lib/ayamFields";
 import { ambilFiles, simpanGambar } from "@/lib/upload";
 
 export async function POST(req: Request) {
   const BASE = reqBase(req);
   const uid = readOwnerFromRequest(req);
-  if (!uid) return NextResponse.redirect(new URL("/panel/login", BASE), 303);
+  if (!uid) return redirectLocal("/panel/login");
 
   const ref = req.headers.get("referer") || `${BASE}/panel/ayam`;
   const back = (ok?: string, err?: string) => {
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.redirect(new URL(`/panel/ayam/${ayam.id}?ok=Tersimpan.+Atur+jenis+foto+lalu+publikasikan.`, BASE), 303);
+    return redirectLocal(`/panel/ayam/${ayam.id}?ok=Tersimpan.+Atur+jenis+foto+lalu+publikasikan.`);
   } catch {
     return back(undefined, "Terjadi kesalahan saat menyimpan.");
   }

@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { readOwnerFromRequest, reqBase } from "@/lib/auth";
+import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { hapusFile } from "@/lib/upload";
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const BASE = reqBase(req);
   const uid = readOwnerFromRequest(req);
-  if (!uid) return NextResponse.redirect(new URL("/panel/login", BASE), 303);
+  if (!uid) return redirectLocal("/panel/login");
 
   const ayamId = Number(params.id);
   const fd = await req.formData();
