@@ -3,7 +3,7 @@
 > **Status proyek: Fase Desain (M0).** Repository berisi PRD, ERD, skema basis data, sistem desain, dan mockup visual awal.
 > Nama produk "Jalu" adalah *working title* dan mudah diganti.
 
-Sistem web untuk **menampilkan ayam Bangkok** sebagai katalog/display sekaligus sarana penjualan, dengan **CRUD lengkap termasuk unggah beberapa gambar per ayam**, multi-pengguna ber-role (admin & petugas), dan fitur penerimaan permintaan ("saya tertarik") dari pengunjung.
+Sistem web **etalase satu kandang** untuk menampilkan ayam Bangkok sekaligus sarana penjualan: **CRUD lengkap termasuk unggah banyak gambar per ayam**, usia yang dihitung otomatis dari tanggal menetas, login pemilik tunggal, dan penerimaan permintaan ("Saya Tertarik") dari pengunjung. (rev 2.0)
 
 - 📄 **PRD** → [`docs/PRD.md`](docs/PRD.md)
 - 🗂️ **ERD** → [`docs/ERD.md`](docs/ERD.md) · diagram SVG → [`docs/diagrams/erd.svg`](docs/diagrams/erd.svg)
@@ -22,7 +22,7 @@ Sistem web untuk **menampilkan ayam Bangkok** sebagai katalog/display sekaligus 
 | Stack | Next.js (App Router) + React, TypeScript |
 | Basis data | MySQL 8 (via Prisma ORM), skema awal di `docs/schema.sql` |
 | Tujuan | Katalog display **+ info penjualan** (harga & status) |
-| Hak akses | Multi-user: **Admin** (penuh) & **Petugas** (input data) + pengunjung publik |
+| Hak akses | **Pemilik tunggal** (satu akun login) + pengunjung publik |
 | Desain | **Merah bata & krem** — hangat, lokal, berkelas (bukan template AI generik) |
 
 ## Struktur Folder
@@ -37,8 +37,8 @@ ayam-bangkok-studio/
 
 ## Peta Jalan Singkat
 
-1. **M0 · Desain (sekarang):** PRD, ERD, skema, sistem desain, mockup — *untuk disetujui.*
-2. **M1 · Pondasi:** Scaffold Next.js + Prisma, autentikasi & role (admin/petugas).
+1. **M0 · Desain (sekarang):** PRD, ERD, skema, sistem desain, mockup — *sedang direvisi → disetujui.*
+2. **M1 · Pondasi:** Scaffold Next.js + Prisma, login pemilik tunggal, layout panel.
 3. **M2 · CRUD Ayam:** Manajemen data ayam + multi-gambar + kategori + status jual.
 4. **M3 · Publik:** Beranda, katalog + filter, halaman detail, form "Saya Tertarik".
 5. **M4 · Rapi & Rilis:** Log aktivitas, pengaturan, pengujian, deployment.

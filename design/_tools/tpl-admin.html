@@ -117,6 +117,7 @@
   .f .radios{display:flex;gap:18px;background:var(--paper);border:1px solid var(--krem-300);border-radius:5px;padding:10px 12px}
   .f .radios label{letter-spacing:.02em;text-transform:none;font-size:13.5px;font-weight:400;color:var(--ink);display:flex;align-items:center;gap:7px;cursor:pointer}
   .f .radios input{accent-color:var(--bata-700)}
+  .f .fhlp{font-size:11px;font-style:italic;color:var(--ink-faint);letter-spacing:0;text-transform:none;font-weight:400}
   .g-section{margin:22px 0 12px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--emas-700);font-weight:700;display:flex;align-items:center;gap:10px}
   .g-section::after{content:"";flex:1;height:1px;background:var(--krem-300)}
 
@@ -161,13 +162,12 @@
       <a class="on" href="#"><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.3-7-11a7 7 0 1 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Data Ayam<span class="pill">28</span></a>
       <a href="#"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Kategori</a>
       <a href="#"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.7-.8L3 20l1-5.2a8.4 8.4 0 1 1 17-3.3z"/></svg>Permintaan Masuk<span class="pill">3</span></a>
-      <div class="as-group">Administrasi</div>
-      <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Pengguna</a>
+      <div class="as-group">Catatan</div>
       <a href="#"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Log Aktivitas</a>
     </nav>
     <div class="as-user">
       <span class="avatar">HS</span>
-      <span><b>H. Suroto</b><span>Admin Utama</span></span>
+      <span><b>H. Suroto</b><span>Pemilik &amp; Pengelola</span></span>
       <a class="out" href="#">Keluar</a>
     </div>
   </aside>
@@ -204,47 +204,47 @@
         </div>
       </div>
       <table>
-        <thead><tr><th>Ayam</th><th>Kategori</th><th>Status</th><th>Harga</th><th>Umur / Berat</th><th>Diperbarui</th><th>Aksi</th></tr></thead>
+        <thead><tr><th>Ayam</th><th>Kategori</th><th>Status</th><th>Harga</th><th>Menetas / Berat</th><th>Diperbarui</th><th>Aksi</th></tr></thead>
         <tbody>
           <tr>
             <td><div class="t-ayam"><img src="@@AT1@@" alt="Rajawali"><span><b>Rajawali</b><small>BKT-001 · Ring 2024-SLO-07</small></span></div></td>
             <td>Bangkok Tulen</td><td><span class="st tersedia"><i></i>Tersedia</span></td>
-            <td class="money">Rp 3.500.000</td><td>18 bln · 3,60 kg</td><td style="color:var(--ink-faint)">2 Sep 2026</td>
+            <td class="money">Rp 3.500.000</td><td>13 Mar 2025 · 3,60 kg</td><td style="color:var(--ink-faint)">2 Sep 2026</td>
             <td><div class="aksi"><button class="u">Ubah</button><button class="a">Arsip</button><button class="d" title="Hanya Admin">Hapus</button></div></td>
           </tr>
           <tr>
             <td><div class="t-ayam"><img src="@@AT4@@" alt="Ronggolawe"><span><b>Ronggolawe</b><small>BKX-019 · Impor 2025</small></span></div></td>
             <td>Bangkok Thailand F1</td><td><span class="st tersedia"><i></i>Tersedia</span></td>
-            <td class="money">Rp 4.500.000</td><td>10 bln · 3,15 kg</td><td style="color:var(--ink-faint)">1 Sep 2026</td>
+            <td class="money">Rp 4.500.000</td><td>8 Nov 2025 · 3,15 kg</td><td style="color:var(--ink-faint)">1 Sep 2026</td>
             <td><div class="aksi"><button class="u">Ubah</button><button class="a">Arsip</button><button class="d">Hapus</button></div></td>
           </tr>
           <tr>
             <td><div class="t-ayam"><img src="@@AT2@@" alt="Sang Pamenan"><span><b>Sang Pamenan</b><small>BKT-007 · Ring 2025-SLO-12</small></span></div></td>
             <td>Bangkok Tulen</td><td><span class="st tersedia"><i></i>Tersedia</span></td>
-            <td class="money">Rp 2.750.000</td><td>14 bln · 3,35 kg</td><td style="color:var(--ink-faint)">30 Agu 2026</td>
+            <td class="money">Rp 2.750.000</td><td>1 Jul 2025 · 3,35 kg</td><td style="color:var(--ink-faint)">30 Agu 2026</td>
             <td><div class="aksi"><button class="u">Ubah</button><button class="a">Arsip</button><button class="d">Hapus</button></div></td>
           </tr>
           <tr>
             <td><div class="t-ayam"><img src="@@AT3@@" alt="Kyai Semar"><span><b>Kyai Semar</b><small>BKB-012 · Warisan 2023</small></span></div></td>
             <td>Bangkok Birma</td><td><span class="st dipesan"><i></i>Dipesan</span></td>
-            <td class="money"><span class="ask">Hubungi kami</span></td><td>22 bln · 3,80 kg</td><td style="color:var(--ink-faint)">28 Agu 2026</td>
+            <td class="money"><span class="ask">Hubungi kami</span></td><td>9 Nov 2024 · 3,80 kg</td><td style="color:var(--ink-faint)">28 Agu 2026</td>
             <td><div class="aksi"><button class="u">Ubah</button><button class="a">Arsip</button><button class="d">Hapus</button></div></td>
           </tr>
           <tr>
             <td><div class="t-ayam"><img src="@@AT5@@" alt="Bima Sakti"><span><b>Bima Sakti</b><small>BKL-008 · Lokal terpilih</small></span></div></td>
             <td>Bangkok Lokal</td><td><span class="st tersedia"><i></i>Tersedia</span></td>
-            <td class="money">Rp 1.900.000</td><td>16 bln · 3,50 kg</td><td style="color:var(--ink-faint)">25 Agu 2026</td>
+            <td class="money">Rp 1.900.000</td><td>2 Mei 2025 · 3,50 kg</td><td style="color:var(--ink-faint)">25 Agu 2026</td>
             <td><div class="aksi"><button class="u">Ubah</button><button class="a">Arsip</button><button class="d">Hapus</button></div></td>
           </tr>
           <tr>
             <td><div class="t-ayam"><img src="@@AT6@@" alt="Sekar Arum"><span><b>Sekar Arum</b><small>BKB-021 · Babon F1</small></span></div></td>
             <td>Betina / Indukan</td><td><span class="st terjual"><i></i>Terjual</span></td>
-            <td class="money">Rp 1.250.000</td><td>20 bln · 2,60 kg</td><td style="color:var(--ink-faint)">22 Agu 2026</td>
+            <td class="money">Rp 1.250.000</td><td>5 Jan 2025 · 2,60 kg</td><td style="color:var(--ink-faint)">22 Agu 2026</td>
             <td><div class="aksi"><button class="u">Ubah</button><button class="a">Arsip</button><button class="d">Hapus</button></div></td>
           </tr>
         </tbody>
       </table>
-      <div class="t-note">Catatan peran: petugas melihat aksi Ubah &amp; Arsip saja — tombol <b>Hapus</b> hanya untuk Admin dan tercatat di Log Aktivitas.</div>
+      <div class="t-note">Satu akun pemilik yang mengelola kandang ini. Tombol <b>Hapus</b> menuntut konfirmasi ketik ulang, dan semua perubahan tercatat di Log Aktivitas.</div>
     </div>
 
     <!-- form tambah contoh -->
@@ -261,11 +261,10 @@
               <div class="f"><label for="fring">Kode / Nomor ring</label><input id="fring" placeholder="mis. BKT-022 / 2026-SLO-01"></div>
               <div class="f"><label for="fkat">Kategori <i>*</i></label><select id="fkat"><option>Bangkok Tulen</option><option>Bangkok Birma</option><option>Bangkok Thailand F1</option><option>Bangkok Lokal</option><option>Betina / Indukan</option></select></div>
               <div class="f"><label>Jenis kelamin <i>*</i></label><div class="radios"><label><input type="radio" name="kel" checked> Jantan</label><label><input type="radio" name="kel"> Betina</label></div></div>
-              <div class="f"><label for="fumur">Umur (bulan) <i>*</i></label><input id="fumur" type="number" placeholder="18"></div>
+              <div class="f"><label for="fmenetas">Tanggal menetas (perkiraan) <i>*</i></label><input id="fmenetas" type="date" value="2025-03-13"><small class="fhlp">Usia dihitung otomatis dari tanggal ini — selalu terbaru.</small></div>
               <div class="f"><label for="fberat">Berat (kg) <i>*</i></label><input id="fberat" type="text" placeholder="3,60"></div>
               <div class="f"><label for="fwarna">Warna bulu</label><input id="fwarna" placeholder="Hitam legam, dada merah bata"></div>
-              <div class="f"><label for="fasal">Asal</label><input id="fasal" placeholder="Blitar, Jawa Timur"></div>
-              <div class="f"><label for="fharga">Harga (Rp) — kosongkan jika “Hubungi kami”</label><input id="fharga" type="text" placeholder="3500000"></div>
+                            <div class="f"><label for="fharga">Harga (Rp) — kosongkan jika “Hubungi kami”</label><input id="fharga" type="text" placeholder="3500000"></div>
               <div class="f"><label for="fstatus">Status jual <i>*</i></label><select id="fstatus"><option>Tersedia</option><option>Dipesan</option><option>Terjual</option></select></div>
               <div class="f full"><label for="fkeung">Keunggulan (satu per baris)</label><textarea id="fkeung" rows="2" placeholder="Postur tegak, tulang besar&#10;Pukulan keras &amp; sambung rapat"></textarea></div>
               <div class="f full"><label for="fdesc">Deskripsi / catatan kandang</label><textarea id="fdesc" rows="3" placeholder="Kisah ayam, riwayat laga/uji, catatan kesehatan…"></textarea></div>
@@ -294,6 +293,7 @@
             <b>Panduan singkat</b>
             <ul>
               <li>Nama &amp; kategori tampil pada kartu katalog.</li>
+              <li>Usia selalu dihitung sistem dari tanggal menetas — tak perlu diedit manual.</li>
               <li>Foto pertama di atas = foto utama kartu.</li>
               <li>Status “Terjual” otomatis menyembunyikan ayam dari daftar tersedia.</li>
               <li>Ayam “Draf” &amp; “Terarsip” tidak pernah tampil publik.</li>

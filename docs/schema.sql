@@ -1,24 +1,24 @@
 -- =====================================================================
 --  JALU — Galeri Ayam Bangkok
---  Skema Basis Data MySQL 8.x  (DDL)
+--  Skema Basis Data MySQL 8.x  (DDL)  — rev.2 sesuai keputusan pemilik
+--  Perubahan rev.2:
+--    1. Umur TIDAK disimpan (angka cepat basi) — cukup tanggal menetas,
+--       usia dihitung otomatis oleh aplikasi saat ditampilkan.
+--    2. Kolom "asal kota" dihapus — satu peternakan, satu lokasi.
+--    3. Multi-user (admin/petugas) disederhanakan -> SATU akun pemilik.
 --  Sumber referensi: docs/PRD.md dan docs/ERD.md
---  Catatan: charset utf8mb4 untuk mendukung emoji/latin penuh & collation
---           case-insensitive Indonesia (ci).
 -- =====================================================================
 
 SET NAMES utf8mb4;
 
 -- ---------------------------------------------------------------------
--- 1. USERS — pengguna sistem (admin & petugas)
+-- 1. USERS — akun pemilik/pengelola (tunggal)
 -- ---------------------------------------------------------------------
 CREATE TABLE users (
     id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     nama           VARCHAR(100)    NOT NULL,
     email          VARCHAR(150)    NOT NULL,
-    no_hp          VARCHAR(25)     NULL,
-    password_hash  VARCHAR(255)    NOT NULL,           -- bcrypt/argon2
-    role           ENUM('ADMIN','PETUGAS') NOT NULL DEFAULT 'PETUGAS',
-    is_active      TINYINT(1)      NOT NULL DEFAULT 1,
+    password_hash  VARCHAR(255)    NOT NULL,          -- bcrypt/argon2
     last_login_at  TIMESTAMP       NULL,
     created_at     TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at     TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -52,10 +52,9 @@ CREATE TABLE ayam (
     nama             VARCHAR(120)    NOT NULL,
     kategori_id      BIGINT UNSIGNED NULL,
     jenis_kelamin    ENUM('JANTAN','BETINA') NOT NULL,
-    umur_bulan       INT             NOT NULL,
-    berat_kg         DECIMAL(5,2)    NOT NULL,
+    tanggal_menetas  DATE            NULL,            -- perkiraan; usia = dihitung aplikasi
+    berat_kg         DECIMAL(5,2)    NOT NULL,        -- berat terakhir yang dicatat
     warna_bulu       VARCHAR(80)     NULL,
-    asal             VARCHAR(120)    NULL,
     keunggulan       TEXT            NULL,
     deskripsi        TEXT            NULL,
     harga            DECIMAL(12,0)   NULL,            -- NULL = "Hubungi kami"
@@ -63,7 +62,6 @@ CREATE TABLE ayam (
     status_tampil    ENUM('DRAFT','PUBLIKASI') NOT NULL DEFAULT 'DRAFT',
     is_featured      TINYINT(1)      NOT NULL DEFAULT 0, -- unggulan beranda (maks. 3)
     is_arsip         TINYINT(1)      NOT NULL DEFAULT 0, -- soft delete
-    created_by       BIGINT UNSIGNED NULL,
     published_at     TIMESTAMP       NULL,
     created_at       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -72,12 +70,10 @@ CREATE TABLE ayam (
     UNIQUE KEY uq_ayam_kode_ring (kode_ring),
     KEY idx_ayam_publik (status_tampil, status_jual, is_arsip),
     KEY idx_ayam_kategori (kategori_id),
+    KEY idx_ayam_menetas (tanggal_menetas),
     KEY idx_ayam_featured (is_featured),
-    KEY idx_ayam_created_by (created_by),
     CONSTRAINT fk_ayam_kategori FOREIGN KEY (kategori_id)
-        REFERENCES kategori (id) ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT fk_ayam_created_by FOREIGN KEY (created_by)
-        REFERENCES users (id) ON DELETE SET NULL ON UPDATE CASCADE
+        REFERENCES kategori (id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -86,7 +82,7 @@ CREATE TABLE ayam (
 CREATE TABLE ayam_images (
     id              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     ayam_id         BIGINT UNSIGNED NOT NULL,
-    file_path       VARCHAR(255)    NOT NULL,         -- path relatif file (di luar publik di produksi)
+    file_path       VARCHAR(255)    NOT NULL,         -- path relatif (di luar folder publik di produksi)
     file_path_thumb VARCHAR(255)    NOT NULL,
     ukuran_kb       INT             NULL,
     lebar_px        INT             NULL,
@@ -103,37 +99,33 @@ CREATE TABLE ayam_images (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- 5. PERMINTAAN — form "Saya Tertarik" dari pengunjung
+-- 5. PERMINTAAN — form "Saya Tertarik" dari pengunjung (via web publik)
 -- ---------------------------------------------------------------------
 CREATE TABLE permintaan (
     id               BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     ayam_id          BIGINT UNSIGNED NULL,            -- tetap tersimpan bila ayam dihapus
     nama_pengunjung  VARCHAR(120)    NOT NULL,
     no_wa            VARCHAR(25)     NOT NULL,
-    kota             VARCHAR(100)    NULL,
+    kota             VARCHAR(100)    NULL,            -- domisili calon pembeli (opsional)
     pesan            TEXT            NULL,
     status           ENUM('BARU','DIHUBUNGI','DEAL','BATAL') NOT NULL DEFAULT 'BARU',
-    created_by       BIGINT UNSIGNED NULL,            -- NULL = dikirim via web publik
     created_at       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     KEY idx_permintaan_ayam (ayam_id),
     KEY idx_permintaan_status (status, created_at),
-    KEY idx_permintaan_created_by (created_by),
     CONSTRAINT fk_permintaan_ayam FOREIGN KEY (ayam_id)
-        REFERENCES ayam (id) ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT fk_permintaan_created_by FOREIGN KEY (created_by)
-        REFERENCES users (id) ON DELETE SET NULL ON UPDATE CASCADE
+        REFERENCES ayam (id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- 6. AKTIVITAS_LOG — jejak audit ringan (hanya admin yang melihat)
+-- 6. AKTIVITAS_LOG — jejak perubahan (dilihat pemilik)
 -- ---------------------------------------------------------------------
 CREATE TABLE aktivitas_log (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id     BIGINT UNSIGNED NULL,                 -- pelaku; NULL = anonim
+    user_id     BIGINT UNSIGNED NULL,                 -- pelaku (pemilik)
     aksi        ENUM('LOGIN','CREATE','UPDATE','DELETE','ARSIP','PULIHKAN',
-                     'UBAH_STATUS','KELOLA_USER','KELOLA_KATEGORI','LAINNYA') NOT NULL,
+                     'UBAH_STATUS','LAINNYA') NOT NULL,
     entitas     VARCHAR(50)     NOT NULL,             -- mis. 'ayam', 'ayam_images', 'permintaan'
     entitas_id  BIGINT UNSIGNED NULL,
     detail      JSON            NULL,                 -- ringkasan perubahan
@@ -149,9 +141,9 @@ CREATE TABLE aktivitas_log (
 -- DATA AWAL (seed minimal)
 -- =====================================================================
 
--- Pengguna awal: admin@jalu.id / (kata sandi di-hash saat instalasi aplikasi)
-INSERT INTO users (nama, email, no_hp, password_hash, role)
-VALUES ('Admin Utama', 'admin@jalu.id', NULL, '<DIISI_OLEH_APP>', 'ADMIN');
+-- Akun pemilik (kata sandi di-hash saat instalasi aplikasi)
+INSERT INTO users (nama, email, password_hash)
+VALUES ('H. Suroto', 'admin@jalu.id', '<DIISI_OLEH_APP>');
 
 -- Kategori contoh
 INSERT INTO kategori (nama, slug, deskripsi, urutan) VALUES
