@@ -96,7 +96,12 @@ export default function PanelSession() {
         }
         return; // biarkan logout normal (tanpa s)
       }
-      if (!path.startsWith("/panel")) return;
+      // Semua aksi internal panel (/panel halaman & /api/panel mutasi) wajib
+      // membawa ?s bila cookie diblokir — kalau tidak, simpan/hapus akan
+      // dianggap belum login dan dilempar ke /panel/login.
+      const isInternal =
+        path.startsWith("/panel") || path.startsWith("/api/panel");
+      if (!isInternal) return;
       if (!hasParam(act, "s")) {
         f.setAttribute("action", addParam(act, "s", t));
       }
