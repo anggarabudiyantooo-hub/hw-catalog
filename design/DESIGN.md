@@ -122,6 +122,11 @@ Tidak memuat font eksternal (offline-friendly); gunakan fallback yang serasi.
 6. Kaki kartu: harga (`bata-700`, serif, semi-bold) + tombol "Detail".
 7. Kartu "Unggulan" berbingkai ganda emas tipis & tab kecil "UNGGULAN".
 
+### 5.2a Kartu Ayam — Status "Terjual" & Jenis Foto
+- Kartu/galeri yang berstatus **Terjual** otomatis menampilkan seluruh fotonya **hitam-putih** (`filter: grayscale(1)`) plus watermark kecil "TERJUAL" di atas foto — kesan etalase yang rapi, bukan barang hilang. File asli tetap berwarna (grayscale hanya efek tampilan).
+- Setiap foto galeri membawa **label jenis**: `Full badan`, `Kepala`, `Kaki`, `Bulu & ekor`, `Lainnya`. Syarat publikasi ayam: wajib ada Full badan, Kepala, dan Kaki (minimal satu masing-masing).
+- Info usia kartu menampilkan dua lapis: angka **usia ± (bulan)** (hasil hitung otomatis, lebih tegas) + **tanggal menetas** (italik kecil) — mis. *"± 18 bulan · menetas 13 Maret 2025"*.
+
 ### 5.3 Hero Beranda
 Latar `marun-900` dengan **tekstur bata** (SVG pattern garis-garis silang sangat samar, opacity 4–6%), ornamen garis emas, tipografi besar krem, dan baris data pendek (statistik) dengan pemisah belah ketupat kecil.
 
