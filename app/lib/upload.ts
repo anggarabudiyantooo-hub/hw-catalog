@@ -1,6 +1,7 @@
 import { randomBytes } from "crypto";
 import { mkdir, rm, writeFile, unlink } from "fs/promises";
 import path from "path";
+import { beriWatermark } from "./watermark";
 
 export const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 const ALLOWED = new Map<string, string>([
@@ -28,9 +29,15 @@ export async function simpanGambar(file: File): Promise<SavedImage> {
   const check = isAllowed(file);
   if (!check.ok) throw new Error(check.err);
   await mkdir(UPLOAD_DIR, { recursive: true });
-  const ext = ALLOWED.get(file.type) || ".jpg";
+  const ext = (ALLOWED.get(file.type) || ".jpg") as ".jpg" | ".png" | ".webp";
   const nama = `${Date.now()}-${randomBytes(4).toString("hex")}${ext}`;
-  const buf = Buffer.from(await file.arrayBuffer());
+  let buf = Buffer.from(await file.arrayBuffer());
+  // Tanda air (watermark) otomatis pada setiap foto unggahan.
+  try {
+    buf = await beriWatermark(buf, ext);
+  } catch (e) {
+    console.error("watermark gagal, simpan asli:", e);
+  }
   await writeFile(path.join(UPLOAD_DIR, nama), buf);
   return { filePath: `/uploads/${nama}`, fileName: nama, sizeKb: Math.round(buf.length / 1024) };
 }

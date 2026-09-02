@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getOwner } from "@/lib/auth";
 import { LogoMark } from "@/components/Logo";
+import { SITE } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +16,16 @@ export default async function LoginPage({
 
   return (
     <div className="login-wrap">
+      <div className="login-top">
+        <Link href="/" className="login-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
+          Kembali ke Beranda
+        </Link>
+        <Link href="/" className="login-brand" aria-label={`${SITE.brand} — kembali ke beranda`}>
+          <LogoMark size={26} />
+          <span>{SITE.brand}</span>
+        </Link>
+      </div>
       <div className="login-card">
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
           <LogoMark />
