@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import NavLinks from "./NavLinks";
+import PublicMenu from "./PublicMenu";
 import { SITE, waLink } from "@/lib/config";
 
 export function Ornamen() {
@@ -20,15 +21,21 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
   return (
     <>
       <header className="pub-nav">
-        <div className="wrap" style={{ display: "flex", alignItems: "center", gap: 30 }}>
+        <div className="wrap pub-head" style={{ display: "flex", alignItems: "center", gap: 30 }}>
           <Link href="/">
             <Logo />
           </Link>
-          <div style={{ marginLeft: "auto", display: "flex", gap: 24, alignItems: "center" }}>
+          <div className="pub-actions">
             <NavLinks />
-            <a className="btn btn-outline btn-sm" href={waLink(`Halo ${SITE.pemilik}, saya ingin bertanya tentang ayam Bangkok di ${SITE.nama}.`)} target="_blank" rel="noopener">
+            <a
+              className="btn btn-outline btn-sm wa-cta"
+              href={waLink(`Halo ${SITE.pemilik}, saya ingin bertanya tentang ayam Bangkok di ${SITE.nama}.`)}
+              target="_blank"
+              rel="noopener"
+            >
               Hubungi
             </a>
+            <PublicMenu />
           </div>
         </div>
       </header>

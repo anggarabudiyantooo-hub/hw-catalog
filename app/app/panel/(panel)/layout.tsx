@@ -6,6 +6,7 @@ import { getOwner, userFromToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import ConfirmInit from "@/components/ConfirmInit";
 import PanelSession from "@/components/PanelSession";
+import PanelNavDrawer from "@/components/PanelNavDrawer";
 import { LogoMark } from "@/components/Logo";
 import { SITE } from "@/lib/config";
 
@@ -47,6 +48,7 @@ export default async function PanelLayout({ children }: { children: ReactNode })
             <span className="brand-sub">Panel Pengelola</span>
           </span>
         </Link>
+        <PanelNavDrawer />
         <nav className="side-nav">
           {NAV.map((item) =>
             item.group ? (
