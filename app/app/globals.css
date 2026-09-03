@@ -938,3 +938,94 @@ body { background: var(--krem-100); }
   .hero { min-height: 640px; }
   .hero-in { min-height: 640px; }
 }
+
+/* =========================================================
+   GOLDEN RATIO SYSTEM (φ = 1,618) — berlaku seluruh situs
+   Basis teks 16px (= φ^0). Skala: 16×φ^k dengan k = -1, -½,
+   0, ½, 1, 1½, 2, 3 → 9,89 · 12,58 · 16 · 20,35 · 25,89 ·
+   32,93 · 41,89 · 67,78 px. Setiap langkah √φ=1,272; tiap dua
+   langkah persis φ=1,618. Kolom baca = 61,8% × 1132 ≈ 700px.
+   ========================================================= */
+:root {
+  --gr-fs-hair: 9.89px;
+  --gr-fs-meta: 12.58px;
+  --gr-fs-body: 16px;
+  --gr-fs-note: 20.35px;
+  --gr-fs-sub: 25.89px;
+  --gr-fs-d2: 32.93px;
+  --gr-fs-title: 41.89px;
+  --gr-fs-hero: 67.78px;
+  --gr-lh: 1.618;
+  --gr-gap: 21px;
+  --gr-gap-lg: 34px;
+  --gr-gap-xl: 55px;
+  --gr-w: 700px; /* 61,8% area baca 1132px */
+}
+
+/* ---- mikro / label (16 ÷ φ = 9,89) ---- */
+.cap, .hero-kicker, .sec-head .cap, .stat span { font-size: var(--gr-fs-hair); }
+.sec-head .cap, .cap { letter-spacing: 0.24em; }
+
+/* ---- hero ---- */
+.hero h1 { font-size: clamp(var(--gr-fs-title), 5.5vw, var(--gr-fs-hero)); }
+.hero .lede { font-size: var(--gr-fs-body); line-height: var(--gr-lh); }
+.hero-copy { max-width: var(--gr-w); }
+.hero .orn { margin: 26px auto var(--gr-gap-lg); }
+.hero-cta { margin-top: var(--gr-gap-lg); gap: var(--gr-gap); }
+.stats { margin-top: var(--gr-gap-xl); gap: var(--gr-gap-xl); }
+.stat b { font-size: var(--gr-fs-d2); }
+.stat b i { font-size: var(--gr-fs-note); }
+
+/* ---- kepala seksi (φ² = 41,89) ---- */
+.sec-head { max-width: var(--gr-w); margin: 0 auto var(--gr-gap-xl); }
+.sec-head h2 { font-size: clamp(var(--gr-fs-d2), 3.4vw, var(--gr-fs-title)); line-height: 1.236; margin: 16px 0 10px; }
+.sec-head p { font-size: var(--gr-fs-body); line-height: var(--gr-lh); }
+section.block { padding: var(--gr-gap-xl) 0; }
+
+/* ---- kartu ayam / kategori (φ^½, φ^0) ---- */
+.cards { gap: var(--gr-gap-lg); }
+.bc-name { font-size: var(--gr-fs-note); line-height: 1.272; }
+.bc-meta { font-size: var(--gr-fs-meta); }
+.price { font-size: var(--gr-fs-note); }
+.kat-tile b { font-size: var(--gr-fs-note); }
+
+/* ---- quote & CTA ---- */
+.quote .qmark { font-size: 53.29px; } /* 16 × φ^2½ */
+.quote blockquote { font-size: clamp(var(--gr-fs-note), 2.4vw, var(--gr-fs-sub)); line-height: var(--gr-lh); margin: var(--gr-gap) 0; }
+.cta-panel h3 { font-size: var(--gr-fs-sub); }
+.cta-panel p { font-size: var(--gr-fs-body); line-height: var(--gr-lh); }
+
+/* ---- lokasi & kunjungan ---- */
+.loc-addr address { font-size: var(--gr-fs-body); line-height: var(--gr-lh); }
+.loc-tip { font-size: var(--gr-fs-meta); line-height: var(--gr-lh); }
+.loc-rule li { font-size: var(--gr-fs-body); line-height: var(--gr-lh); }
+.loc-jam .jam { font-size: clamp(var(--gr-fs-sub), 2.6vw, var(--gr-fs-d2)); }
+.loc-map-meta b { font-size: var(--gr-fs-body); }
+
+/* ---- halaman detail ayam ---- */
+.pd-info h1 { font-size: clamp(var(--gr-fs-sub), 3.4vw, var(--gr-fs-title)); }
+.pd-cap { font-size: var(--gr-fs-hair); }
+.pd-sub { font-size: var(--gr-fs-meta); line-height: var(--gr-lh); }
+.pd-price-val { font-size: clamp(var(--gr-fs-sub), 3.2vw, var(--gr-fs-d2)); }
+.pd-spec .spec dt { font-size: var(--gr-fs-meta); }
+.pd-spec .spec dd { font-size: var(--gr-fs-body); line-height: var(--gr-lh); }
+.pd-keung li { font-size: var(--gr-fs-body); line-height: var(--gr-lh); }
+.fr-head h2, .rel-head h2 { font-size: clamp(20.35px, 2.4vw, 25.89px); }
+.minat-grid h2 { font-size: clamp(var(--gr-fs-sub), 2.8vw, var(--gr-fs-d2)); }
+.minat-list li { font-size: var(--gr-fs-body); line-height: var(--gr-lh); }
+.fr-sub, .rel-meta { font-size: var(--gr-fs-meta); }
+.rel-body b { font-size: var(--gr-fs-note); }
+
+/* ---- footer ---- */
+.pub-foot .fnav a { font-size: var(--gr-fs-meta); }
+.pub-foot .frow b, .pub-foot .frow a { font-size: var(--gr-fs-meta); }
+.pub-foot .f-about, .pub-foot .f-addr { font-size: var(--gr-fs-meta); line-height: var(--gr-lh); }
+
+/* ---- layar kecil: ritme tetap proporsional ---- */
+@media (max-width: 600px) {
+  section.block { padding: var(--gr-gap-lg) 0; }
+  .sec-head { margin-bottom: var(--gr-gap-lg); }
+  .stats { gap: var(--gr-gap-lg); margin-top: var(--gr-gap-lg); }
+  .hero .orn { margin: var(--gr-gap) 0 26px; }
+  .cards { gap: 26px; }
+}
