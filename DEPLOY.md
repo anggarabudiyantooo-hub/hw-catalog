@@ -85,3 +85,5 @@ masuk (atau ubah di `app/prisma/seed.ts` sebelum seed).
 - Foto yang diunggah lalu ayamnya dihapus otomatis dihapus juga dari Blob.
 - URL foto seed lokal (`/uploads/seed/…`) berbeda dari foto unggahan
   (URL Blob `https://….blob.vercel-storage.com/…`) — keduanya didukung.
+
+> Catatan: commit harus memakai email yang terhubung ke akun GitHub agar deploy Vercel tidak diblokir (DEPLOYMENT_BLOCKED).
