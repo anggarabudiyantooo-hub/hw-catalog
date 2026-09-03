@@ -18,7 +18,7 @@ export const SITE = {
   alamatBaris1: "Pedan, Kab. Klaten,",
   alamatBaris2: "Jawa Tengah, Indonesia",
   mapsUrl: "https://maps.google.com/?q=Pedan+Klaten+Jawa+Tengah",
-  jamLayanan: "08.00–17.00 WIB",
+  jamLayanan: "08:00 – 17:00 WIB",
   catatanKunjungan:
     "Kunjungan wajib reservasi (janji temu). Chat WhatsApp dulu untuk mencocokkan jadwal pemilik — tanpa janji, mohon tidak datang langsung.",
   sejak: "",

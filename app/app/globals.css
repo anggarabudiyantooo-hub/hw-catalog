@@ -877,3 +877,48 @@ body { background: var(--krem-100); }
   .pub-foot .foot-grid { grid-template-columns: 1fr; row-gap: 30px; }
   .pub-foot .f-visit { width: 100%; }
 }
+
+/* =========================================================
+   LOKASI & KUNJUNGAN — redesign mengikuti gambar acuan
+   (cap KUNJUNGI KAMI, kartu Alamat / Jam Kunjungan /
+   Prosedur, kartu peta) dengan palet hangat terang.
+   ========================================================= */
+.loc-sec { background: var(--krem-200); }
+.loc-grid { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: 26px; align-items: stretch; }
+.loc-stack { display: flex; flex-direction: column; gap: 18px; }
+.loc-card { background: var(--card); border: 1px solid var(--krem-300); border-radius: 12px; box-shadow: 0 12px 26px -24px rgba(90, 35, 20, 0.4); }
+.loc-stack .loc-card { display: flex; gap: 16px; align-items: flex-start; padding: 20px 22px; }
+.loc-ic {
+  flex: none; width: 42px; height: 42px; border-radius: 11px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--marun-900), var(--bata-700));
+  color: var(--emas-300);
+  box-shadow: 0 6px 14px -8px rgba(90, 25, 20, 0.8);
+}
+.loc-ic svg { width: 20px; height: 20px; }
+.loc-body { flex: 1; min-width: 0; }
+.loc-card h3 {
+  font-size: 11.5px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--bata-700); font-weight: 700; margin: 2px 0 8px;
+}
+.loc-addr address { font-style: normal; font-size: 15.5px; line-height: 1.7; color: var(--ink); }
+.loc-addr address b { color: var(--bata-700); }
+.loc-tip { font-size: 12.5px; color: var(--ink-muted); font-style: italic; margin-top: 9px; }
+.loc-jam .jam { font-size: clamp(21px, 2.3vw, 27px); font-weight: 700; color: var(--ink); line-height: 1.25; }
+.loc-rule ol { margin: 2px 0 0; padding: 0; counter-reset: st; list-style: none; }
+.loc-rule li { counter-increment: st; position: relative; padding: 0 0 13px 46px; font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.loc-rule li:last-child { padding-bottom: 0; }
+.loc-rule li::before {
+  content: counter(st);
+  position: absolute; left: 0; top: -2px;
+  width: 31px; height: 31px; border-radius: 50%;
+  background: var(--marun-800); color: var(--emas-300);
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 13px;
+}
+.loc-map-card { display: flex; flex-direction: column; gap: 12px; padding: 12px 12px 10px; }
+.loc-map-card .map-svg { border-radius: 8px; }
+.loc-map-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 4px 6px 4px; }
+.loc-map-meta b { font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.loc-map-meta a { font-size: 12.5px; font-weight: 600; color: var(--bata-700); border-bottom: 1px dotted rgba(138, 30, 26, 0.55); text-decoration: none; white-space: nowrap; }
+.loc-map-meta a:hover { color: var(--emas-700); border-bottom-color: rgba(184, 137, 47, 0.65); }

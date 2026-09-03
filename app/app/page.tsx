@@ -136,42 +136,59 @@ export default async function HomePage() {
       <section className="block loc-sec" id="lokasi">
         <div className="wrap">
           <div className="sec-head">
-            <span className="cap">Sebelum Berkunjung</span>
-            <h2>Lokasi &amp; Kunjungan Kandang</h2>
-            <p>Kandang berada di Pedan, Klaten. Supaya Anda tidak sia-sia datang, kunjungan kami layani dengan janji temu.</p>
+            <span className="cap">Kunjungi Kami</span>
+            <h2>Lokasi &amp; Kunjungan</h2>
+            <p>Kandang kami berada di Pedan, Klaten — di jalur utama Solo–Yogyakarta. Silakan cek alamat, jam layanan, dan tata cara berkunjung di bawah.</p>
           </div>
           <div className="loc-grid">
             <div className="loc-stack">
               <div className="loc-card loc-addr">
-                <h3>Alamat</h3>
-                <address>
-                  <b>{SITE.nama}</b>
-                  <br />
-                  {SITE.alamatBaris1}
-                  <br />
-                  {SITE.alamatBaris2}
-                </address>
-                <ul className="loc-list">
-                  <li>Terletak di Kec. Pedan, Kab. Klaten — mudah diakses dari jalur Solo–Yogyakarta.</li>
-                  <li>Parkir di halaman kandang — cukup untuk mobil kecil.</li>
-                  <li>Dapat dijangkau ojek online / kendaraan pribadi (tujuan: Pedan, Klaten).</li>
-                </ul>
-                <a className="btn btn-outline btn-sm" href={SITE.mapsUrl} target="_blank" rel="noopener">Buka Peta di Google Maps</a>
+                <span className="loc-ic" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11Z" /><circle cx="12" cy="10" r="2.7" /></svg>
+                </span>
+                <div className="loc-body">
+                  <h3>Alamat</h3>
+                  <address>
+                    <b>{SITE.nama}</b>, Pedan, Kab. Klaten
+                    <br />
+                    Jawa Tengah, Indonesia
+                  </address>
+                  <p className="loc-tip">Jalur Solo–Yogyakarta, parkir tersedia.</p>
+                </div>
               </div>
+
+              <div className="loc-card loc-jam">
+                <span className="loc-ic" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2.2" /></svg>
+                </span>
+                <div className="loc-body">
+                  <h3>Jam Kunjungan</h3>
+                  <p className="jam">{SITE.jamLayanan}</p>
+                  <p className="loc-tip">Layanan kunjungan hanya dengan reservasi.</p>
+                </div>
+              </div>
+
               <div className="loc-card loc-rule">
-                <h3>Syarat Kunjungan: Reservasi Dulu</h3>
-                <p>
-                  Kami melayani kunjungan hanya bagi yang <b>sudah membuat janji (reservasi)</b> terlebih dahulu, agar jadwal pemilik cocok dan Anda didampingi sepenuhnya.
-                </p>
-                <ol>
-                  <li>Chat WhatsApp, sebut ayam yang ingin dilihat &amp; tanggal kunjungan.</li>
-                  <li>Pemilik mengonfirmasi jadwal (umumnya &lt; 1×24 jam).</li>
-                  <li>Datang sesuai jam yang disepakati — jam layanan {SITE.jamLayanan}.</li>
-                </ol>
+                <span className="loc-ic" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4.6V3.5c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5v1.1M9 10.5h6M9 14h6M9 17.5h3.5" /></svg>
+                </span>
+                <div className="loc-body">
+                  <h3>Prosedur Kunjungan</h3>
+                  <ol>
+                    <li>Konfirmasi via WhatsApp terlebih dahulu.</li>
+                    <li>Pemilik akan konfirmasi dalam ±1×24 jam.</li>
+                    <li>Datang sesuai jadwal yang disepakati.</li>
+                  </ol>
+                </div>
               </div>
             </div>
+
             <div className="loc-card loc-map-card">
               <MapSvg />
+              <div className="loc-map-meta">
+                <b>Pedan, Klaten, Jawa Tengah</b>
+                <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer">Buka di Google Maps →</a>
+              </div>
             </div>
           </div>
         </div>
