@@ -1,4 +1,7 @@
 # Product Requirements Document (PRD)
+
+> **Catatan status:** dokumen ini artefak **fase desain** (nama produk kerja "Jalu", basis data awal MySQL 8). Implementasi yang berjalan kini bernama **HW Catalog** (Next.js + Prisma/PostgreSQL, Vercel Blob) — lihat `README.md` & `DEPLOY.md`. Dokumen tetap disimpan sebagai riwayat desain.
+
 ## Jalu — Galeri Ayam Bangkok (Katalog & Info Penjualan)
 
 | | |

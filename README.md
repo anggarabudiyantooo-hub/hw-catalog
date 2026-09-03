@@ -1,44 +1,100 @@
-# Jalu — Galeri Ayam Bangkok
+# HW Catalog — Galeri Ayam Bangkok
 
-> **Status proyek: Fase Desain (M0).** Repository berisi PRD, ERD, skema basis data, sistem desain, dan mockup visual awal.
-> Nama produk "Jalu" adalah *working title* dan mudah diganti.
+> **Status: produksi.** Aplikasi web etalase satu kandang untuk menampilkan ayam
+> Bangkok milik **Pemilik Demo** (Pedan, Kab. Klaten, Jawa Tengah) sekaligus sarana
+> penjualan. Ter-deploy di Vercel dengan PostgreSQL (Neon) + Vercel Blob.
 
-Sistem web **etalase satu kandang** untuk menampilkan ayam Bangkok sekaligus sarana penjualan: **CRUD lengkap termasuk unggah banyak gambar per ayam**, usia yang dihitung otomatis dari tanggal menetas, login pemilik tunggal, dan penerimaan permintaan ("Saya Tertarik") dari pengunjung. (rev 2.0)
+**HW Catalog** adalah katalog digital yang layak & berkelas (bukan marketplace):
+kartu ayam informatif dengan galeri foto, usia otomatis dari tanggal menetas,
+rekap riwayat laga, kontak WhatsApp langsung ke pemilik, dan panel CRUD sederhana
+untuk satu pengelola. Semua foto unggahan otomatis diberi **tanda air logo HW**
+(pola diagonal zigzag, transparan, tidak mengganggu).
 
-- 📄 **PRD** → [`docs/PRD.md`](docs/PRD.md)
-- 🗂️ **ERD** → [`docs/ERD.md`](docs/ERD.md) · diagram SVG → [`docs/diagrams/erd.svg`](docs/diagrams/erd.svg)
-- 🗃️ **Skema SQL (MySQL 8)** → [`docs/schema.sql`](docs/schema.sql)
-- 🎨 **Sistem Desain** → [`design/DESIGN.md`](design/DESIGN.md)
-- 🖼️ **Mockup (mandiri, buka langsung di browser)** →
-  - Beranda publik → [`design/mockup-beranda.html`](design/mockup-beranda.html)
-  - Katalog + filter → [`design/mockup-katalog.html`](design/mockup-katalog.html)
-  - Detail ayam + form minat → [`design/mockup-detail.html`](design/mockup-detail.html)
-  - Panel Admin (CRUD) → [`design/mockup-admin.html`](design/mockup-admin.html)
+## Fitur
 
-## Keputusan Teknis Awal (hasil kesepakatan)
+**Publik**
+- Beranda: hero, ayam unggulan, kategori, kutipan pemilik, lokasi & syarat kunjungan (wajib reservasi).
+- Katalog: penyaringan & urutan **instan di browser** (tanpa reload), URL tersinkron.
+- Detail ayam: galeri + perbesar, spesifikasi (postur, tinggi, kaki & sisik, jalu), rekap + riwayat laga, keunggulan, harga/status, "Hubungi" WhatsApp, tombol "Laporkan".
+- Peta lokasi & alamat lengkap di footer seluruh halaman.
 
-| Aspek | Keputusan |
+**Panel pemilik (`/panel`)**
+- Login pemilik tunggal (cookie + fallback token `?s=` di URL bila cookie tidak tersedia).
+- CRUD ayam + kategori, status jual (Terjual → foto otomatis hitam-putih), arsip/hapus.
+- Galeri multi-foto dengan **pratinjau langsung sebelum diunggah** (validasi tipe & 5 MB, label BARU/DITOLAK).
+- Riwayat tarung (menang/kalah/seri, rekap otomatis), laporan pengunjung, log aktivitas.
+- Aturan publikasi: wajib ada foto Full badan · Kepala · Kaki.
+
+**Teknis**
+- Halaman publik memakai **ISR/SSG** (cache CDN) + pembersihan cache otomatis (`revalidatePath`) saat data diubah lewat panel → klik antar halaman cepat.
+- Watermark logo (PNG transparan) ditulis oleh `sharp` pada setiap foto baru.
+- Upload disimpan ke **Vercel Blob** di produksi; fallback `public/uploads` untuk dev lokal.
+
+## Stack
+
+| Aspek | Pilihan |
 |---|---|
-| Stack | Next.js (App Router) + React, TypeScript |
-| Basis data | MySQL 8 (via Prisma ORM), skema awal di `docs/schema.sql` |
-| Tujuan | Katalog display **+ info penjualan** (harga & status) |
-| Hak akses | **Pemilik tunggal** (satu akun login) + pengunjung publik |
-| Desain | **Merah bata & krem** — hangat, lokal, berkelas (bukan template AI generik) |
+| Framework | Next.js 14 (App Router) + TypeScript |
+| Database | PostgreSQL via Prisma ORM (dev/SQLite dulu → kini PostgreSQL, migrasi di `app/prisma/migrations/`) |
+| Penyimpanan foto | Vercel Blob (produksi) / `public/uploads` (lokal) |
+| Login | `bcryptjs` + sesi cookie, fallback token URL |
+| Watermark | `sharp` (logo transparan, pola diagonal acak-diperbarui) |
+| Deploy | Vercel (lihat [`DEPLOY.md`](DEPLOY.md)) |
 
-## Struktur Folder
+## Struktur
 
 ```
 ayam-bangkok-studio/
-├── docs/            # PRD, ERD, skema SQL, diagram
-├── design/          # sistem desain + mockup HTML & aset gambar
-├── assets/          # (cadangan) aset lain di masa depan
+├── app/                  # Aplikasi Next.js (root direktori di Vercel = "app")
+│   ├── app/              #   route App Router (publik + /panel)
+│   ├── components/       #   komponen React
+│   ├── lib/              #   config, prisma, auth, upload, watermark, format
+│   ├── prisma/           #   schema + migrasi + seed (6 ayam contoh)
+│   ├── public/brand/     #   logo emblem & favicon
+│   └── public/uploads/seed/  # foto demo (aset statis)
+├── docs/                 # PRD & ERD (kontrak desain awal — lihat catatan)
+├── design/               # sistem desain & mockup HTML awal
+├── DEPLOY.md             # panduan deploy GitHub + Vercel + Neon + Blob
 └── README.md
 ```
 
-## Peta Jalan Singkat
+> Dokumen `docs/` dan `design/` adalah artefak **fase desain** (nama produk lama
+> "Jalu", basis data awal MySQL 8). Implementasi kini berjalan dengan **HW Catalog**
+> + Prisma/PostgreSQL — dokumen tersebut tetap disimpan sebagai riwayat desain.
 
-1. **M0 · Desain (sekarang):** PRD, ERD, skema, sistem desain, mockup — *sedang direvisi → disetujui.*
-2. **M1 · Pondasi:** Scaffold Next.js + Prisma, login pemilik tunggal, layout panel.
-3. **M2 · CRUD Ayam:** Manajemen data ayam + multi-gambar + kategori + status jual.
-4. **M3 · Publik:** Beranda, katalog + filter, halaman detail, form "Saya Tertarik".
-5. **M4 · Rapi & Rilis:** Log aktivitas, pengaturan, pengujian, deployment.
+## Menjalankan Lokal
+
+```bash
+cd app
+npm install                      # menjalankan prisma generate (postinstall)
+cp .env.example .env             # isi DATABASE_URL + SESSION_SECRET
+# pastikan PostgreSQL tersedia, lalu:
+npx prisma migrate deploy        # terapkan migrasi
+npm run db:seed                  # akun admin + 6 ayam contoh
+npm run dev                      # http://localhost:3000
+```
+
+- Akun panel hasil seed: **`admin@jalu.id` / `jalu1234`** — segera ganti di produksi.
+- Tanpa `BLOB_READ_WRITE_TOKEN`, unggahan disimpan ke `public/uploads` (dev lokal).
+
+## Build & Uji
+
+```bash
+cd app
+DATABASE_URL="postgresql://…" npm run build   # publik di-prerender (butuh DB)
+npm start                                     # atau next start
+```
+
+## Deploy
+
+Panduan lengkap (Neon, Vercel, Blob, migrasi+seed, pemecahan `DEPLOYMENT_BLOCKED`)
+ada di **[`DEPLOY.md`](DEPLOY.md)**.
+
+## Dokumentasi lain
+
+- 📄 PRD → [`docs/PRD.md`](docs/PRD.md)
+- 🗂️ ERD → [`docs/ERD.md`](docs/ERD.md) · diagram → [`docs/diagrams/erd.svg`](docs/diagrams/erd.svg)
+- 🎨 Sistem desain → [`design/DESIGN.md`](design/DESIGN.md)
+
+---
+© HW Catalog · Pedan, Klaten. Kontak: +62 800-0000-0000 (WhatsApp) · kunjungan wajib reservasi.

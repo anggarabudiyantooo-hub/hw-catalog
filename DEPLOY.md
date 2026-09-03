@@ -1,89 +1,81 @@
 # Deploy HW Catalog — GitHub + Vercel
 
-Aplikasi sudah disiapkan agar berfungsi penuh di Vercel:
+Aplikasi **HW Catalog** (Next.js di folder `app/`) disiapkan agar berfungsi penuh
+di Vercel:
 
-- **Database**: PostgreSQL (produksi) — skema di `app/prisma/schema.prisma`,
-  migrasi awal di `app/prisma/migrations/0_init`. Sebelumnya SQLite (hanya
-  untuk demo lokal, `app/prisma/dev.db`, tidak ikut di-commit).
-- **Foto unggahan**: disimpan ke **Vercel Blob** bila `BLOB_READ_WRITE_TOKEN`
-  tersedia; tanpa token, otomatis fallback ke `public/uploads` (dev lokal).
-- **Foto seed/demo** (`public/uploads/seed/*.jpg`) ikut di-repo sebagai aset
-  statis, jadi tetap tampil di Vercel tanpa storage.
-- Semua halaman `force-dynamic`, sehingga build tidak perlu akses database.
+- **Database**: PostgreSQL produksi (mis. **Neon** free tier). Skema Prisma di
+  `app/prisma/schema.prisma`, migrasi awal di `app/prisma/migrations/0_init`.
+- **Foto unggahan**: disimpan ke **Vercel Blob** saat `BLOB_READ_WRITE_TOKEN`
+  tersedia; tanpa token → fallback ke `public/uploads` (dev lokal).
+- **Halaman publik** memakai **ISR/SSG**: beranda & katalog statis, detail ayam
+  di-prerender, lalu cache dibersihkan otomatis (`revalidatePath`) setiap data
+  diubah lewat panel → **build membutuhkan akses ke database yang sudah diisi**.
 
 ---
 
 ## 1) Siapkan database PostgreSQL (Neon — gratis)
 
-1. Buka https://neon.tech → Sign up (bisa pakai GitHub/Google).
-2. **Create a project** (region bebas), lalu buka tab **Connect**.
-3. Salin **connection string** yang berawalan `postgresql://…` (mode
-   `Prisma`/`Node.js`), misalnya:
-   `postgresql://user:pass@ep-xxxx.region.aws.neon.tech/hwcatalog?sslmode=require`
-   > Catatan: bila memakai URL `pooler`, Prisma butuh `?pgbouncer=true` dan
-   > `direct_url` — disarankan pakai string **non-pooling** biasa.
+1. Buka https://neon.tech → daftar (bisa lewat GitHub/Google) → **Create a project**.
+2. Buka tab **Connect** → pilih jenis koneksi **Node.js/Prisma**.
+3. Salin **connection string** berawalan `postgresql://…` (mode **non-pooling**,
+   host tanpa `-pooler`).
+4. **Isi tabel** lewat SQL Editor Neon:
+   - Buka **SQL Editor** → tempel **seluruh isi `SETUP_NEON.sql`** (file di akar
+     repo; membuat 8 tabel + 5 kategori + 6 ayam contoh + 22 foto + akun panel)
+     → **Run**. Hanya untuk database **kosong**, cukup sekali.
+   - Alternatif dari CLI: `npx prisma migrate deploy && npm run db:seed`
+     (menghasilkan akun **`admin@jalu.id` / `jalu1234`**).
 
-## 2) Siapkan repositori GitHub
+> ⚠️ Jangan pernah menjalankan `db:seed`/`SETUP_NEON.sql` berulang — ia menghapus
+> seluruh data lalu membuat ulang.
 
-1. Buat akun di https://github.com bila belum punya.
-2. Buat **Personal Access Token**:
-   https://github.com/settings/tokens → **Generate new token (classic)** →
-   centang **`repo`** → Generate → salin token (hanya tampil sekali).
-3. (Opsional) Buat repo kosong dulu di GitHub, atau beri tahu nama repo yang
-   diinginkan — nanti dibuatkan.
+## 2) Repositori GitHub
 
-## 3) Siapkan Vercel
+- Repo: `https://github.com/<user>/hw-catalog` (cabang `main`).
+- Akses push memakai **Personal Access Token** (scope `repo`):
+  https://github.com/settings/tokens → *Generate new token (classic)*.
+- **Identitas git harus milik akun GitHub yang terhubung ke Vercel.** Vercel
+  memblokir build (`DEPLOYMENT_BLOCKED`) bila penulis commit tidak bisa dikaitkan
+  ke pengguna GitHub (Hobby plan). Pastikan:
+  ```bash
+  git config user.name  "<Nama di GitHub>"
+  git config user.email "<email terdaftar di GitHub>"
+  ```
 
-1. Daftar di https://vercel.com (sambungkan akun GitHub).
-2. Buat **token API**: https://vercel.com/account/settings/tokens →
-   **Create Token** (scope: `Full Account` atau minimal `deployment` +
-   `project`) → salin token.
-3. Buat **Blob store**: Dashboard → **Storage** → **Create** → **Blob** →
-   salin **`BLOB_READ_WRITE_TOKEN`**.
+## 3) Vercel — project & environment
 
-## 4) Environment Variables (Vercel)
+1. https://vercel.com → **Add New → Project → Import** repo `hw-catalog`.
+2. Atur: **Root Directory = `app`**, framework otomatis **Next.js**.
+3. **Settings → Environment Variables**:
 
-Set di project Vercel → **Settings → Environment Variables**:
+   | Nama | Isi |
+   |---|---|
+   | `DATABASE_URL` | connection string Neon (langkah 1) |
+   | `SESSION_SECRET` | string acak panjang (mis. `openssl rand -hex 32`) |
+   | `BLOB_READ_WRITE_TOKEN` | token dari **Storage → Create → Blob** (untuk simpan foto unggahan) |
 
-| Nama | Isi |
-|---|---|
-| `DATABASE_URL` | connection string Neon dari langkah 1 |
-| `SESSION_SECRET` | string acak panjang, mis. hasil `openssl rand -hex 32` |
-| `BLOB_READ_WRITE_TOKEN` | token Blob dari langkah 3.3 |
+   Beri tanda centang minimal **Production** (tambahkan Preview jika ingin
+   mengetes branch/PR).
 
-## 5) Migrasi + seed (sekali saja)
+4. **Deploy.** Build membaca DB saat prerender → pastikan langkah 1.4 selesai
+   sebelum deploy pertama.
 
-Jalankan dari mesin lokal (bisa dari folder `app/`):
+## 4) Verifikasi & pemeliharaan
 
-```bash
-cd app
-export DATABASE_URL="postgresql://…(URL Neon)…"
-npx prisma migrate deploy
-npm run db:seed        # membuat akun admin + 6 ayam contoh
-```
+- Setiap push ke `main` memicu deployment baru; tunggu status **Ready** di tab
+  Deployments, lalu buka URL `https://<project>.vercel.app`.
+- Uji: katalog 6 ayam tampil → login `/panel` → tambah foto (ada pratinjau dulu,
+  tersimpan ke Blob + watermark) → halaman publik langsung segar (cache dibersihkan).
+- Deployment berstatus **Blocked** biasanya karena identitas commit (lihat 2).
+  Setelah identitas git benar, push ulang; deployment lama bisa di-*Redeploy*
+  dari dashboard atau diabaikan.
 
-> **Penting:** `db:seed` menghapus seluruh data lalu membuat ulang — jalankan
-> hanya sekali pada DB kosong, JANGAN dijalankan otomatis setiap build.
+## Catatan
 
-Akun panel: `admin@jalu.id` / `jalu1234` — segera ganti kata sandi setelah
-masuk (atau ubah di `app/prisma/seed.ts` sebelum seed).
-
-## 6) Deploy
-
-1. Push repo ke GitHub, lalu di Vercel: **Add New → Project → Import** repo
-   tersebut (framework terdeteksi otomatis: Next.js).
-2. Tambahkan environment variables di atas, lalu **Deploy**.
-3. Halaman publik, panel login, dan unggah foto (tersimpan ke Blob +
-   watermark) semuanya aktif.
-
----
-
-### Catatan kecil
-- Penyimpanan **lokal** tetap jalan tanpa token: file masuk `public/uploads`
-  (tidak ikut git). Setiap perubahan hanya diterapkan di deployment bila
-  perubahan itu di-commit & di-push ke GitHub.
-- Foto yang diunggah lalu ayamnya dihapus otomatis dihapus juga dari Blob.
-- URL foto seed lokal (`/uploads/seed/…`) berbeda dari foto unggahan
-  (URL Blob `https://….blob.vercel-storage.com/…`) — keduanya didukung.
-
-> Catatan: commit harus memakai email yang terhubung ke akun GitHub agar deploy Vercel tidak diblokir (DEPLOYMENT_BLOCKED).
+- `public/uploads/seed/*.jpg` (foto demo) ikut di-repo sebagai aset statis;
+  foto hasil unggahan dinamis tidak ikut git (Blob di produksi, `public/uploads`
+  diabaikan `.gitignore`).
+- Local dev tanpa token: unggahan masuk `public/uploads` dan hanya hidup selama
+  instance lokal.
+- Repo bisa dibuat **Public** (Settings → ubah visibility) — berpengaruh ke
+  kolaborasi/CI di GitHub, bukan ke jalannya Vercel.
