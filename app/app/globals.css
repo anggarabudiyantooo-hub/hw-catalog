@@ -201,7 +201,11 @@ section.block { padding: 54px 0; }
 
 /* ---------- Footer ---------- */
 .pub-foot { background: linear-gradient(120deg, #2e0b08, #4a120d); color: #d8c4a4; margin-top: 26px; }
-.pub-foot .foot-in { display: grid; grid-template-columns: 1.2fr 0.8fr 0.9fr 1.35fr; gap: 30px; padding: 54px 0 38px; }
+.pub-foot .foot-in { display: grid; grid-template-columns: 1.55fr 0.85fr 1.05fr 1.5fr; gap: 0; padding: 56px 0 34px; }
+.pub-foot .foot-in > div { padding: 0 30px; }
+.pub-foot .foot-in > div:first-child { padding-left: 0; }
+.pub-foot .foot-in > div:last-child { padding-right: 0; }
+.pub-foot .foot-in > div + div { border-left: 1px solid rgba(224, 188, 108, 0.16); }
 .pub-foot .brand-name { color: #f2e4c6; }
 .pub-foot .brand-sub { color: #b99f78; }
 .pub-foot .brand-mark, .side .brand-mark { background: rgba(240, 222, 178, 0.1); border-color: rgba(224, 188, 108, 0.65); }
@@ -209,7 +213,7 @@ section.block { padding: 54px 0; }
 .pub-foot h4 { font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--emas-300); margin-bottom: 14px; font-weight: 600; }
 .pub-foot a.dim, .pub-foot .dim.soon { display: block; font-size: 13.5px; color: #d8c4a4; padding: 3px 0; font-style: italic; color: #a98f6c; }
 .pub-foot a.dim:hover { color: #f6e7ce; }
-.pub-foot p { font-size: 13.5px; color: #c7af8d; }
+.pub-foot p { font-size: 13.5px; color: #c7af8d; max-width: 40ch; line-height: 1.75; }
 .foot-map { background: #e9d9b6; border: 1px solid rgba(224, 188, 108, 0.4); padding: 6px; margin: 4px 0 10px; }
 .foot-addr b { display: block; color: #f2e4c6; font-size: 13px; font-family: var(--serif); }
 .foot-addr span { display: block; font-size: 12px; color: #c7af8d; margin-top: 3px; line-height: 1.65; }
@@ -218,6 +222,14 @@ section.block { padding: 54px 0; }
 .resv svg { width: 15px; height: 15px; flex: none; margin-top: 2px; color: var(--emas-300); }
 .resv span { font-size: 12px; color: #d8c4a4; line-height: 1.6; }
 .resv b { color: #f5e9cd; }
+
+/* Strip reservasi (full width) di atas bar bawah */
+.foot-resv { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; text-align: center; padding: 15px 26px; border-top: 1px solid rgba(224, 188, 108, 0.2); border-bottom: 1px solid rgba(224, 188, 108, 0.2); background: rgba(0, 0, 0, 0.14); color: #d8c4a4; font-size: 13px; line-height: 1.6; }
+.foot-resv svg { width: 19px; height: 19px; color: var(--emas-300); flex: none; }
+.foot-resv b { color: #f5e9cd; font-weight: 600; }
+.foot-resv .btn-ghost { padding: 8px 16px; font-size: 10.5px; }
+.foot-resv .btn-ghost:hover { background: rgba(246, 231, 206, 0.1); }
+
 .foot-bottom { border-top: 1px solid rgba(224, 188, 108, 0.18); padding: 17px 0; font-size: 12.5px; color: #a98f6c; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
 /* ---------- Katalog: toolbar ---------- */
@@ -592,3 +604,8 @@ button.zoom-open { display: block; width: 100%; padding: 0; border: 0; backgroun
 }
 @media (max-width: 760px) { .pub-nav nav { display: none; } .mini-grid { grid-template-columns: 1fr 1fr; } .cta-panel .btn { margin-left: 0; } main.panel-main { padding: 20px 14px 40px; } }
 @media (max-width: 600px) { .cards, .mini-grid, .pub-foot .foot-in, .kat-grid { grid-template-columns: 1fr; } .fgrid { grid-template-columns: 1fr; } .up-pre { grid-template-columns: repeat(3, 1fr); } .spec { grid-template-columns: 1fr; } .spec .cell:nth-child(odd) { border-right: 0; } .keung ul { columns: 1; } .gthumbs { grid-template-columns: repeat(2, 1fr); } .lrow { grid-template-columns: 1fr; gap: 5px; } .toolbar .res { margin-left: 0; } }
+
+@media (max-width: 980px) {
+  .pub-foot .foot-in > div { padding: 20px 0 0; border-left: 0; }
+  .pub-foot .foot-in > div:first-child { padding-top: 0; }
+}

@@ -73,11 +73,12 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
                 </span>
                 <a className="gmap" href={SITE.mapsUrl} target="_blank" rel="noopener">Buka peta &amp; rute di Google Maps</a>
               </div>
-              <div className="resv">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="M12 13.5v3l2 1.6" /></svg>
-                <span><b>Kunjungan wajib reservasi.</b> Chat WhatsApp dulu untuk mencocokkan jadwal — tanpa janji, mohon tidak datang langsung.</span>
-              </div>
             </div>
+          </div>
+          <div className="foot-resv">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="M12 13.5v3l2 1.6" /></svg>
+            <span><b>Kunjungan wajib reservasi.</b> Chat WhatsApp dulu untuk mencocokkan jadwal — tanpa janji, mohon tidak datang langsung.</span>
+            <a className="btn btn-ghost btn-sm" href={waLink(`Halo ${SITE.pemilik}, saya ingin menjadwalkan kunjungan ke ${SITE.nama}.`)} target="_blank" rel="noopener">Jadwalkan Kunjungan</a>
           </div>
           <div className="foot-bottom">
             <span>© {new Date().getFullYear()} {SITE.nama}. Seluruh hak cipta.</span>
