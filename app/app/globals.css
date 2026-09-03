@@ -609,3 +609,74 @@ button.zoom-open { display: block; width: 100%; padding: 0; border: 0; backgroun
   .pub-foot .foot-in > div { padding: 20px 0 0; border-left: 0; }
   .pub-foot .foot-in > div:first-child { padding-top: 0; }
 }
+
+/* =========================================================
+   Detail ayam — polesan "koleksi premium" (galeri berlabel,
+   data produk ringan, kotak harga emas, footer merah bata)
+   ========================================================= */
+html { background: #FEFDF8; }
+body { background: #FEFDF8; }
+
+/* Galeri: bingkai netral halus & gambar studio cream */
+.gv .gframe { background: #fff; border: 1px solid #e6dbc4; padding: 10px; box-shadow: 0 20px 46px -34px rgba(90, 35, 20, 0.38); }
+.gv .gmain img { background: #f5efe2; }
+
+/* Thumbnail: kartu putih + caption all-caps di bawah */
+.gthumbs { gap: 12px; }
+.gthumbs button { background: #fff; border: 1px solid #e6dbc4; }
+.gthumbs button:hover { border-color: #c69a4a; }
+.gthumbs .g-cap { display: block; font-family: var(--sans); text-align: center; font-size: 9px; letter-spacing: .13em; text-transform: uppercase; color: #8a1e1a; padding: 7px 4px 6px; border-top: 1px solid #f0e7d3; }
+
+/* Kaca pembesar: chip putih minimal */
+.zoom-chip { background: rgba(255, 252, 244, .92); color: #3d2a22; border: 1px solid rgba(138, 30, 26, .28); backdrop-filter: blur(4px); }
+
+/* Judul & meta — serif tipis elegan */
+.info h1 { font-weight: 400; letter-spacing: .005em; color: #1c1c1c; }
+.info .cap { color: #7d2a2a; }
+.info .code { font-family: var(--sans); font-style: normal; letter-spacing: .13em; text-transform: uppercase; color: #8a1e1a; }
+.info .orn svg { color: #c69a4a; }
+
+/* Spesifikasi: kisi ringan dengan pembatas titik-titik */
+.spec { background: #fff; border: 1px solid #e9dfc9; }
+.spec .cell { padding: 14px 18px; border-bottom: 1px dotted rgba(125, 42, 42, .22); }
+.spec .cell:nth-child(odd) { border-right: 1px dotted rgba(125, 42, 42, .22); }
+.spec dt { color: #9a7b52; font-family: var(--sans); }
+.spec dd { color: #1c1c1c; }
+.spec-note { color: #a3907f; }
+
+/* Keunggulan: peluru garis horizontal merah bata */
+.keung h3, .desc h3, .laga-h h3 { color: #7d2a2a; }
+.keung li::before { background: var(--bata-700); width: 16px; height: 2px; border-radius: 2px; transform: none; top: 10px; left: 0; }
+.keung li { padding-left: 26px; }
+
+/* Kotak harga: transparan, aksen emas halus, pola bulu samar */
+.buy { background: linear-gradient(135deg, rgba(255, 255, 255, .55), rgba(250, 243, 225, .35)); border: 1px solid rgba(198, 154, 74, .55); box-shadow: 0 22px 50px -42px rgba(125, 42, 42, .45); padding: 30px 32px; }
+.buy::before { opacity: .05; }
+.buy .lbl { color: #8f6a1f; }
+.buy .price { color: #1c1c1c; font-weight: 400; }
+.buy small { color: #7a6657; font-family: var(--sans); font-style: italic; }
+.buy .cta { margin-top: 22px; }
+.buy .btn-wa { background: #7d2a2a; border-color: #7d2a2a; }
+.buy .btn-wa:hover { background: #b8892f; border-color: #b8892f; color: #fff; box-shadow: 0 10px 22px -12px rgba(184, 137, 47, .85); transform: translateY(-2px); }
+.buy .btn-minat { border-color: #7d2a2a; color: #7d2a2a; }
+.buy .btn-minat:hover { background: #7d2a2a; color: #fff; border-color: #7d2a2a; }
+
+/* Layar lebar: galeri = foto utama kiri + jempol berlabel di kanan */
+@media (min-width: 1240px) {
+  .detailgrid { grid-template-columns: minmax(0, 680px) minmax(0, 1fr); gap: 48px; }
+  .gv { display: grid; grid-template-columns: minmax(0, 1fr) 118px; gap: 14px; align-items: start; }
+  .gv .gmain { min-width: 0; }
+  .gv .gthumbs { grid-template-columns: 1fr; margin-top: 4px; }
+  .gv .gthumbs button img { aspect-ratio: 4/5; }
+  .gv .g-note { grid-column: 1 / -1; }
+}
+@media (min-width: 980px) and (max-width: 1239px) {
+  .gv .gthumbs { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Footer: dasar merah bata #7D2A2A dengan aksen emas */
+.pub-foot { background: #7d2a2a; }
+.pub-foot .brand-sub { text-transform: uppercase; letter-spacing: .2em; font-size: 10px; color: #e7cfa0; }
+.pub-foot h4 { color: #f0d9a8; }
+.pub-foot .foot-in > div + div { border-left-color: rgba(255, 244, 224, .18); }
+.foot-resv { border-top-color: rgba(255, 255, 255, .15); border-bottom-color: rgba(255, 255, 255, .15); background: rgba(0, 0, 0, .13); }

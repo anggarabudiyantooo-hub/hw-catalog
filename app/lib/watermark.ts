@@ -15,8 +15,8 @@ function logoBuf(): Promise<Buffer> {
 
 // Parameter pola watermark — "zigzag antar logo" + transparan tinggi:
 const TILTS = [-45, 45]; // miring selang-seling: logo berikutnya kiri/kanan bergantian
-const OP_EMAS = 0.36; // opasitas logo emas (rendah = samar, tidak mengganggu)
-const OP_BAYANG = 0.12; // opasitas bayangan halus di belakang logo
+const OP_EMAS = 0.2; // opasitas logo emas (sangat samar, seperti tekstur)
+const OP_BAYANG = 0.06; // opasitas bayangan halus di belakang logo
 const GAP_MAJU = 2.5; // jarak antar logo (× lebar logo) searah garis diagonal
 const GAP_BARIS = 1.8; // jarak antar baris diagonal (× lebar logo)
 const STAGGER = true; // tiap baris digeser setengah langkah → efek zigzag

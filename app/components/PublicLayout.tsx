@@ -55,7 +55,7 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
               <a className="dim" href={waLink()}>Kontak WhatsApp</a>
             </div>
             <div>
-              <h4>Hubungi Kami</h4>
+              <h4>Kontak &amp; Reservasi</h4>
               <a className="dim" href={waLink()} target="_blank" rel="noopener">{SITE.waDisplay} (WhatsApp) — {SITE.pemilik}</a>
               {SITE.email ? <a className="dim" href={`mailto:${SITE.email}`}>{SITE.email}</a> : <span className="dim soon">Email — segera menyusul</span>}
               {SITE.sosmed ? <a className="dim" href={SITE.sosmed} target="_blank" rel="noopener">Media sosial</a> : <span className="dim soon">Media sosial — segera menyusul</span>}

@@ -88,7 +88,7 @@ export default function GalleryView({
   const grayscale = sold ? { filter: "grayscale(1)" } : undefined;
 
   return (
-    <>
+    <div className="gv">
       <div className="gmain">
         <div className="gframe">
           <button
@@ -135,7 +135,9 @@ export default function GalleryView({
                 loading="lazy"
                 decoding="async"
               />
-              {im.jenisFoto && <span className="g-label">{labelJenisFoto(im.jenisFoto)}</span>}
+              <span className="g-cap">
+                {im.jenisFoto ? labelJenisFoto(im.jenisFoto) : `Foto ${i + 1}`}
+              </span>
             </button>
           ))}
         </div>
@@ -236,6 +238,6 @@ export default function GalleryView({
           )}
         </div>
       )}
-    </>
+    </div>
   );
 }

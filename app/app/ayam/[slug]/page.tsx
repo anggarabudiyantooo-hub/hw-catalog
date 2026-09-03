@@ -191,10 +191,10 @@ export default async function DetailPage({ params }: { params: { slug: string } 
               {!sold && (
                 <>
                   <div className="cta">
-                    <a className="btn btn-primary" href="#minat">Saya Tertarik</a>
-                    <a className="btn btn-ghost" href={waLink(`Halo ${SITE.pemilik}, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di katalog Anda.`)} target="_blank" rel="noopener">
+                    <a className="btn btn-primary btn-wa" href={waLink(`Halo ${SITE.pemilik}, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di katalog Anda.`)} target="_blank" rel="noopener">
                       Tanya via WhatsApp
                     </a>
+                    <a className="btn btn-outline btn-minat" href="#minat">Saya Tertarik</a>
                   </div>
                   <div className="note">Biasanya dibalas dalam 1×24 jam pada jam kerja (08.00–17.00 WIB).</div>
                 </>
