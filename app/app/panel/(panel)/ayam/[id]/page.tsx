@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { rekapDari, formatTanggal, labelJenisFoto } from "@/lib/format";
 import PublicPreview from "@/components/PublicPreview";
 import PublicPreviewContent from "@/components/PublicPreviewContent";
+import PanelTambahFoto from "@/components/PanelTambahFoto";
 
 export const dynamic = "force-dynamic";
 
@@ -245,34 +246,7 @@ export default async function AyamEditPage({
             </table>
           )}
 
-          <form method="post" action={`/api/panel/ayam/${ayam.id}`} encType="multipart/form-data">
-            <label htmlFor="newImg" className="dz" style={{ marginBottom: 10, cursor: "pointer", display: "block", position: "relative" }}>
-              <input
-                type="file"
-                name="newImages"
-                multiple
-                accept="image/*"
-                id="newImg"
-                style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", zIndex: 2 }}
-              />
-              <svg viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6" /><path d="M4 20h16" /></svg>
-              <div><b>Klik untuk memilih foto</b> — bisa beberapa sekaligus (JPG/PNG/WebP, maks. 5 MB)</div>
-              <small>Setelah memilih, pilih jenis foto di bawah lalu tekan “Unggah + Simpan Data”.</small>
-            </label>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-              <select name="newJenis" style={{ padding: "8px 11px", fontSize: 13.5, border: "1px solid var(--krem-300)", borderRadius: 5, background: "var(--paper)" }}>
-                <option value="FULL_BADAN">Full badan</option>
-                <option value="KEPALA">Kepala</option>
-                <option value="KAKI">Kaki</option>
-                <option value="BULU">Bulu / ekor</option>
-                <option value="LAINNYA">Lainnya</option>
-              </select>
-              <button className="btn btn-sec" type="submit">Unggah + Simpan Data</button>
-              <span className="hint" style={{ fontSize: 12, color: "var(--ink-faint)" }}>
-                Unggahan ini hanya menambah foto — data di atas disimpan lewat tombol “Simpan Perubahan”.
-              </span>
-            </div>
-          </form>
+          <PanelTambahFoto ayamId={ayam.id} nama={ayam.nama} />
           <div className="req-note">
             Syarat publikasi: <span className="tag ok">Full badan ✓</span><span className="tag ok">Kepala ✓</span><span className="tag ok">Kaki ✓</span>
             <span className="tag">Bulu / ekor</span><span className="tag">Lainnya</span> — pastikan masing-masing minimal satu foto berjenis tersebut.

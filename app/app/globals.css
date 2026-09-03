@@ -426,6 +426,12 @@ table.data tbody tr:hover { background: #f7ebd2; }
 .up-chip .tag { position: absolute; left: 4px; top: 4px; background: rgba(26, 8, 5, 0.66); color: #f6e7ce; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 6px; }
 .up-chip .del { position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%; background: #a83226; color: #fff; border: 0; font-size: 11px; line-height: 1; cursor: pointer; }
 .up-chip.prim { border-color: var(--emas-500); box-shadow: 0 0 0 2px rgba(184, 137, 47, 0.25); }
+
+.up-chip.pick { border-color: var(--bata-400); border-style: dashed; background: #fff; }
+.up-chip.pick .tag { background: rgba(168, 50, 38, 0.88); }
+.up-chip .sz { position: absolute; right: 3px; bottom: 3px; background: rgba(26, 8, 5, 0.6); color: #f6e7ce; font-size: 9px; line-height: 1; padding: 2px 5px; border-radius: 3px; }
+.up-chip .sz.bad { background: #a83226; }
+
 .up-chip select.jf { width: 100%; border: 1px solid var(--krem-300); border-top: 0; background: #fbf3e1; font-family: var(--sans); font-size: 10px; padding: 4px; color: var(--ink-muted); border-radius: 0 0 4px 4px; outline: none; }
 .req-note { margin-top: 12px; font-size: 12.5px; color: var(--ink-muted); }
 .req-note b { color: var(--bata-700); font-weight: 600; }
