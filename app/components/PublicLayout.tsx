@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { MapSvg } from "./MapSvg";
 import NavLinks from "./NavLinks";
 import { SITE, waLink } from "@/lib/config";
 
@@ -40,55 +39,86 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
 
       <footer className="pub-foot">
         <div className="wrap">
-          <div className="foot-in">
+          <div className="foot-grid">
+            {/* Merek */}
             <div>
               <Logo light />
-              <p style={{ marginTop: 16 }}>
-                Etalase satu kandang ayam bangkok pilihan di Pedan, Klaten. Melayani kolektor &amp; penyuka ayam laga dari seluruh Indonesia.
+              <p className="f-about">
+                Galeri ayam Bangkok pilihan di Pedan, Klaten. Setiap ekor dikurasi dengan
+                standar koleksi.
               </p>
+              <a
+                className="btn f-visit"
+                href={waLink(
+                  `Halo ${SITE.pemilik}, saya ingin menjadwalkan kunjungan ke ${SITE.nama} — mohon info jadwal yang memungkinkan.`
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Jadwalkan Kunjungan
+              </a>
             </div>
+
+            {/* Navigasi */}
             <div>
-              <h4>Jelajahi</h4>
-              <Link className="dim" href="/">Beranda</Link>
-              <Link className="dim" href="/katalog">Katalog Ayam</Link>
-              <a className="dim" href="/#lokasi">Lokasi &amp; Kunjungan</a>
-              <a className="dim" href={waLink()}>Kontak WhatsApp</a>
+              <h4>Navigasi</h4>
+              <ul className="fnav">
+                <li><Link href="/">Beranda</Link></li>
+                <li><Link href="/katalog">Katalog Ayam</Link></li>
+                <li><a href="/#lokasi">Lokasi &amp; Kunjungan</a></li>
+                <li><a href={waLink()} target="_blank" rel="noopener noreferrer">Kontak WhatsApp</a></li>
+              </ul>
             </div>
+
+            {/* Kontak */}
             <div>
-              <h4>Kontak &amp; Reservasi</h4>
-              <a className="dim" href={waLink()} target="_blank" rel="noopener">{SITE.waDisplay} (WhatsApp) — {SITE.pemilik}</a>
-              {SITE.email ? <a className="dim" href={`mailto:${SITE.email}`}>{SITE.email}</a> : <span className="dim soon">Email — segera menyusul</span>}
-              {SITE.sosmed ? <a className="dim" href={SITE.sosmed} target="_blank" rel="noopener">Media sosial</a> : <span className="dim soon">Media sosial — segera menyusul</span>}
-              <a className="dim" href="/#lokasi">Kunjungan: wajib reservasi dulu</a>
-            </div>
-            <div>
-              <h4>Lokasi &amp; Alamat</h4>
-              <div className="foot-map"><MapSvg /></div>
-              <div className="foot-addr">
-                <b>{SITE.nama}</b>
-                <span>
-                  {SITE.alamatBaris1}
-                  <br />
-                  {SITE.alamatBaris2}
-                </span>
-                <a className="gmap" href={SITE.mapsUrl} target="_blank" rel="noopener">Buka peta &amp; rute di Google Maps</a>
+              <h4>Kontak</h4>
+              <div className="fk">
+                <div className="frow">
+                  <span>Pemilik</span>
+                  <b>{SITE.pemilik}</b>
+                </div>
+                <div className="frow">
+                  <span>WhatsApp</span>
+                  <a href={waLink()} target="_blank" rel="noopener noreferrer">{SITE.waDisplay}</a>
+                </div>
+                <div className="frow">
+                  <span>Email</span>
+                  {SITE.email ? (
+                    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+                  ) : (
+                    <em className="soon">segera menyusul</em>
+                  )}
+                </div>
+                <div className="frow">
+                  <span>Media Sosial</span>
+                  {SITE.sosmed ? (
+                    <a href={SITE.sosmed} target="_blank" rel="noopener noreferrer">Ikuti kami</a>
+                  ) : (
+                    <em className="soon">segera menyusul</em>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="foot-resv">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="M12 13.5v3l2 1.6" /></svg>
-            <span><b>Kunjungan wajib reservasi.</b> Chat WhatsApp dulu untuk mencocokkan jadwal — tanpa janji, mohon tidak datang langsung.</span>
-            <a className="btn btn-ghost btn-sm" href={waLink(`Halo ${SITE.pemilik}, saya ingin menjadwalkan kunjungan ke ${SITE.nama}.`)} target="_blank" rel="noopener">Jadwalkan Kunjungan</a>
-          </div>
-          <div className="foot-bottom">
-            <span>© {new Date().getFullYear()} {SITE.nama}. Seluruh hak cipta.</span>
-            <span className="foot-bottom-right">
-              <span>Desain merah bata &amp; krem — warisan Nusantara.</span>
-              <a className="owner" href="/panel/login" title="Login pengelola kandang">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="4" y="10" width="16" height="10" rx="1.5" /><path d="M8 10V7a4 4 0 1 1 8 0v3" /></svg>
-                Area Pemilik
+
+            {/* Lokasi */}
+            <div>
+              <h4>Lokasi</h4>
+              <p className="f-addr">
+                {SITE.alamatBaris1}
+                <br />
+                {SITE.alamatBaris2}
+              </p>
+              <a className="f-gmap" href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer">
+                Buka peta &amp; rute di Google Maps →
               </a>
-            </span>
+              <p className="f-note">Kunjungan wajib reservasi terlebih dahulu via WhatsApp.</p>
+            </div>
+          </div>
+
+          <div className="foot-bottom">
+            <span>© {new Date().getFullYear()} {SITE.nama} · Pedan, Klaten, Jawa Tengah</span>
+            <a className="owner" href="/panel/login" title="Login pengelola kandang">Area Pemilik</a>
           </div>
         </div>
       </footer>
