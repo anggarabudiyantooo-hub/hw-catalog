@@ -614,52 +614,52 @@ button.zoom-open { display: block; width: 100%; padding: 0; border: 0; backgroun
    Detail ayam — polesan "koleksi premium" (galeri berlabel,
    data produk ringan, kotak harga emas, footer merah bata)
    ========================================================= */
-html { background: #FEFDF8; }
-body { background: #FEFDF8; }
+html { background: var(--krem-100); }
+body { background: var(--krem-100); }
 
 /* Galeri: bingkai netral halus & gambar studio cream */
-.gv .gframe { background: #fff; border: 1px solid #e6dbc4; padding: 10px; box-shadow: 0 20px 46px -34px rgba(90, 35, 20, 0.38); }
-.gv .gmain img { background: #f5efe2; }
+.gv .gframe { background: var(--card); border: 1px solid var(--krem-300); padding: 10px; box-shadow: 0 20px 46px -36px rgba(90, 35, 20, 0.4); }
+.gv .gmain img { background: var(--krem-200); }
 
 /* Thumbnail: kartu putih + caption all-caps di bawah */
 .gthumbs { gap: 12px; }
-.gthumbs button { background: #fff; border: 1px solid #e6dbc4; }
-.gthumbs button:hover { border-color: #c69a4a; }
-.gthumbs .g-cap { display: block; font-family: var(--sans); text-align: center; font-size: 9px; letter-spacing: .13em; text-transform: uppercase; color: #8a1e1a; padding: 7px 4px 6px; border-top: 1px solid #f0e7d3; }
+.gthumbs button { background: var(--card); border: 1px solid var(--krem-300); }
+.gthumbs button:hover { border-color: var(--emas-500); }
+.gthumbs .g-cap { display: block; font-family: var(--sans); text-align: center; font-size: 9px; letter-spacing: .13em; text-transform: uppercase; color: var(--bata-700); padding: 7px 4px 6px; border-top: 1px solid var(--krem-300); }
 
 /* Kaca pembesar: chip putih minimal */
-.zoom-chip { background: rgba(255, 252, 244, .92); color: #3d2a22; border: 1px solid rgba(138, 30, 26, .28); backdrop-filter: blur(4px); }
+.zoom-chip { background: rgba(255, 249, 236, .94); color: var(--ink); border: 1px solid rgba(138, 30, 26, .3); backdrop-filter: blur(4px); }
 
 /* Judul & meta — serif tipis elegan */
-.info h1 { font-weight: 400; letter-spacing: .005em; color: #1c1c1c; }
-.info .cap { color: #7d2a2a; }
-.info .code { font-family: var(--sans); font-style: normal; letter-spacing: .13em; text-transform: uppercase; color: #8a1e1a; }
-.info .orn svg { color: #c69a4a; }
+.info h1 { font-weight: 400; letter-spacing: .005em; color: var(--ink); }
+.info .cap { color: var(--bata-700); }
+.info .code { font-family: var(--sans); font-style: normal; letter-spacing: .13em; text-transform: uppercase; color: var(--bata-700); }
+.info .orn svg { color: var(--emas-500); }
 
 /* Spesifikasi: kisi ringan dengan pembatas titik-titik */
-.spec { background: #fff; border: 1px solid #e9dfc9; }
-.spec .cell { padding: 14px 18px; border-bottom: 1px dotted rgba(125, 42, 42, .22); }
-.spec .cell:nth-child(odd) { border-right: 1px dotted rgba(125, 42, 42, .22); }
-.spec dt { color: #9a7b52; font-family: var(--sans); }
-.spec dd { color: #1c1c1c; }
-.spec-note { color: #a3907f; }
+.spec { background: var(--card); border: 1px solid var(--krem-300); }
+.spec .cell { padding: 14px 18px; border-bottom: 1px dotted rgba(138, 30, 26, .2); }
+.spec .cell:nth-child(odd) { border-right: 1px dotted rgba(138, 30, 26, .2); }
+.spec dt { color: var(--ink-muted); font-family: var(--sans); }
+.spec dd { color: var(--ink); }
+.spec-note { color: var(--ink-faint); }
 
 /* Keunggulan: peluru garis horizontal merah bata */
-.keung h3, .desc h3, .laga-h h3 { color: #7d2a2a; }
+.keung h3, .desc h3, .laga-h h3 { color: var(--bata-700); }
 .keung li::before { background: var(--bata-700); width: 16px; height: 2px; border-radius: 2px; transform: none; top: 10px; left: 0; }
 .keung li { padding-left: 26px; }
 
 /* Kotak harga: transparan, aksen emas halus, pola bulu samar */
-.buy { background: linear-gradient(135deg, rgba(255, 255, 255, .55), rgba(250, 243, 225, .35)); border: 1px solid rgba(198, 154, 74, .55); box-shadow: 0 22px 50px -42px rgba(125, 42, 42, .45); padding: 30px 32px; }
+.buy { background: linear-gradient(135deg, rgba(255, 249, 236, .9), rgba(246, 232, 205, .75)); border: 1px solid var(--emas-500); box-shadow: 0 22px 50px -42px rgba(125, 42, 42, .45); padding: 30px 32px; }
 .buy::before { opacity: .05; }
-.buy .lbl { color: #8f6a1f; }
-.buy .price { color: #1c1c1c; font-weight: 400; }
-.buy small { color: #7a6657; font-family: var(--sans); font-style: italic; }
+.buy .lbl { color: var(--emas-700); }
+.buy .price { color: var(--ink); font-weight: 400; }
+.buy small { color: var(--ink-muted); font-family: var(--sans); font-style: italic; }
 .buy .cta { margin-top: 22px; }
-.buy .btn-wa { background: #7d2a2a; border-color: #7d2a2a; }
-.buy .btn-wa:hover { background: #b8892f; border-color: #b8892f; color: #fff; box-shadow: 0 10px 22px -12px rgba(184, 137, 47, .85); transform: translateY(-2px); }
-.buy .btn-minat { border-color: #7d2a2a; color: #7d2a2a; }
-.buy .btn-minat:hover { background: #7d2a2a; color: #fff; border-color: #7d2a2a; }
+.buy .btn-wa { background: var(--bata-700); border-color: var(--bata-700); }
+.buy .btn-wa:hover { background: var(--emas-500); border-color: var(--emas-500); color: #fff; box-shadow: 0 10px 22px -12px rgba(184, 137, 47, .85); transform: translateY(-2px); }
+.buy .btn-minat { border-color: var(--bata-700); color: var(--bata-700); }
+.buy .btn-minat:hover { background: var(--bata-700); color: #fff; border-color: var(--bata-700); }
 
 /* Layar lebar: galeri = foto utama kiri + jempol berlabel di kanan */
 @media (min-width: 1240px) {
