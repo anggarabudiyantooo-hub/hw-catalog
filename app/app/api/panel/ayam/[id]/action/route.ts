@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { hapusFile } from "@/lib/upload";
@@ -27,17 +28,20 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   if (act === "arsip") {
     await prisma.ayam.update({ where: { id }, data: { isArsip: true, statusTampil: "DRAFT", isFeatured: false } });
     await prisma.log.create({ data: { userId: uid, aksi: "ARSIP", entitas: "ayam", entitasId: id, detail: `Arsip "${ayam.nama}"` } });
+    await purgPublik();
     return go("Ayam diarsipkan (disembunyikan dari publik).");
   }
   if (act === "pulih") {
     await prisma.ayam.update({ where: { id }, data: { isArsip: false } });
     await prisma.log.create({ data: { userId: uid, aksi: "PULIHKAN", entitas: "ayam", entitasId: id, detail: `Pulihkan "${ayam.nama}"` } });
+    await purgPublik();
     return go("Ayam dipulihkan dari arsip.");
   }
   if (act === "permanen") {
     for (const img of ayam.images) await hapusFile(img.filePath);
     await prisma.ayam.delete({ where: { id } });
     await prisma.log.create({ data: { userId: uid, aksi: "DELETE", entitas: "ayam", entitasId: id, detail: `Hapus permanen "${ayam.nama}"` } });
+    await purgPublik();
     return go("Ayam beserta galerinya dihapus permanen.");
   }
 

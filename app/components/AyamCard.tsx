@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Ayam, AyamImage, Kategori, RiwayatTarung } from "@prisma/client";
 import { formatRupiah, rekapDari, usiaInfo, formatTanggal } from "@/lib/format";
@@ -43,7 +44,7 @@ export default function AyamCard({ ayam }: { ayam: AyamWith }) {
       <div className="bc-img">
         <Link href={`/ayam/${ayam.slug}`}>
           {img ? (
-            <img src={img.filePath} alt={`${ayam.nama}, ${ayam.kategori?.nama ?? "ayam bangkok"}`} />
+            <img src={img.filePath} alt={`${ayam.nama}, ${ayam.kategori?.nama ?? "ayam bangkok"}`} loading="lazy" decoding="async" />
           ) : (
             <div style={{ aspectRatio: "4/5", background: "var(--krem-200)", display: "grid", placeItems: "center", color: "var(--ink-faint)", fontSize: 13 }}>
               Belum ada foto

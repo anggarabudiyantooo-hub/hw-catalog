@@ -98,7 +98,7 @@ export default function GalleryView({
             title="Klik untuk memperbesar"
             aria-label="Perbesar foto"
           >
-            <img src={cur.filePath} alt={cur.altText || `${namaAyam} — foto ${idx + 1}`} style={grayscale} />
+            <img src={cur.filePath} alt={cur.altText || `${namaAyam} — foto ${idx + 1}`} style={grayscale} fetchPriority="high" />
             <span className="zoom-chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <circle cx="11" cy="11" r="7" />
@@ -132,6 +132,8 @@ export default function GalleryView({
                 src={im.filePath}
                 alt={im.altText || `${namaAyam} — ${labelJenisFoto(im.jenisFoto)}`}
                 style={grayscale}
+                loading="lazy"
+                decoding="async"
               />
               {im.jenisFoto && <span className="g-label">{labelJenisFoto(im.jenisFoto)}</span>}
             </button>

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 
@@ -47,5 +48,6 @@ export async function POST(req: Request) {
     data: { userId: uid, aksi: "CREATE", entitas: "riwayat_tarung", entitasId: ayamId, detail: `Tambah hasil laga "${hasil}" utk ${ayam.nama}` },
   });
 
+  await purgPublik();
   return go("Hasil laga dicatat — rekap menang/kalah/seri terbarui otomatis.");
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { slugify } from "@/lib/format";
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
       data: { nama, slug, deskripsi: String(fd.get("deskripsi") || "").trim() || null, urutan: Number(fd.get("urutan")) || 0 },
     });
     await prisma.log.create({ data: { userId: uid, aksi: "CREATE", entitas: "kategori", detail: `Tambah kategori "${nama}"` } });
+    await purgPublik();
     return go("Kategori ditambahkan.");
   } catch {
     return go(undefined, "Nama kategori sudah ada.");

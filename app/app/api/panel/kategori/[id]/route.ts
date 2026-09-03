@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 
@@ -35,6 +36,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
           urutan: Number(fd.get("urutan")) || 0,
         },
       });
+      await purgPublik();
       return go("Kategori diperbarui.");
     } catch {
       return go(undefined, "Nama sudah dipakai kategori lain.");
@@ -44,6 +46,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   if (act === "hapus") {
     if (kat._count.ayam > 0) return go(undefined, `Kategori ini masih dipakai ${kat._count.ayam} ayam — pindahkan atau hapus ayamnya dulu.`);
     await prisma.kategori.delete({ where: { id } });
+    await purgPublik();
     return go("Kategori dihapus.");
   }
 

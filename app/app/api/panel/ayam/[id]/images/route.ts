@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { hapusFile } from "@/lib/upload";
@@ -30,6 +31,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       prisma.ayamImage.updateMany({ where: { ayamId }, data: { isPrimary: false } }),
       prisma.ayamImage.update({ where: { id: imageId }, data: { isPrimary: true } }),
     ]);
+    await purgPublik();
     return go("Foto utama diperbarui.");
   }
 
@@ -37,6 +39,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const jenis = String(fd.get("jenis") || "").trim() || null;
     const urutan = Math.max(0, Number(fd.get("urutan") ?? img.urutan) || img.urutan);
     await prisma.ayamImage.update({ where: { id: imageId }, data: { jenisFoto: jenis, urutan } });
+    await purgPublik();
     return go("Jenis / urutan foto disimpan.");
   }
 
@@ -46,6 +49,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     // bila foto utama dihapus, angkat gambar lain jadi utama
     const sisa = await prisma.ayamImage.findFirst({ where: { ayamId }, orderBy: { urutan: "asc" } });
     if (sisa) await prisma.ayamImage.update({ where: { id: sisa.id }, data: { isPrimary: true } });
+    await purgPublik();
     return go("Foto dihapus.");
   }
 

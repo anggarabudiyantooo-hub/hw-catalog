@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { parseAyam, cekJenisFotoTerpenuhi } from "@/lib/ayamFields";
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
       }
     }
 
+    await purgPublik();
     return redirectLocal(`/panel/ayam/${ayam.id}?ok=Tersimpan.+Atur+jenis+foto+lalu+publikasikan.${new URL(req.url).searchParams.get("s") ? `&s=${new URL(req.url).searchParams.get("s")}` : ""}`);
   } catch {
     return back(undefined, "Terjadi kesalahan saat menyimpan.");

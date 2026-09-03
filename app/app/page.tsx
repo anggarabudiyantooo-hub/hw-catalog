@@ -12,7 +12,9 @@ const include = {
   riwayat: true,
 };
 
-export const dynamic = "force-dynamic";
+// Halaman publik memakai ISR: konten di-cache di CDN Vercel dan
+// diperbarui saat ada perubahan data (revalidatePath di panel).
+export const revalidate = 60;
 
 export default async function HomePage() {
   const featured = await prisma.ayam.findMany({

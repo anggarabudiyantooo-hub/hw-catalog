@@ -15,7 +15,20 @@ import {
 } from "@/lib/format";
 import { waLink, SITE } from "@/lib/config";
 
-export const dynamic = "force-dynamic";
+// Halaman publik memakai ISR: konten di-cache di CDN Vercel dan
+// diperbarui saat ada perubahan data (revalidatePath di panel).
+export const revalidate = 60;
+
+// Prerender semua halaman publik yang ada (cepat via CDN); slug baru tetap
+// bisa diakses (dynamicParams) dan ikut di-cache ISR.
+export async function generateStaticParams() {
+  const rows = await prisma.ayam.findMany({
+    where: { isArsip: false, statusTampil: "PUBLIKASI" },
+    select: { slug: true },
+  });
+  return rows.map((r) => ({ slug: r.slug }));
+}
+
 
 const include = { images: true, kategori: true, riwayat: true };
 

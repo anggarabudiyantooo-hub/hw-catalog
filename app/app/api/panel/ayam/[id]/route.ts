@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { parseAyam, cekJenisFotoTerpenuhi } from "@/lib/ayamFields";
@@ -81,5 +82,6 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     }
   }
 
+  await purgPublik();
   return back(galleryOnly ? "Foto ditambahkan ke galeri." : "Perubahan tersimpan.");
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 
@@ -26,6 +27,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   if (act === "hapus") {
     await prisma.riwayatTarung.delete({ where: { id } });
     await prisma.log.create({ data: { userId: uid, aksi: "DELETE", entitas: "riwayat_tarung", entitasId: id, detail: `Hapus hasil laga ${row.ayam?.nama ?? row.ayamId}` } });
+    await purgPublik();
     return go("Catatan laga dihapus — rekap diperbarui.");
   }
 
