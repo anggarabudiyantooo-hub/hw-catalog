@@ -14,11 +14,15 @@ export default function GalleryView({
   images,
   sold,
   statusJual,
+  overlayRight,
+  overlayBottom,
 }: {
   namaAyam: string;
   images: GalFoto[];
   sold: boolean;
   statusJual: string;
+  overlayRight?: string;
+  overlayBottom?: string;
 }) {
   const n = images.length;
   const [idx, setIdx] = useState(0);
@@ -115,6 +119,8 @@ export default function GalleryView({
           <span className="badge-st badge-dipesan"><i /> Dipesan</span>
         )}
         {sold && <span className="badge-st badge-terjual"><i /> Terjual</span>}
+        {overlayRight && <span className="g-chip g-tr">{overlayRight}</span>}
+        {overlayBottom && <span className="g-chip g-bl">{overlayBottom}</span>}
       </div>
 
       {n > 1 && (

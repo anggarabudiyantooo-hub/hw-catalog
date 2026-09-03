@@ -7,20 +7,14 @@ import PermintaanForm from "@/components/PermintaanForm";
 import LaporTrigger from "@/components/LaporTrigger";
 import GalleryView from "@/components/GalleryView";
 import { prisma } from "@/lib/prisma";
-import {
-  formatRupiah,
-  formatTanggal,
-  usiaInfo,
-  rekapDari,
-} from "@/lib/format";
+import { formatRupiah, formatTanggal, usiaInfo, rekapDari } from "@/lib/format";
 import { waLink, SITE } from "@/lib/config";
 
-// Halaman publik memakai ISR: konten di-cache di CDN Vercel dan
-// diperbarui saat ada perubahan data (revalidatePath di panel).
+const include = { images: true, kategori: true, riwayat: true };
+
+// ISR: di-cache Vercel, disegarkan otomatis saat panel mengubah data.
 export const revalidate = 60;
 
-// Prerender semua halaman publik yang ada (cepat via CDN); slug baru tetap
-// bisa diakses (dynamicParams) dan ikut di-cache ISR.
 export async function generateStaticParams() {
   const rows = await prisma.ayam.findMany({
     where: { isArsip: false, statusTampil: "PUBLIKASI" },
@@ -28,9 +22,6 @@ export async function generateStaticParams() {
   });
   return rows.map((r) => ({ slug: r.slug }));
 }
-
-
-const include = { images: true, kategori: true, riwayat: true };
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const a = await prisma.ayam.findUnique({ where: { slug: params.slug }, include: { kategori: true } });
@@ -50,12 +41,12 @@ export default async function DetailPage({ params }: { params: { slug: string } 
   const images = [...ayam.images].sort((a, b) =>
     a.isPrimary === b.isPrimary ? a.urutan - b.urutan : a.isPrimary ? -1 : 1
   );
-  const main = images[0] ?? null;
   const usia = usiaInfo(ayam.tanggalMenetas);
   const rekap = rekapDari(ayam.riwayat);
   const riwayatSorted = [...ayam.riwayat].sort((a, b) => +new Date(b.tanggal) - +new Date(a.tanggal));
   const sold = ayam.statusJual === "TERJUAL";
   const isBetina = ayam.jenisKelamin === "BETINA";
+  const katNama = ayam.kategori?.nama ?? "Ayam Bangkok";
 
   const lain = await prisma.ayam.findMany({
     where: { id: { not: ayam.id }, isArsip: false, statusTampil: "PUBLIKASI", statusJual: { not: "TERJUAL" } },
@@ -64,183 +55,269 @@ export default async function DetailPage({ params }: { params: { slug: string } 
     orderBy: { updatedAt: "desc" },
   });
 
-  const spec: [string, ReactNode][] = [
-    ["Jenis kelamin", <b key="k">{isBetina ? "Betina" : "Jantan"}</b>],
-    ["Tanggal menetas", ayam.tanggalMenetas ? <span key="m">{formatTanggal(ayam.tanggalMenetas, true)} <small className="auto">perkiraan pencatatan kandang</small></span> : "Belum dicatat"],
-    ["Usia saat ini", usia ? <span key="u">± {usia.bulan} bulan <small className="auto">dihitung otomatis dari tanggal menetas — selalu terbaru</small></span> : "—"],
-    ["Berat badan", `${String(ayam.beratKg).replace(".", ",")} kg`],
-    ["Postur / ukuran badan", ayam.postur ?? null],
-    ["Tinggi punggung", ayam.tinggiCm != null ? `± ${ayam.tinggiCm} cm` : null],
-    ["Kaki & sisik", ayam.kakiSisik ?? null],
-    ["Jalu", ayam.jalu ? ({ BELUM: "Belum tumbuh", TUNGGAL: "Tunggal", GANDA: "Ganda" } as Record<string, string>)[ayam.jalu] : null],
-    ["Warna bulu", ayam.warnaBulu ?? null],
-    ["Nomor ring", ayam.kodeRing ? `${ayam.kodeRing} (terdaftar)` : "Belum ber-ring"],
-  ];
-  const terisi = spec.filter(([, v]) => v !== null && v !== undefined);
+  const spec: [string, ReactNode, boolean][] = [
+    ["Kategori", `${katNama} · ${isBetina ? "Betina" : "Jantan"}`, false],
+    ["Nomor Ring", ayam.kodeRing ? `${ayam.kodeRing}` : "Belum ber-ring", false],
+    ["Jenis Kelamin", isBetina ? "Betina" : "Jantan", false],
+    ["Tetas Estimasi", ayam.tanggalMenetas ? formatTanggal(ayam.tanggalMenetas) : "Belum dicatat", false],
+    ["Usia", usia ? `± ${usia.bulan} bulan` : "—", true],
+    ["Berat", `${String(ayam.beratKg).replace(".", ",")} kg`, false],
+    ["Postur", ayam.postur ?? null, false],
+    ["Tinggi Punggung", ayam.tinggiCm != null ? `± ${ayam.tinggiCm} cm` : null, false],
+    ["Sisik / Kaki", ayam.kakiSisik ?? null, false],
+    ["Taji / Jalu", ayam.jalu ? ({ BELUM: "Belum tumbuh", TUNGGAL: "Tunggal", GANDA: "Ganda" } as Record<string, string>)[ayam.jalu] : null, false],
+    ["Warna Bulu", ayam.warnaBulu ?? null, false],
+  ].filter(([, v]) => v !== null && v !== undefined) as [string, ReactNode, boolean][];
+
+  const keunggulan = (ayam.keunggulan || "")
+    .split("\n")
+    .map((b) => b.trim())
+    .filter(Boolean);
+
+  const menang = rekap.menang;
+  const kalah = rekap.kalah;
+  const seri = rekap.seri;
+  const winRate = rekap.total ? Math.round((menang / rekap.total) * 100) : 0;
 
   return (
     <PublicLayout>
-      <div className="wrap">
-        <p className="crumb" style={{ paddingTop: 24, color: "var(--ink-muted)", fontSize: 13 }}>
-          <Link href="/">Beranda</Link> / <Link href="/katalog">Katalog</Link> /{" "}
-          <span style={{ color: "var(--ink)", fontStyle: "italic" }}>{ayam.nama}</span>
-        </p>
+      {/* ── Breadcrumb ── */}
+      <div className="wrap pd-bread">
+        <Link href="/">Beranda</Link>
+        <span>/</span>
+        <Link href="/katalog">Katalog</Link>
+        <span>/</span>
+        <span className="cur">{ayam.nama}</span>
+      </div>
 
+      {/* ── Produk: galeri + info ── */}
+      <section className="wrap pd-main">
         <div className="detailgrid">
-          {/* ===== galeri (klik untuk perbesar) ===== */}
-          <GalleryView
-            namaAyam={ayam.nama}
-            images={images}
-            sold={sold}
-            statusJual={ayam.statusJual}
-          />
+          {/* Galeri (sticky) */}
+          <div className="pd-gal">
+            <GalleryView
+              namaAyam={ayam.nama}
+              images={images}
+              sold={sold}
+              statusJual={ayam.statusJual}
+              overlayRight={katNama}
+              overlayBottom={ayam.kodeRing ?? undefined}
+            />
+          </div>
 
-          {/* ===== info ===== */}
-          <div className="info">
-            <span className="cap">{ayam.kategori?.nama ?? "Belum berkategori"} · {isBetina ? "Betina" : "Jantan"}</span>
+          {/* Info produk */}
+          <div className="pd-info">
+            <span className="pd-cap">{isBetina ? "Betina" : "Jantan"} · {katNama}</span>
             <h1>{ayam.nama}</h1>
-            <div className="code">
-              {[ayam.kodeRing ?? "Tanpa nomor ring", ayam.kategori?.nama].filter(Boolean).join(" · ")}
-            </div>
-            <div className="orn">
-              <span className="ln"></span>
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" /></svg>
-              <span className="ln"></span>
+            <p className="pd-sub">
+              Ayam {katNama}{ayam.kodeRing ? ` · Ring No. ${ayam.kodeRing}` : ""}
+            </p>
+
+            {/* Harga */}
+            <div className="pd-price">
+              <span className="pd-price-lbl">{sold ? "Status" : "Harga Penawaran"}</span>
+              {sold ? (
+                <p className="pd-price-val">Terjual</p>
+              ) : (
+                <p className="pd-price-val">{ayam.harga ? formatRupiah(ayam.harga) : "Hubungi kami"}</p>
+              )}
+              <p className="pd-price-note">
+                {sold
+                  ? "Ayam ini telah terjual dan ditampilkan sebagai riwayat koleksi."
+                  : "Termasuk surat ring & sertifikat asal kandang. Harga dapat dinegosiasi."}
+              </p>
             </div>
 
-            <dl className="spec">
-              {terisi.map(([k, v], i) => (
-                <div className="cell" key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+            {/* Catatan kandang */}
+            {ayam.deskripsi && (
+              <div className="pd-note">
+                <span className="pd-note-lbl">Catatan Kandang</span>
+                <p className="pd-note-txt">“{ayam.deskripsi}”</p>
+              </div>
+            )}
+
+            {/* CTA */}
+            {!sold && (
+              <>
+                <div className="pd-cta">
+                  <a
+                    className="btn pd-wa"
+                    href={waLink(`Halo ${SITE.pemilik}, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di katalog Anda.`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Tanya via WhatsApp
+                  </a>
+                  <a className="btn pd-minat" href="#minat">Saya Tertarik</a>
                 </div>
-              ))}
-            </dl>
-            <p className="spec-note">Kolom opsional (postur, tinggi, kaki &amp; sisik, jalu) hanya tampil bila diisi — mewakili hal yang lazim ditanyakan pembeli.</p>
+                <p className="pd-reply">
+                  Biasanya dibalas dalam 1×24 jam kerja · 08:00–17:00 WIB
+                </p>
+              </>
+            )}
 
-            {ayam.keunggulan && (
-              <div className="keung">
-                <h3>Keunggulan</h3>
+            {/* Spesifikasi */}
+            <div className="pd-spec">
+              <h2>Spesifikasi</h2>
+              <div className="spec">
+                {spec.map(([k, v, otomatis]) => (
+                  <div className="cell" key={String(k)}>
+                    <dt>{k}</dt>
+                    <dd>
+                      {v}
+                      {otomatis && (
+                        <small className="auto">dihitung otomatis dari tanggal menetas — selalu terbaru</small>
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Keunggulan */}
+            {keunggulan.length > 0 && (
+              <div className="pd-keung">
+                <h2>Keunggulan</h2>
                 <ul>
-                  {ayam.keunggulan.split("\n").map((b, i) => b.trim() && <li key={i}>{b.trim()}</li>)}
+                  {keunggulan.map((b, i) => (
+                    <li key={i}>{b}</li>
+                  ))}
                 </ul>
               </div>
             )}
 
-            {ayam.deskripsi && (
-              <div className="desc">
-                <h3>Catatan Kandang</h3>
-                <p>{ayam.deskripsi}</p>
-              </div>
-            )}
-
-            {/* ===== rekap laga ===== */}
-            {!isBetina && (
-              <div className="laga">
-                <div className="laga-h">
-                  <h3>Rekap Pertarungan</h3>
-                  <span>
-                    {rekap.total > 0 ? `${rekap.total} laga tercatat · rekap otomatis` : "belum ada laga tercatat"}
-                  </span>
-                </div>
-                {rekap.total > 0 ? (
-                  <>
-                    <div className="laga-sum">
-                      <div className="s"><div className="n w">{rekap.menang}</div><div className="t">Menang</div></div>
-                      <div className="s"><div className="n l">{rekap.kalah}</div><div className="t">Kalah</div></div>
-                      <div className="s"><div className="n d">{rekap.seri}</div><div className="t">Seri</div></div>
-                    </div>
-                    <div className="laga-rate">
-                      Rasio kemenangan <b>{rekap.total ? Math.round((rekap.menang / rekap.total) * 100) : 0}%</b> · dihitung otomatis dari daftar laga. Seluruh uji bersifat terbatas/ramah ayam.
-                    </div>
-                    <div className="laga-list">
-                      {riwayatSorted.map((r) => (
-                        <div className="lrow" key={r.id}>
-                          <div className="dt">{formatTanggal(r.tanggal)}</div>
-                          <div className="dd">
-                            <b>{r.namaLawan || "Lawan tidak dicatat"}{r.beratLawan != null && ` (${String(r.beratLawan).replace(".", ",")} kg)`}</b>
-                            <span>
-                              {(r.jenisLaga === "ADU_RESMI" ? "Adu resmi" : "Uji terbatas")}
-                              {r.ronde != null ? ` · ronde ${r.ronde}` : ""}
-                            </span>
-                            {r.catatan && <div className="ct">{r.catatan}</div>}
-                          </div>
-                          <span className={`res ${r.hasil === "MENANG" ? "win" : r.hasil === "KALAH" ? "loss" : "draw"}`}>
-                            {r.hasil === "MENANG" ? "Menang" : r.hasil === "KALAH" ? "Kalah" : "Seri"}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <div className="laga-empty">Belum ada riwayat laga yang dicatat. Hubungi pemilik untuk info lebih lanjut.</div>
-                )}
-                <div className="laga-note">Hasil ditulis apa adanya oleh pemilik sebagai poin penilaian — silakan tanyakan detail via WhatsApp.</div>
-              </div>
-            )}
-
-            {/* ===== harga ===== */}
-            <div className="buy">
-              <div className="lbl">{sold ? "Status" : "Harga yang diminta"}</div>
-              <div className="price">{ayam.harga ? formatRupiah(ayam.harga) : "Hubungi kami"}</div>
-              <small>
-                {sold
-                  ? "Ayam ini telah terjual dan ditampilkan sebagai riwayat koleksi."
-                  : `Termasuk surat ring & sertifikat asal kandang. Tawar-menawar dapat dibicarakan.`}
-              </small>
-              {!sold && (
-                <>
-                  <div className="cta">
-                    <a className="btn btn-primary btn-wa" href={waLink(`Halo ${SITE.pemilik}, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di katalog Anda.`)} target="_blank" rel="noopener">
-                      Tanya via WhatsApp
-                    </a>
-                    <a className="btn btn-outline btn-minat" href="#minat">Saya Tertarik</a>
-                  </div>
-                  <div className="note">Biasanya dibalas dalam 1×24 jam pada jam kerja (08.00–17.00 WIB).</div>
-                </>
-              )}
+            {/* Laporkan */}
+            <div className="pd-report">
+              <LaporTrigger ayamId={ayam.id} nama={ayam.nama} variant="link" />
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ===== form minat ===== */}
-      {!sold && (
-        <section className="wrap" id="minat" style={{ paddingTop: 8 }}>
-          <div className="panel">
-            <h2>Saya Tertarik pada {ayam.nama}</h2>
-            <p className="sub">Isi singkat di bawah — permintaan langsung tersimpan dan kami balas lewat WhatsApp Anda.</p>
-            <PermintaanForm ayamId={ayam.id} namaAyam={ayam.nama} />
+      {/* ── Rekam Jejak ── */}
+      {!isBetina && (
+        <section className="wrap pd-fight">
+          <div className="fr-card">
+            <div className="fr-head">
+              <div>
+                <h2>Rekam Jejak Pertarungan</h2>
+                <p className="fr-sub">
+                  {rekap.total} pertandingan · Win rate {winRate}%
+                </p>
+              </div>
+              {rekap.total > 0 && (
+                <div className="fr-stats">
+                  <div><b className="w">{menang}</b><span>Menang</span></div>
+                  <i />
+                  <div><b className="d">{seri}</b><span>Seri</span></div>
+                  <i />
+                  <div><b className="l">{kalah}</b><span>Kalah</span></div>
+                </div>
+              )}
+            </div>
+
+            <div className="fr-disclaimer">
+              Semua pertarungan tercatat adalah uji terbatas / persahabatan, bukan pertandingan resmi yang
+              memperebutkan taruhan.
+            </div>
+
+            {rekap.total > 0 ? (
+              <div className="fr-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Tanggal</th>
+                      <th>Lawan</th>
+                      <th>Berat Lawan</th>
+                      <th>Tipe</th>
+                      <th>Catatan</th>
+                      <th>Hasil</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {riwayatSorted.map((r) => (
+                      <tr key={r.id}>
+                        <td className="dt">{formatTanggal(r.tanggal)}</td>
+                        <td className="strong">{r.namaLawan || "Lawan tidak dicatat"}</td>
+                        <td>{r.beratLawan != null ? `${String(r.beratLawan).replace(".", ",")} kg` : "—"}</td>
+                        <td>
+                          {r.jenisLaga === "ADU_RESMI" ? "Adu resmi" : "Uji terbatas"}
+                          {r.ronde != null ? ` · ronde ${r.ronde}` : ""}
+                        </td>
+                        <td>{r.catatan || "—"}</td>
+                        <td>
+                          <span className={`fr-res ${r.hasil === "MENANG" ? "win" : r.hasil === "KALAH" ? "loss" : "draw"}`}>
+                            {r.hasil === "MENANG" ? "Menang" : r.hasil === "KALAH" ? "Kalah" : "Seri"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="fr-empty">
+                Belum ada riwayat laga yang dicatat — hubungi pemilik untuk info lebih lanjut.
+              </p>
+            )}
           </div>
         </section>
       )}
 
-      {/* ===== laporan halus ===== */}
-      <LaporTrigger ayamId={ayam.id} nama={ayam.nama} variant="link" />
+      {/* ── Saya Tertarik ── */}
+      {!sold && (
+        <section id="minat" className="wrap pd-minat">
+          <div className="minat-grid">
+            <div>
+              <h2>
+                Saya Tertarik pada<br />
+                {ayam.nama}
+              </h2>
+              <p className="minat-sub">
+                Isi form di bawah dan kami akan menghubungi Anda via WhatsApp. Harga bisa
+                dinegosiasi untuk pembeli serius.
+              </p>
+              <ul className="minat-list">
+                <li><span>📋</span> Surat ring & sertifikat asal disertakan</li>
+                <li><span>🚚</span> Pengiriman ke seluruh Indonesia (koordinasi)</li>
+                <li><span>🤝</span> Negosiasi terbuka untuk pembeli serius</li>
+                <li><span>📍</span> Kunjungan langsung wajib janjian terlebih dahulu</li>
+              </ul>
+            </div>
+            <div className="minat-form">
+              <PermintaanForm ayamId={ayam.id} namaAyam={ayam.nama} />
+            </div>
+          </div>
+        </section>
+      )}
 
-      {/* ===== ayam lain ===== */}
+      {/* ── Masih Menimbang? ── */}
       {lain.length > 0 && (
-        <section className="block" style={{ paddingTop: 24 }}>
-          <div className="wrap">
-            <div className="sec-head" style={{ marginBottom: 22 }}>
-              <h2 style={{ fontSize: 24 }}>Masih Menimbang? Ayam Lain dari Kandang</h2>
-            </div>
-            <div className="mini-grid">
-              {lain.map((x) => {
-                const xi = x.images.find((i) => i.isPrimary) || x.images[0];
-                return (
-                  <div className="mini-card" key={x.id}>
-                    {xi && <img src={xi.filePath} alt={x.nama} />}
-                    <div>
-                      <b>{x.nama}</b>
-                      <span>{x.kategori?.nama} · {usiaInfo(x.tanggalMenetas)?.label ?? ""}</span>
-                      <div className="pr">{x.harga ? formatRupiah(x.harga) : "Hubungi kami"}</div>
-                    </div>
-                    <Link href={`/ayam/${x.slug}`}>Lihat</Link>
+        <section className="wrap pd-related">
+          <div className="rel-head">
+            <h2>Masih Menimbang?</h2>
+            <Link href="/katalog">Lihat semua →</Link>
+          </div>
+          <div className="rel-grid">
+            {lain.map((x) => {
+              const xi = x.images.find((i) => i.isPrimary) || x.images[0];
+              return (
+                <Link className="rel-card" href={`/ayam/${x.slug}`} key={x.id}>
+                  <span className="rel-badge">{x.kodeRing || "HW"}</span>
+                  {xi && <img src={xi.filePath} alt={x.nama} loading="lazy" decoding="async" />}
+                  <div className="rel-body">
+                    <b>{x.nama}</b>
+                    <span className="rel-meta">
+                      {x.kategori?.nama ?? "Ayam Bangkok"} · {usiaInfo(x.tanggalMenetas)?.label ?? ""}
+                    </span>
+                    <span className="rel-foot">
+                      <em>{x.harga ? formatRupiah(x.harga) : "Hubungi kami"}</em>
+                      <i>Lihat →</i>
+                    </span>
                   </div>
-                );
-              })}
-            </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}

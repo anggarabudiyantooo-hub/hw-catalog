@@ -44,7 +44,14 @@ export default function PublicPreviewContent({ ayam }: { ayam: AyamFull }) {
       <div className="pv-grid">
         {/* galeri publik */}
         <div className="pv-gal">
-          <GalleryView namaAyam={ayam.nama} images={ayam.images} sold={sold} statusJual={ayam.statusJual} />
+          <GalleryView
+            namaAyam={ayam.nama}
+            images={ayam.images}
+            sold={sold}
+            statusJual={ayam.statusJual}
+            overlayRight={ayam.kategori?.nama ?? undefined}
+            overlayBottom={ayam.kodeRing ?? undefined}
+          />
         </div>
 
         {/* info publik */}
