@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
 import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
+import { guardApi } from "@/lib/izin";
+import { infodari } from "@/lib/requestinfo";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { parseAyam, cekJenisFotoTerpenuhi } from "@/lib/ayamFields";
 import { ambilFiles, simpanGambar } from "@/lib/upload";
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const BASE = reqBase(req);
-  const uid = readOwnerFromRequest(req);
-  if (!uid) return redirectLocal("/panel/login");
+  const { user: _u, res: _r } = await guardApi(req, "ayam");
+  if (_r) return _r;
+  const uid = _u!.id;
 
   const id = Number(params.id);
   const ref = req.headers.get("referer") || `${BASE}/panel/ayam/${id}`;
@@ -57,7 +60,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     }
 
     await prisma.log.create({
-      data: { userId: uid, aksi: "UPDATE", entitas: "ayam", entitasId: id, detail: `Update data ayam "${parsed.data.nama}"` },
+      data: { ...infodari(req), userId: uid, aksi: "UPDATE", entitas: "ayam", entitasId: id, detail: `Update data ayam "${parsed.data.nama}"` },
     });
   }
 

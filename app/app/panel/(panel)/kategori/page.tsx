@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { cekModulHalaman } from "@/lib/izin";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -7,6 +9,8 @@ export default async function KategoriPage({
 }: {
   searchParams: { ok?: string; err?: string };
 }) {
+  if (!(await cekModulHalaman("kategori"))) redirect("/panel");
+
   const kategori = await prisma.kategori.findMany({
     orderBy: { urutan: "asc" },
     include: { _count: { select: { ayam: true } } },

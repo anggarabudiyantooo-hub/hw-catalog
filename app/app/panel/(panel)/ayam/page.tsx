@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { cekModulHalaman } from "@/lib/izin";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
@@ -8,6 +10,8 @@ export default async function AyamListPage({
 }: {
   searchParams: { q?: string; st?: string; ok?: string; err?: string };
 }) {
+  if (!(await cekModulHalaman("ayam"))) redirect("/panel");
+
   const q = (searchParams.q || "").toLowerCase();
   const st = searchParams.st || "aktif";
 

@@ -14,13 +14,17 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   nama         String
-  email        String   @unique
+  email        String    @unique
   passwordHash String
+  role         String    @default("ADMIN") // "PEMILIK" = semua akses + kelola admin; "ADMIN" = dibatasi modul
+  izin         String[]  @default([])      // modul yang boleh diakses ADMIN: ayam, kategori, riwayat, permintaan, laporan, log
+  aktif        Boolean   @default(true)    // false = tidak bisa login
+  avatarUrl    String?
   lastLoginAt  DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   logs         Log[]
 }
 
@@ -121,12 +125,19 @@ model RiwayatTarung {
 }
 
 model Log {
-  id        Int      @id @default(autoincrement())
-  userId    Int?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  aksi      String // LOGIN | CREATE | UPDATE | DELETE | ARSIP | PULIHKAN | UBAH_STATUS | LAINNYA
-  entitas   String
-  entitasId Int?
-  detail    String?
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  userId     Int?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  aksi       String // LOGIN | LOGIN_GAGAL | LOGOUT | CREATE | UPDATE | DELETE | ARSIP | PULIHKAN | UBAH_STATUS | UBAH_IZIN | LAINNYA
+  entitas    String
+  entitasId  Int?
+  detail     String?
+  email      String?   // email pelaku (untuk login gagal yg tak punya userId)
+  ip         String?
+  negara     String?
+  kota       String?
+  perangkat  String?   // ringkas: mis. "HP · Android" / "PC · Windows"
+  browser    String?
+  os         String?
+  createdAt  DateTime  @default(now())
 }

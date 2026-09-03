@@ -24,6 +24,8 @@ async function main() {
       nama: "Pemilik Demo",
       email: "admin@jalu.id",
       passwordHash: await bcrypt.hash("jalu1234", 10),
+      role: "PEMILIK",
+      izin: [],
     },
   });
   console.log("Akun pemilik: admin@jalu.id / jalu1234");

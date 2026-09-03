@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
+import { guardApi } from "@/lib/izin";
+import { infodari } from "@/lib/requestinfo";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 
 export async function POST(req: Request) {
   const BASE = reqBase(req);
-  const uid = readOwnerFromRequest(req);
-  if (!uid) return redirectLocal("/panel/login");
+  const { user: _u, res: _r } = await guardApi(req, "riwayat");
+  if (_r) return _r;
+  const uid = _u!.id;
 
   const fd = await req.formData();
   const ayamId = Number(fd.get("ayamId"));
@@ -45,7 +48,7 @@ export async function POST(req: Request) {
   });
 
   await prisma.log.create({
-    data: { userId: uid, aksi: "CREATE", entitas: "riwayat_tarung", entitasId: ayamId, detail: `Tambah hasil laga "${hasil}" utk ${ayam.nama}` },
+    data: { ...infodari(req), userId: uid, aksi: "CREATE", entitas: "riwayat_tarung", entitasId: ayamId, detail: `Tambah hasil laga "${hasil}" utk ${ayam.nama}` },
   });
 
   await purgPublik();

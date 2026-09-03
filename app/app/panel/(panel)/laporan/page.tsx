@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { cekModulHalaman } from "@/lib/izin";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import AutoFormSelect from "@/components/AutoFormSelect";
@@ -22,6 +24,8 @@ export default async function LaporanPage({
 }: {
   searchParams: { ok?: string; err?: string };
 }) {
+  if (!(await cekModulHalaman("laporan"))) redirect("/panel");
+
   const rows = await prisma.laporan.findMany({
     include: { ayam: { select: { id: true, nama: true, slug: true, kodeRing: true } } },
     orderBy: { createdAt: "desc" },

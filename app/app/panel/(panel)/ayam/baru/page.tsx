@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { cekModulHalaman } from "@/lib/izin";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import PanelPilihFoto from "@/components/PanelPilihFoto";
@@ -9,6 +11,8 @@ export default async function AyamBaruPage({
 }: {
   searchParams: { err?: string };
 }) {
+  if (!(await cekModulHalaman("ayam"))) redirect("/panel");
+
   const kategori = await prisma.kategori.findMany({ orderBy: { urutan: "asc" } });
 
   return (

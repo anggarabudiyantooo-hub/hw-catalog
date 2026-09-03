@@ -96,3 +96,30 @@ export async function hapusFileUpload(nama: string) {
     await rm(full, { force: true });
   } catch {}
 }
+
+/** Direktori khusus avatar profil (lokal). */
+export const AVATAR_DIR = path.join(process.cwd(), "public", "uploads", "avatar");
+
+/**
+ * Simpan foto profil (tanpa tanda air, folder terpisah dari galeri ayam).
+ * Mengikuti pola simpanGambar: dev lokal ke public/uploads/avatar, produksi ke
+ * Vercel Blob berprefix "profil/".
+ */
+export async function simpanAvatar(file: File): Promise<SavedImage> {
+  const check = isAllowed(file);
+  if (!check.ok) throw new Error(check.err);
+  const ext = (ALLOWED.get(file.type) || ".jpg") as ".jpg" | ".png" | ".webp";
+  const nama = `${Date.now()}-${randomBytes(4).toString("hex")}${ext}`;
+  const buf = Buffer.from(await file.arrayBuffer());
+  if (BLOB_AKTIF) {
+    const { url } = await put(`profil/${nama}`, buf, {
+      access: "public",
+      contentType: file.type || "image/jpeg",
+      addRandomSuffix: false,
+    });
+    return { filePath: url, fileName: nama, sizeKb: Math.round(buf.length / 1024) };
+  }
+  await mkdir(AVATAR_DIR, { recursive: true });
+  await writeFile(path.join(AVATAR_DIR, nama), buf);
+  return { filePath: `/uploads/avatar/${nama}`, fileName: nama, sizeKb: Math.round(buf.length / 1024) };
+}

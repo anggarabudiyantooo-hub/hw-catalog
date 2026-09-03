@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { guardApi } from "@/lib/izin";
+import { infodari } from "@/lib/requestinfo";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const BASE = reqBase(req);
-  const uid = readOwnerFromRequest(req);
-  if (!uid) return redirectLocal("/panel/login");
+  const { user: _u, res: _r } = await guardApi(req, "laporan");
+  if (_r) return _r;
+  const uid = _u!.id;
 
   const id = Number(params.id);
   const fd = await req.formData();
@@ -25,5 +28,6 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   if (!l) return go(undefined, "Laporan tidak ditemukan.");
 
   await prisma.laporan.update({ where: { id }, data: { status } });
+  await prisma.log.create({ data: { ...infodari(req), userId: uid, aksi: "UBAH_STATUS", entitas: "laporan", entitasId: id, detail: `Status laporan -> ${status}` } }).catch(() => {});
   return go(`Status laporan diubah ke ${status}.`);
 }

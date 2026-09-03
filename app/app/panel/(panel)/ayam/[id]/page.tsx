@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { cekModulHalaman } from "@/lib/izin";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -15,6 +17,8 @@ export default async function AyamEditPage({
   params: { id: string };
   searchParams: { ok?: string; err?: string };
 }) {
+  if (!(await cekModulHalaman("ayam"))) redirect("/panel");
+
   const id = Number(params.id);
   const ayam = await prisma.ayam.findUnique({
     where: { id },

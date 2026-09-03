@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
+import { guardApi } from "@/lib/izin";
+import { infodari } from "@/lib/requestinfo";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { slugify } from "@/lib/format";
 
 export async function POST(req: Request) {
   const BASE = reqBase(req);
-  const uid = readOwnerFromRequest(req);
-  if (!uid) return redirectLocal("/panel/login");
+  const { user: _u, res: _r } = await guardApi(req, "kategori");
+  if (_r) return _r;
+  const uid = _u!.id;
 
   const fd = await req.formData();
   const nama = String(fd.get("nama") || "").trim();
@@ -34,7 +37,7 @@ export async function POST(req: Request) {
     await prisma.kategori.create({
       data: { nama, slug, deskripsi: String(fd.get("deskripsi") || "").trim() || null, urutan: Number(fd.get("urutan")) || 0 },
     });
-    await prisma.log.create({ data: { userId: uid, aksi: "CREATE", entitas: "kategori", detail: `Tambah kategori "${nama}"` } });
+    await prisma.log.create({ data: { ...infodari(req), userId: uid, aksi: "CREATE", entitas: "kategori", detail: `Tambah kategori "${nama}"` } });
     await purgPublik();
     return go("Kategori ditambahkan.");
   } catch {

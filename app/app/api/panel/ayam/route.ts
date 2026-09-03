@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
 import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
+import { guardApi } from "@/lib/izin";
+import { infodari } from "@/lib/requestinfo";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 import { parseAyam, cekJenisFotoTerpenuhi } from "@/lib/ayamFields";
 import { ambilFiles, simpanGambar } from "@/lib/upload";
 
 export async function POST(req: Request) {
   const BASE = reqBase(req);
-  const uid = readOwnerFromRequest(req);
-  if (!uid) return redirectLocal("/panel/login");
+  const { user: _u, res: _r } = await guardApi(req, "ayam");
+  if (_r) return _r;
+  const uid = _u!.id;
 
   const ref = req.headers.get("referer") || `${BASE}/panel/ayam`;
   const back = (ok?: string, err?: string) => {

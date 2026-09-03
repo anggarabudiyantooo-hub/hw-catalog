@@ -39,7 +39,12 @@ export default async function LoginPage({
         <h1 style={{ fontSize: 21 }}>Masuk</h1>
         <p className="sub">Halaman ini khusus pemilik kandang. Login untuk mengelola katalog ayam.</p>
 
-        {searchParams.err && <p className="flash flash-err">Email atau kata sandi salah.</p>}
+        {searchParams.err === "2" && (
+          <p className="flash flash-err">Akun ini dinonaktifkan. Hubungi pemilik untuk mengaktifkannya kembali.</p>
+        )}
+        {searchParams.err && searchParams.err !== "2" && (
+          <p className="flash flash-err">Email atau kata sandi salah.</p>
+        )}
 
         <form method="post" action="/api/auth/login">
           <div className="f" style={{ marginBottom: 14 }}>
@@ -53,7 +58,7 @@ export default async function LoginPage({
           <button className="btn btn-primary btn-block" type="submit">Masuk ke Panel</button>
         </form>
         <p style={{ marginTop: 16, fontSize: 12, color: "var(--ink-faint)", fontStyle: "italic" }}>
-          Demo: admin@jalu.id / jalu1234 (dapat diubah di halaman Data Pengguna/seed).
+          Login dicatat di Log Aktivitas (waktu, IP, perangkat, lokasi perkiraan).
         </p>
       </div>
     </div>

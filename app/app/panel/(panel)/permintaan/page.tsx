@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { cekModulHalaman } from "@/lib/izin";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { waLink } from "@/lib/config";
@@ -17,6 +19,8 @@ export default async function PermintaanPage({
 }: {
   searchParams: { ok?: string; err?: string; st?: string };
 }) {
+  if (!(await cekModulHalaman("permintaan"))) redirect("/panel");
+
   const filter = searchParams.st || "";
   const rows = await prisma.permintaan.findMany({
     include: { ayam: { select: { id: true, nama: true, slug: true, kodeRing: true } } },

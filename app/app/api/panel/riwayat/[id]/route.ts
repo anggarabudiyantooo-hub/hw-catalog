@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { purgPublik } from "@/lib/purg";
 import { prisma } from "@/lib/prisma";
+import { guardApi } from "@/lib/izin";
+import { infodari } from "@/lib/requestinfo";
 import { readOwnerFromRequest, reqBase, redirectLocal } from "@/lib/auth";
 
 export async function POST(req: Request, { params }: { params: { id: string } }) {
   const BASE = reqBase(req);
-  const uid = readOwnerFromRequest(req);
-  if (!uid) return redirectLocal("/panel/login");
+  const { user: _u, res: _r } = await guardApi(req, "riwayat");
+  if (_r) return _r;
+  const uid = _u!.id;
 
   const id = Number(params.id);
   const fd = await req.formData();
@@ -26,7 +29,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
   if (act === "hapus") {
     await prisma.riwayatTarung.delete({ where: { id } });
-    await prisma.log.create({ data: { userId: uid, aksi: "DELETE", entitas: "riwayat_tarung", entitasId: id, detail: `Hapus hasil laga ${row.ayam?.nama ?? row.ayamId}` } });
+    await prisma.log.create({ data: { ...infodari(req), userId: uid, aksi: "DELETE", entitas: "riwayat_tarung", entitasId: id, detail: `Hapus hasil laga ${row.ayam?.nama ?? row.ayamId}` } });
     await purgPublik();
     return go("Catatan laga dihapus — rekap diperbarui.");
   }

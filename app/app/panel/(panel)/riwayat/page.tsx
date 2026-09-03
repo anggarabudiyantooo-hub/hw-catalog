@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { cekModulHalaman } from "@/lib/izin";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatTanggal } from "@/lib/format";
@@ -10,6 +12,8 @@ export default async function RiwayatPage({
 }: {
   searchParams: { ayam?: string; ok?: string; err?: string };
 }) {
+  if (!(await cekModulHalaman("riwayat"))) redirect("/panel");
+
   const rows = await prisma.riwayatTarung.findMany({
     include: { ayam: { include: { kategori: true } } },
     orderBy: { tanggal: "desc" },
