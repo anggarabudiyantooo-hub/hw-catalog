@@ -15,7 +15,7 @@ function logoBuf(): Promise<Buffer> {
 
 // Parameter pola watermark — logo besar, satu lapis, opasitas seragam:
 const TILTS = [-45, 45]; // miring selang-seling: logo berikutnya kiri/kanan bergantian
-const OP_LOGO = 0.15; // opasitas logo — satu lapis saja (0.15), tanpa lapis bayangan
+const OP_LOGO = 0.05; // opasitas logo — sangat samar, seolah-olah tak terlihat (0.05)
 const UKURAN = 0.2; // ukuran logo = 20% sisi terkecil foto (diperbesar dari 13%)
 const GAP_MAJU = 2.5; // jarak antar logo (× lebar logo) searah garis diagonal
 const GAP_BARIS = 1.8; // jarak antar baris diagonal (× lebar logo)
@@ -24,8 +24,9 @@ const STAGGER = true; // tiap baris digeser setengah langkah → efek zigzag
 /**
  * Menempelkan watermark LOGO: posisi pada kisi diagonal dengan miring yang
  * SELANG-SELING (-45°/+45°) sehingga antar logo tampak zigzag, plus tiap
- * baris digeser setengah langkah. Satu lapis transparan 0.15; ukuran logo
- * dibuat besar agar merek terbaca. Dipanggil otomatis saat foto diunggah.
+ * baris digeser setengah langkah. Satu lapis transparan sangat rendah (0.05)
+ * sehingga nyaris tak terlihat; ukuran logo dibuat besar agar tetap terbaca
+ * bila diperhatikan. Dipanggil otomatis saat foto diunggah.
  */
 export async function beriWatermark(
   buf: Buffer,
