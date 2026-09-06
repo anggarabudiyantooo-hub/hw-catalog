@@ -4,6 +4,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { waLink } from "@/lib/config";
 import AutoFormSelect from "@/components/AutoFormSelect";
+import { formatWaktu } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -62,7 +63,7 @@ export default async function PermintaanPage({
         </div>
         <table className="data">
           <thead>
-            <tr><th>Waktu</th><th>Pembeli</th><th>Ayam diminati</th><th>Pesan</th><th>Status</th><th>Aksi</th></tr>
+            <tr><th>Waktu (WIB)</th><th>Pembeli</th><th>Ayam diminati</th><th>Pesan</th><th>Status</th><th>Aksi</th></tr>
           </thead>
           <tbody>
             {data.map((p) => {
@@ -70,7 +71,7 @@ export default async function PermintaanPage({
               return (
                 <tr key={p.id}>
                   <td style={{ whiteSpace: "nowrap" }}>
-                    {new Intl.DateTimeFormat("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(p.createdAt)}
+                    {formatWaktu(p.createdAt, { tahun: true })}
                   </td>
                   <td>
                     <b>{p.namaPengunjung}</b>

@@ -35,6 +35,33 @@ export function formatTanggalLengkap(d: Date | string | null | undefined): strin
   }).format(new Date(d));
 }
 
+/**
+ * Zona waktu tampilan: Waktu Indonesia Barat (Asia/Jakarta, UTC+7, tanpa DST).
+ * Dipakai untuk semua kolom "Waktu" di panel — waktu di database tetap UTC,
+ * hanya tampilannya yang dikonversi agar konsisten di semua server.
+ */
+export const ZONA_WIB = "Asia/Jakarta";
+
+/**
+ * Format tanggal + jam dalam WIB, mis. "03 Sep, 19.53.53".
+ * o.detik → sertakan detik; o.tahun → sertakan tahun.
+ */
+export function formatWaktu(
+  d: Date | string | null | undefined,
+  o: { detik?: boolean; tahun?: boolean } = {}
+): string {
+  if (!d) return "—";
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: o.tahun ? "numeric" : undefined,
+    hour: "2-digit",
+    minute: "2-digit",
+    ...(o.detik ? { second: "2-digit" } : {}),
+    timeZone: ZONA_WIB,
+  }).format(new Date(d));
+}
+
 export function hariIniISO(): string {
   const d = new Date();
   const p = (x: number) => String(x).padStart(2, "0");

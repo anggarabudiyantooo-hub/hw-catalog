@@ -3,16 +3,9 @@ import { redirect } from "next/navigation";
 import { getOwner } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { MODUL } from "@/lib/izin";
+import { formatWaktu } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
-
-function fmt(tgl: Date | null) {
-  if (!tgl) return "—";
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "2-digit", month: "short", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
-  }).format(tgl);
-}
 
 export default async function PenggunaPage({
   searchParams,
@@ -91,7 +84,7 @@ export default async function PenggunaPage({
               <div className="tools" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
                 <span className={`res ${isOwnerRow ? "win" : "draw"}`}>{isOwnerRow ? "Pemilik" : "Admin"}</span>
                 <span className={`res ${u.aktif ? "win" : "loss"}`}>{u.aktif ? "Aktif" : "Nonaktif"}</span>
-                <span style={{ fontSize: 11.5, color: "var(--ink-faint)" }}>Login terakhir: {fmt(u.lastLoginAt)}</span>
+                <span style={{ fontSize: 11.5, color: "var(--ink-faint)" }}>Login terakhir (WIB): {formatWaktu(u.lastLoginAt, { tahun: true })}</span>
               </div>
             </div>
             <div className="card-body">

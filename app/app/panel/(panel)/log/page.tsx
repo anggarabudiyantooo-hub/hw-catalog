@@ -3,6 +3,7 @@ import { getOwner } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { boleh } from "@/lib/izin";
 import { tampilLokasi, tampilPerangkat } from "@/lib/requestinfo";
+import { formatWaktu } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +62,7 @@ export default async function LogPage({
           <table className="data">
             <thead>
               <tr>
-                <th>Waktu</th>
+                <th>Waktu (WIB)</th>
                 <th>Pelaku</th>
                 <th>Aksi</th>
                 <th>Entitas</th>
@@ -74,7 +75,7 @@ export default async function LogPage({
               {data.map((l) => (
                 <tr key={l.id}>
                   <td style={{ whiteSpace: "nowrap", color: "var(--ink-muted)", fontSize: 12 }}>
-                    {new Intl.DateTimeFormat("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(l.createdAt)}
+                    {formatWaktu(l.createdAt, { detik: true })}
                   </td>
                   <td style={{ maxWidth: 180 }}>
                     <div style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink)", overflowWrap: "anywhere" }}>
