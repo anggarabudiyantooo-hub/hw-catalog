@@ -1156,13 +1156,16 @@ a.avatar { text-decoration: none; }
 .panel-main .tag { display: inline-block; background: #fbf3df; border: 1px solid var(--krem-300); padding: 2px 9px; border-radius: 4px; font-size: 11.5px; font-family: var(--sans); letter-spacing: .02em; text-transform: none; }
 
 /* =========================================================
-   FINAL — penyesuaian tata letak:
-   · footer melebar merata (space kanan-kiri kecil)
+   FINAL — penyesuaian tata letak footer:
+   · konten footer membentang selebar layar (tanpa batas
+     maksimum) sehingga space kanan-kiri nyaris nol,
+     kolom dibagi simetris-bercermin dengan rasio emas.
    · lokasi & kunjungan satu kolom di layar kecil
    (diletakkan paling akhir agar menang atas aturan redesign)
    ========================================================= */
 .pub-foot .wrap {
-  max-width: 1760px;
+  width: 100%;
+  max-width: none;
 }
 @media (max-width: 980px) {
   .loc-sec .loc-grid { grid-template-columns: 1fr; }
