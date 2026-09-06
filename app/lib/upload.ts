@@ -1,6 +1,7 @@
 import { randomBytes } from "crypto";
 import { mkdir, rm, writeFile, unlink } from "fs/promises";
 import path from "path";
+import sharp from "sharp";
 import { beriWatermark } from "./watermark";
 // Penyimpanan objek Vercel Blob dipakai di produksi; di dev tanpa token,
 // import ini tetap aman (library hanya aktif saat fungsi dipanggil).
@@ -31,12 +32,126 @@ export function isAllowed(file: File): { ok: boolean; err?: string } {
   return { ok: true };
 }
 
+// ---------------------------------------------------------------------------
+// Kompresi otomatis setiap foto unggahan
+// ---------------------------------------------------------------------------
+
+/** Sisi terpanjang maksimum foto galeri setelah dikompres (px). */
+export const FOTO_MAX_SISI = 1920;
+/** Sisi terpanjang maksimum foto profil setelah dikompres (px). */
+export const AVATAR_MAX_SISI = 512;
+/** Kualitas enkode (0–100) untuk JPG/WebP hasil kompresi. */
+const KUALITAS_JPG = 82;
+const KUALITAS_WEBP = 82;
+
+export type FormatFoto = ".jpg" | ".png" | ".webp";
+
+/** Peta content-type per format (dipakai saat menyimpan ke Blob/Vercel). */
+export const MIME: Record<FormatFoto, string> = {
+  ".jpg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+};
+
+export interface HasilKompres {
+  buf: Buffer;
+  ext: FormatFoto;
+}
+
+/**
+ * Kompres & perkecil satu gambar:
+ * - sisi terpanjang dipangkas agar tidak melebihi `maxSisi` (tanpa memperbesar);
+ * - orientasi EXIF dibenahi, metadata EXIF dibuang;
+ * - PNG yang TIDAK punya transparansi otomatis diubah ke JPG (jauh lebih kecil);
+ * - PNG ber-transparansi tetap PNG (level 9); JPG/WebP dienkode kualitas 82.
+ * Mengembalikan buffer + format akhir (bisa berbeda dari input, mis. PNG→JPG).
+ */
+async function kompresFoto(
+  buf: Buffer,
+  ext: FormatFoto,
+  maxSisi: number
+): Promise<HasilKompres> {
+  // Baca metadata dari input asli (sebelum transformasi).
+  const info = await sharp(buf, { failOn: "none" }).metadata();
+  const w = info.width ?? 1920;
+  const h = info.height ?? 1920;
+  const orientasi = info.orientation ?? 1;
+  // Orientasi EXIF 90°/270° (5–8) menukar lebar↔tinggi pada keluaran setelah .rotate().
+  const swap = orientasi >= 5 && orientasi <= 8;
+  const wOut = swap ? h : w;
+  const hOut = swap ? w : h;
+
+  const sisi = Math.max(wOut, hOut);
+  let tw = wOut;
+  let th = hOut;
+  if (sisi > maxSisi) {
+    const skala = maxSisi / sisi;
+    tw = Math.max(1, Math.round(wOut * skala));
+    th = Math.max(1, Math.round(hOut * skala));
+  }
+
+  // PNG tanpa transparansi nyata → ubah ke JPG agar jauh lebih ringan.
+  // "Tanpa transparansi" = tak punya kanal alpha, ATAU kanal alpha-nya nyaris
+  // pekat penuh (>250 dari 255) di seluruh gambar (banyak ekspor PNG menyertakan
+  // alpha walau sebenarnya foto pekat). PNG semi-transparan tetap dipertahankan.
+  let jadiJpg = false;
+  if (ext === ".png") {
+    if (!info.hasAlpha) {
+      jadiJpg = true; // PNG RGB polos (tanpa kanal alpha) → foto, aman jadi JPG.
+    } else {
+      // Punya kanal alpha: periksa nilai nyatanya. Bila seluruh piksel ≥ 251
+      // (nyaris/benar-benar pekat), perlakukan sebagai foto → JPG. PNG yang
+      // memakai transparansi sungguhan tetap dipertahankan sebagai PNG.
+      const { data } = await sharp(buf, { failOn: "none" })
+        .extractChannel(3) // kanal alpha saja → 1 byte/piksel
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+      let pekat = true;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i] < 251) {
+          pekat = false;
+          break;
+        }
+      }
+      jadiJpg = pekat;
+    }
+  }
+  const formatAkhir: FormatFoto = jadiJpg ? ".jpg" : ext;
+
+  const img = sharp(buf, { failOn: "none" }).rotate(); // terapkan orientasi EXIF
+  const selesai =
+    tw === wOut && th === hOut
+      ? img
+      : img.resize(tw, th, { fit: "inside", withoutEnlargement: true });
+  switch (formatAkhir) {
+    case ".jpg":
+      // flatten putih agar kanal alpha (bila ada) tak membiaskan warna tepi.
+      return {
+        buf: await selesai.flatten({ background: { r: 255, g: 255, b: 255 } }).jpeg({ quality: KUALITAS_JPG, mozjpeg: true }).toBuffer(),
+        ext: ".jpg",
+      };
+    case ".webp":
+      return { buf: await selesai.webp({ quality: KUALITAS_WEBP }).toBuffer(), ext: ".webp" };
+    default:
+      return { buf: await selesai.png({ compressionLevel: 9 }).toBuffer(), ext: ".png" };
+  }
+}
+
 export async function simpanGambar(file: File): Promise<SavedImage> {
   const check = isAllowed(file);
   if (!check.ok) throw new Error(check.err);
-  const ext = (ALLOWED.get(file.type) || ".jpg") as ".jpg" | ".png" | ".webp";
-  const nama = `${Date.now()}-${randomBytes(4).toString("hex")}${ext}`;
+  const extAwal = (ALLOWED.get(file.type) || ".jpg") as FormatFoto;
   let buf = Buffer.from(await file.arrayBuffer());
+  let ext: FormatFoto = extAwal;
+  // Kompresi otomatis: perkecil dimensi, enkode ulang, PNG pekat → JPG (buang EXIF).
+  try {
+    const hasil = await kompresFoto(buf, extAwal, FOTO_MAX_SISI);
+    buf = hasil.buf;
+    ext = hasil.ext;
+  } catch (e) {
+    console.error("kompresi gagal, lanjut tanpa kompresi:", e);
+  }
+  const nama = `${Date.now()}-${randomBytes(4).toString("hex")}${ext}`;
   // Tanda air (watermark) otomatis pada setiap foto unggahan.
   try {
     buf = await beriWatermark(buf, ext);
@@ -47,7 +162,7 @@ export async function simpanGambar(file: File): Promise<SavedImage> {
     // Produksi: simpan ke Vercel Blob → URL permanen.
     const { url } = await put(`galeri/${nama}`, buf, {
       access: "public",
-      contentType: file.type || "image/jpeg",
+      contentType: MIME[ext],
       addRandomSuffix: false,
     });
     return { filePath: url, fileName: nama, sizeKb: Math.round(buf.length / 1024) };
@@ -108,13 +223,22 @@ export const AVATAR_DIR = path.join(process.cwd(), "public", "uploads", "avatar"
 export async function simpanAvatar(file: File): Promise<SavedImage> {
   const check = isAllowed(file);
   if (!check.ok) throw new Error(check.err);
-  const ext = (ALLOWED.get(file.type) || ".jpg") as ".jpg" | ".png" | ".webp";
+  const extAwal = (ALLOWED.get(file.type) || ".jpg") as FormatFoto;
+  // Kompresi otomatis (tanpa tanda air): avatar cukup kecil (ditampilkan ≤ 120px).
+  let buf = Buffer.from(await file.arrayBuffer());
+  let ext: FormatFoto = extAwal;
+  try {
+    const hasil = await kompresFoto(buf, extAwal, AVATAR_MAX_SISI);
+    buf = hasil.buf;
+    ext = hasil.ext;
+  } catch (e) {
+    console.error("kompresi avatar gagal, lanjut asli:", e);
+  }
   const nama = `${Date.now()}-${randomBytes(4).toString("hex")}${ext}`;
-  const buf = Buffer.from(await file.arrayBuffer());
   if (BLOB_AKTIF) {
     const { url } = await put(`profil/${nama}`, buf, {
       access: "public",
-      contentType: file.type || "image/jpeg",
+      contentType: MIME[ext],
       addRandomSuffix: false,
     });
     return { filePath: url, fileName: nama, sizeKb: Math.round(buf.length / 1024) };
