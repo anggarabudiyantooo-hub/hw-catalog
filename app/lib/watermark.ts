@@ -13,10 +13,10 @@ function logoBuf(): Promise<Buffer> {
   return logoCache;
 }
 
-// Parameter pola watermark — "zigzag antar logo" + transparan tinggi:
+// Parameter pola watermark — logo besar, satu lapis, opasitas seragam:
 const TILTS = [-45, 45]; // miring selang-seling: logo berikutnya kiri/kanan bergantian
-const OP_EMAS = 0.2; // opasitas logo emas (sangat samar, seperti tekstur)
-const OP_BAYANG = 0.06; // opasitas bayangan halus di belakang logo
+const OP_LOGO = 0.15; // opasitas logo — satu lapis saja (0.15), tanpa lapis bayangan
+const UKURAN = 0.2; // ukuran logo = 20% sisi terkecil foto (diperbesar dari 13%)
 const GAP_MAJU = 2.5; // jarak antar logo (× lebar logo) searah garis diagonal
 const GAP_BARIS = 1.8; // jarak antar baris diagonal (× lebar logo)
 const STAGGER = true; // tiap baris digeser setengah langkah → efek zigzag
@@ -24,8 +24,8 @@ const STAGGER = true; // tiap baris digeser setengah langkah → efek zigzag
 /**
  * Menempelkan watermark LOGO: posisi pada kisi diagonal dengan miring yang
  * SELANG-SELING (-45°/+45°) sehingga antar logo tampak zigzag, plus tiap
- * baris digeser setengah langkah. Opasitas rendah dan logo tetap transparan
- * penuh tanpa kotak latar. Dipanggil otomatis saat foto diunggah.
+ * baris digeser setengah langkah. Satu lapis transparan 0.15; ukuran logo
+ * dibuat besar agar merek terbaca. Dipanggil otomatis saat foto diunggah.
  */
 export async function beriWatermark(
   buf: Buffer,
@@ -50,30 +50,20 @@ export async function beriWatermark(
   const rasio = lw0 / lh0;
 
   const minSisi = Math.min(w, h);
-  const base = Math.max(34, Math.round(minSisi * 0.13)); // ukuran dasar logo
+  const base = Math.max(44, Math.round(minSisi * UKURAN)); // ukuran dasar logo
   const lw = Math.max(24, Math.round(base * rasio));
   const lh = Math.round(base);
 
-  // Logo siap tempel untuk tiap kemiringan (bayangan & emas, alpha dipertahankan).
-  const tiles: { gelap: Buffer; emas: Buffer; bw: number; bh: number }[] = [];
+  // Logo siap tempel untuk tiap kemiringan (alpha dipertahankan, tanpa lapis bayangan).
+  const tiles: { emas: Buffer; bw: number; bh: number }[] = [];
   for (const t of TILTS) {
-    const b = sharp(logo).resize(lw, lh, { fit: "fill" });
-    const gelap = await b
-      .clone()
-      .recomb([
-        [0.07, 0, 0],
-        [0, 0.05, 0],
-        [0, 0, 0.04],
-      ])
+    const emas = await sharp(logo)
+      .resize(lw, lh, { fit: "fill" })
       .rotate(t, { background: { r: 0, g: 0, b: 0, alpha: 0 } })
       .png()
       .toBuffer();
-    const emas = await b
-      .rotate(t, { background: { r: 0, g: 0, b: 0, alpha: 0 } })
-      .png()
-      .toBuffer();
-    const m = await sharp(gelap).metadata();
-    tiles.push({ gelap, emas, bw: m.width ?? lw, bh: m.height ?? lh });
+    const m = await sharp(emas).metadata();
+    tiles.push({ emas, bw: m.width ?? lw, bh: m.height ?? lh });
   }
   const bw = tiles[0].bw;
   const bh = tiles[0].bh;
@@ -111,8 +101,7 @@ export async function beriWatermark(
       const y0 = cy - hh;
       if (x0 < 0 || y0 < 0 || x0 + bw > w || y0 + bh > h) continue;
       const tile = tiles[(a + b) & 1]; // miring selang-seling antar logo
-      overlay.push({ input: tile.gelap, left: x0 + 2, top: y0 + 3, opacity: OP_BAYANG });
-      overlay.push({ input: tile.emas, left: x0, top: y0, opacity: OP_EMAS });
+      overlay.push({ input: tile.emas, left: x0, top: y0, opacity: OP_LOGO });
     }
   }
 
