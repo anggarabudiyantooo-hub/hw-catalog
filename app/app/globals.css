@@ -834,9 +834,14 @@ body { background: var(--krem-100); }
 .pub-foot .wrap { padding-left: 14px; padding-right: 14px; }
 .pub-foot .foot-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 44px 22px;
-  padding: 52px 0 34px;
+  /* Tata letak simetris bercermin kiri–kanan dengan proporsi emas (φ ≈ 1,618):
+     separuh kiri = [Merek besar · Navigasi kecil], separuh kanan = [Kontak kecil ·
+     Lokasi besar] adalah pencerminan; pada tiap separuh, kolom besar : kecil = φ : 1. */
+  grid-template-columns:
+    minmax(0, 1.618fr) minmax(0, 1fr)
+    minmax(0, 1fr) minmax(0, 1.618fr);
+  gap: 40px 26px;
+  padding: 52px 0 40px;
 }
 .pub-foot .foot-grid > div { padding: 0; }
 .pub-foot .foot-grid h4 { margin-top: 4px; color: #efd7a6; }
