@@ -844,8 +844,9 @@ body { background: var(--krem-100); }
   padding: 52px 0 40px;
 }
 .pub-foot .foot-grid > div { padding: 0; }
+.pub-foot .foot-grid p { max-width: none; }
 .pub-foot .foot-grid h4 { margin-top: 4px; color: #efd7a6; }
-.pub-foot .f-about { margin-top: 14px; font-size: 13.5px; line-height: 1.75; color: #cbb390; max-width: 36ch; }
+.pub-foot .f-about { margin-top: 14px; font-size: 13.5px; line-height: 1.75; color: #cbb390; }
 .pub-foot .f-visit {
   margin-top: 18px;
   background: var(--emas-500);
@@ -855,13 +856,18 @@ body { background: var(--krem-100); }
   font-size: 11px;
 }
 .pub-foot .f-visit:hover { background: #dba454; border-color: #dba454; transform: translateY(-1px); box-shadow: 0 10px 20px -12px rgba(219, 164, 84, 0.9); }
-.pub-foot .fnav { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+/* Tautan navigasi disusun menjadi 2 lajur bila kolomnya cukup lebar,
+   sehingga memakai seluruh lebar kolom (tidak menumpuk kosong di kanan). */
+.pub-foot .fnav { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); row-gap: 12px; column-gap: 34px; }
+.pub-foot .fnav li { margin: 0; }
 .pub-foot .fnav a { font-size: 13.5px; color: #dccbb0; text-decoration: none; transition: color 0.18s; }
 .pub-foot .fnav a:hover { color: #f6e7ce; }
 .pub-foot .fk { display: flex; flex-direction: column; gap: 13px; }
-.pub-foot .frow { display: flex; flex-direction: column; gap: 2px; }
-.pub-foot .frow span { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #a0845f; font-weight: 600; }
-.pub-foot .frow b, .pub-foot .frow a { font-style: normal; font-size: 14px; color: #f0e0c0; text-decoration: none; font-weight: 600; }
+/* Baris kontak: label di kiri dan isi di kanan satu baris,
+   direntangkan sehingga memakai seluruh lebar kolom. */
+.pub-foot .frow { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 20px; }
+.pub-foot .frow > span { flex: none; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #a0845f; font-weight: 600; }
+.pub-foot .frow b, .pub-foot .frow a, .pub-foot .frow em { flex: 0 1 auto; min-width: 0; overflow-wrap: anywhere; text-align: right; font-style: normal; font-size: 14px; color: #f0e0c0; text-decoration: none; font-weight: 600; }
 .pub-foot .frow a:hover { color: #ffe9bd; }
 .pub-foot .frow em.soon { color: #a0845f; font-style: italic; font-size: 13px; }
 .pub-foot .f-addr { margin: 0 0 10px; font-size: 13.5px; line-height: 1.7; color: #f0e0c0; }
