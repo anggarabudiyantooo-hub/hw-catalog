@@ -602,7 +602,7 @@ button.zoom-open { display: block; width: 100%; padding: 0; border: 0; backgroun
   .side { position: static; height: auto; }
   .side-nav { display: none; }
 }
-@media (max-width: 760px) { .pub-nav nav { display: none; } .mini-grid { grid-template-columns: 1fr 1fr; } .cta-panel .btn { margin-left: 0; } main.panel-main { padding: 20px 14px 40px; } }
+@media (max-width: 760px) { .pub-nav nav:not(.pub-mnav) { display: none; } .mini-grid { grid-template-columns: 1fr 1fr; } .cta-panel .btn { margin-left: 0; } main.panel-main { padding: 20px 14px 40px; } }
 @media (max-width: 600px) { .cards, .mini-grid, .pub-foot .foot-in, .kat-grid { grid-template-columns: 1fr; } .fgrid { grid-template-columns: 1fr; } .up-pre { grid-template-columns: repeat(3, 1fr); } .spec { grid-template-columns: 1fr; } .spec .cell:nth-child(odd) { border-right: 0; } .keung ul { columns: 1; } .gthumbs { grid-template-columns: repeat(2, 1fr); } .lrow { grid-template-columns: 1fr; gap: 5px; } .toolbar .res { margin-left: 0; } }
 
 @media (max-width: 980px) {
@@ -1096,7 +1096,8 @@ body.panel-nav-open { overflow: hidden; }
    RESPONSIF — breakpoint mobile
    ========================================================= */
 @media (max-width: 760px) {
-  .pub-actions nav { display: none; }
+  /* Sembunyikan hanya nav desktop; menu hamburger (.pub-mnav) tetap tampil saat dibuka. */
+  .pub-actions > nav:not(.pub-mnav) { display: none; }
   .pub-actions .wa-cta { display: none; }
   .pub-actions { gap: 10px; }
   .pub-burger { display: inline-flex; }
@@ -1148,3 +1149,20 @@ a.avatar { text-decoration: none; }
 .izin-chips input { accent-color: var(--bata-700); }
 .izin-edit { border: 1px dashed var(--krem-300); border-radius: 8px; padding: 12px; background: #fdfaf1; }
 .panel-main .tag { display: inline-block; background: #fbf3df; border: 1px solid var(--krem-300); padding: 2px 9px; border-radius: 4px; font-size: 11.5px; font-family: var(--sans); letter-spacing: .02em; text-transform: none; }
+
+/* =========================================================
+   FINAL — penyesuaian tata letak:
+   · footer melebar merata (space kanan-kiri kecil)
+   · lokasi & kunjungan satu kolom di layar kecil
+   (diletakkan paling akhir agar menang atas aturan redesign)
+   ========================================================= */
+.pub-foot .wrap {
+  max-width: 1760px;
+}
+@media (max-width: 980px) {
+  .loc-sec .loc-grid { grid-template-columns: 1fr; }
+  .loc-stack .loc-card { flex-wrap: wrap; }
+}
+@media (max-width: 980px) {
+  .pub-foot .foot-grid { column-gap: 20px; }
+}
