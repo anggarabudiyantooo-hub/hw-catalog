@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { labelJenisFoto } from "@/lib/format";
 
 type GalFoto = {
@@ -155,7 +156,9 @@ export default function GalleryView({
       )}
 
       {/* ================= LIGHTBOX / ZOOM ================= */}
-      {open && (
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
         <div className="lbox" role="dialog" aria-modal="true" aria-label={`Foto ${namaAyam}`}>
           <div className="lbox-dim" onClick={() => setOpen(false)} />
           <button className="lbox-x" onClick={() => setOpen(false)} aria-label="Tutup">
@@ -242,7 +245,8 @@ export default function GalleryView({
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 5l7 7-7 7" /></svg>
             </button>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
