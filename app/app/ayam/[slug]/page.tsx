@@ -8,7 +8,8 @@ import LaporTrigger from "@/components/LaporTrigger";
 import GalleryView from "@/components/GalleryView";
 import { prisma } from "@/lib/prisma";
 import { formatRupiah, formatTanggal, usiaInfo, rekapDari } from "@/lib/format";
-import { waLink, SITE } from "@/lib/config";
+import { waLinkDari } from "@/lib/config";
+import { getSite } from "@/lib/site";
 
 const include = { images: true, kategori: true, riwayat: true };
 
@@ -24,18 +25,24 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const a = await prisma.ayam.findUnique({ where: { slug: params.slug }, include: { kategori: true } });
+  const [a, site] = await Promise.all([
+    prisma.ayam.findUnique({ where: { slug: params.slug }, include: { kategori: true } }),
+    getSite(),
+  ]);
   return {
     title: a ? `${a.nama} (${a.kodeRing ?? "ayam bangkok"})` : "Ayam tidak ditemukan",
-    description: a ? `Detail ${a.kodeRing ?? a.nama} · ${a.kategori?.nama ?? "Ayam bangkok"} di ${SITE.nama}.` : undefined,
+    description: a ? `Detail ${a.kodeRing ?? a.nama} · ${a.kategori?.nama ?? "Ayam bangkok"} di ${site.nama}.` : undefined,
   };
 }
 
 export default async function DetailPage({ params }: { params: { slug: string } }) {
-  const ayam = await prisma.ayam.findUnique({
-    where: { slug: params.slug },
-    include,
-  });
+  const [ayam, site] = await Promise.all([
+    prisma.ayam.findUnique({
+      where: { slug: params.slug },
+      include,
+    }),
+    getSite(),
+  ]);
   if (!ayam || ayam.isArsip || ayam.statusTampil !== "PUBLIKASI") notFound();
 
   const images = [...ayam.images].sort((a, b) =>
@@ -142,7 +149,7 @@ export default async function DetailPage({ params }: { params: { slug: string } 
                 <div className="pd-cta">
                   <a
                     className="btn pd-wa"
-                    href={waLink(`Halo ${SITE.pemilik}, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di katalog Anda.`)}
+                    href={waLinkDari(site.waNumber, `Halo ${site.pemilik}, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di katalog Anda.`)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -285,7 +292,7 @@ export default async function DetailPage({ params }: { params: { slug: string } 
               </ul>
             </div>
             <div className="minat-form">
-              <PermintaanForm ayamId={ayam.id} namaAyam={ayam.nama} />
+              <PermintaanForm ayamId={ayam.id} namaAyam={ayam.nama} waNumber={site.waNumber} />
             </div>
           </div>
         </section>

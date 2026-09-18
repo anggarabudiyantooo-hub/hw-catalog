@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { waLink } from "@/lib/config";
+import { waLinkDari } from "@/lib/config";
+import { getSite } from "@/lib/site";
 
 export async function POST(req: Request) {
   try {
@@ -19,7 +20,8 @@ export async function POST(req: Request) {
       data: { ayamId: Number.isFinite(ayamId) && ayamId > 0 ? ayamId : null, namaPengunjung: nama, noWa, kota, pesan },
     });
 
-    return NextResponse.json({ ok: true, wa: waLink(`Halo, saya ${nama} tertarik dengan ayam Anda di katalog. No. WhatsApp saya ${noWa}.`) });
+    const site = await getSite();
+    return NextResponse.json({ ok: true, wa: waLinkDari(site.waNumber, `Halo, saya ${nama} tertarik dengan ayam Anda di katalog. No. WhatsApp saya ${noWa}.`) });
   } catch {
     return NextResponse.json({ error: "Terjadi kesalahan, coba lagi." }, { status: 500 });
   }

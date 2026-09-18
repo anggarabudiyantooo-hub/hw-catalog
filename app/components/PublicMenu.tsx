@@ -16,8 +16,11 @@ const LINKS = [
  * tautan navigasi tampil seperti biasa; tombol ini hanya muncul di mobile dan
  * membuka panel menu berisi tautan + tombol Hubungi. Menutup sendiri saat
  * berpindah halaman.
+ *
+ * `waHref` = tautan WhatsApp dari sumber terpusat (panel pemilik), dikirim
+ * oleh induk server; bila kosong jatuh ke konfigurasi default.
  */
-export default function PublicMenu() {
+export default function PublicMenu({ waHref }: { waHref?: string }) {
   const [open, setOpen] = useState(false);
   const path = usePathname();
 
@@ -62,7 +65,7 @@ export default function PublicMenu() {
           ))}
           <a
             className="btn btn-primary pub-mhubungi"
-            href={waLink(
+            href={waHref ?? waLink(
               `Halo ${SITE.pemilik}, saya ingin bertanya tentang ayam Bangkok di ${SITE.nama}.`
             )}
             target="_blank"

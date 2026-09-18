@@ -1,8 +1,8 @@
 "use client";
 import { useState, type FormEvent } from "react";
-import { waLink } from "@/lib/config";
+import { waLinkDari, SITE } from "@/lib/config";
 
-export default function PermintaanForm({ ayamId, namaAyam }: { ayamId: number; namaAyam: string }) {
+export default function PermintaanForm({ ayamId, namaAyam, waNumber }: { ayamId: number; namaAyam: string; waNumber?: string }) {
   const [state, setState] = useState<"idle" | "ok" | "err">("idle");
   const [msg, setMsg] = useState("");
 
@@ -62,7 +62,7 @@ export default function PermintaanForm({ ayamId, namaAyam }: { ayamId: number; n
       {state === "ok" && (
         <p className="ok-note">
           Terima kasih — permintaan Anda untuk <b>{namaAyam}</b> terkirim ke pemilik. Beliau akan menghubungi Anda lewat WhatsApp.{" "}
-          <a href={waLink(`Halo, saya ${" "}tertarik dengan ${namaAyam} dan baru saja mengirim formulir minat di website.`)} target="_blank" rel="noopener" style={{ color: "var(--bata-700)" }}>
+          <a href={waLinkDari(waNumber ?? SITE.waNumber, `Halo, saya tertarik dengan ${namaAyam} dan baru saja mengirim formulir minat di website.`)} target="_blank" rel="noopener" style={{ color: "var(--bata-700)" }}>
             Atau langsung chat WhatsApp
           </a>.
         </p>

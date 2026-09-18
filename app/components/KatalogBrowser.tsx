@@ -18,9 +18,11 @@ type Kat = { id: number; nama: string; slug: string };
 export default function KatalogBrowser({
   items,
   kategori,
+  waNumber,
 }: {
   items: AyamFull[];
   kategori: Kat[];
+  waNumber?: string;
 }) {
   const [q, setQ] = useState("");
   const [kat, setKat] = useState("");

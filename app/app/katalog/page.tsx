@@ -2,6 +2,7 @@ import Link from "next/link";
 import PublicLayout from "@/components/PublicLayout";
 import KatalogBrowser from "@/components/KatalogBrowser";
 import { prisma } from "@/lib/prisma";
+import { getSite } from "@/lib/site";
 
 const include = { images: true, kategori: true, riwayat: true };
 
@@ -9,7 +10,7 @@ const include = { images: true, kategori: true, riwayat: true };
 export const revalidate = 60;
 
 export default async function KatalogPage() {
-  const [kategori, items] = await Promise.all([
+  const [kategori, items, site] = await Promise.all([
     prisma.kategori.findMany({
       orderBy: { urutan: "asc" },
       select: { id: true, nama: true, slug: true },
@@ -19,6 +20,7 @@ export default async function KatalogPage() {
       include,
       orderBy: { updatedAt: "desc" },
     }),
+    getSite(),
   ]);
 
   return (
@@ -39,7 +41,7 @@ export default async function KatalogPage() {
         </section>
       }
     >
-      <KatalogBrowser items={items} kategori={kategori} />
+      <KatalogBrowser items={items} kategori={kategori} waNumber={site.waNumber} />
     </PublicLayout>
   );
 }

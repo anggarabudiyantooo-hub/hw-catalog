@@ -3,7 +3,9 @@ import Link from "next/link";
 import { Logo } from "./Logo";
 import NavLinks from "./NavLinks";
 import PublicMenu from "./PublicMenu";
-import { SITE, waLink } from "@/lib/config";
+import PapanBar from "./PapanBar";
+import { getSite, getPapan } from "@/lib/site";
+import { waLinkDari } from "@/lib/config";
 
 export function Ornamen() {
   return (
@@ -17,9 +19,19 @@ export function Ornamen() {
   );
 }
 
-export default function PublicLayout({ children, phead }: { children: ReactNode; phead?: ReactNode }) {
+export default async function PublicLayout({ children, phead }: { children: ReactNode; phead?: ReactNode }) {
+  // Satu-satunya sumber kontak & info situs: panel pemilik (fallback lib/config.ts).
+  const [site, papan] = await Promise.all([getSite(), getPapan()]);
+  const waHubungi = waLinkDari(
+    site.waNumber,
+    `Halo ${site.pemilik}, saya ingin bertanya tentang ayam Bangkok di ${site.nama}.`
+  );
+
   return (
     <>
+      {/* Papan pengumuman (peringatan/iklan/info) — paling atas, muncul segera */}
+      <PapanBar items={papan} />
+
       <header className="pub-nav">
         <div className="wrap pub-head" style={{ display: "flex", alignItems: "center", gap: 30 }}>
           <Link href="/">
@@ -29,13 +41,13 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
             <NavLinks />
             <a
               className="btn btn-outline btn-sm wa-cta"
-              href={waLink(`Halo ${SITE.pemilik}, saya ingin bertanya tentang ayam Bangkok di ${SITE.nama}.`)}
+              href={waHubungi}
               target="_blank"
               rel="noopener"
             >
               Hubungi
             </a>
-            <PublicMenu />
+            <PublicMenu waHref={waHubungi} />
           </div>
         </div>
       </header>
@@ -56,8 +68,9 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
               </p>
               <a
                 className="btn f-visit"
-                href={waLink(
-                  `Halo ${SITE.pemilik}, saya ingin menjadwalkan kunjungan ke ${SITE.nama} — mohon info jadwal yang memungkinkan.`
+                href={waLinkDari(
+                  site.waNumber,
+                  `Halo ${site.pemilik}, saya ingin menjadwalkan kunjungan ke ${site.nama} — mohon info jadwal yang memungkinkan.`
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -73,7 +86,7 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
                 <li><Link href="/">Beranda</Link></li>
                 <li><Link href="/katalog">Katalog Ayam</Link></li>
                 <li><a href="/#lokasi">Lokasi &amp; Kunjungan</a></li>
-                <li><a href={waLink()} target="_blank" rel="noopener noreferrer">Kontak WhatsApp</a></li>
+                <li><a href={waLinkDari(site.waNumber)} target="_blank" rel="noopener noreferrer">Kontak WhatsApp</a></li>
               </ul>
             </div>
 
@@ -83,24 +96,24 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
               <div className="fk">
                 <div className="frow">
                   <span>Pemilik</span>
-                  <b>{SITE.pemilik}</b>
+                  <b>{site.pemilik}</b>
                 </div>
                 <div className="frow">
                   <span>WhatsApp</span>
-                  <a href={waLink()} target="_blank" rel="noopener noreferrer">{SITE.waDisplay}</a>
+                  <a href={waLinkDari(site.waNumber)} target="_blank" rel="noopener noreferrer">{site.waDisplay}</a>
                 </div>
                 <div className="frow">
                   <span>Email</span>
-                  {SITE.email ? (
-                    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+                  {site.email ? (
+                    <a href={`mailto:${site.email}`}>{site.email}</a>
                   ) : (
                     <em className="soon">segera menyusul</em>
                   )}
                 </div>
                 <div className="frow">
                   <span>Media Sosial</span>
-                  {SITE.sosmed ? (
-                    <a href={SITE.sosmed} target="_blank" rel="noopener noreferrer">Ikuti kami</a>
+                  {site.sosmed ? (
+                    <a href={site.sosmed} target="_blank" rel="noopener noreferrer">Ikuti kami</a>
                   ) : (
                     <em className="soon">segera menyusul</em>
                   )}
@@ -112,11 +125,11 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
             <div>
               <h4>Lokasi</h4>
               <p className="f-addr">
-                {SITE.alamatBaris1}
+                {site.alamatBaris1}
                 <br />
-                {SITE.alamatBaris2}
+                {site.alamatBaris2}
               </p>
-              <a className="f-gmap" href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer">
+              <a className="f-gmap" href={site.mapsUrl} target="_blank" rel="noopener noreferrer">
                 Buka peta &amp; rute di Google Maps →
               </a>
               <p className="f-note">Kunjungan wajib reservasi terlebih dahulu via WhatsApp.</p>
@@ -124,7 +137,7 @@ export default function PublicLayout({ children, phead }: { children: ReactNode;
           </div>
 
           <div className="foot-bottom">
-            <span>© {new Date().getFullYear()} {SITE.nama} · Pedan, Klaten, Jawa Tengah</span>
+            <span>© {new Date().getFullYear()} {site.nama} · Pedan, Klaten, Jawa Tengah</span>
             <a className="owner" href="/panel/login" title="Login pengelola kandang">Area Pemilik</a>
           </div>
         </div>

@@ -3,7 +3,8 @@ import PublicLayout from "@/components/PublicLayout";
 import AyamCard from "@/components/AyamCard";
 import { MapSvg } from "@/components/MapSvg";
 import { prisma } from "@/lib/prisma";
-import { SITE, waLink } from "@/lib/config";
+import { SITE, waLinkDari } from "@/lib/config";
+import { getSite } from "@/lib/site";
 import { formatTanggal } from "@/lib/format";
 
 const include = {
@@ -17,6 +18,7 @@ const include = {
 export const revalidate = 60;
 
 export default async function HomePage() {
+  const site = await getSite();
   const featured = await prisma.ayam.findMany({
     where: { isFeatured: true, isArsip: false, statusTampil: "PUBLIKASI" },
     include,
@@ -59,7 +61,7 @@ export default async function HomePage() {
             </p>
             <div className="hero-cta">
               <Link className="btn btn-primary" href="/katalog">Jelajahi Katalog</Link>
-              <a className="btn btn-ghost" href={waLink(`Halo ${SITE.pemilik}, saya ingin bertanya tentang ayam Bangkok di ${SITE.nama}.`)} target="_blank" rel="noopener">Hubungi Kandang</a>
+              <a className="btn btn-ghost" href={waLinkDari(site.waNumber, `Halo ${site.pemilik}, saya ingin bertanya tentang ayam Bangkok di ${site.nama}.`)} target="_blank" rel="noopener">Hubungi Kandang</a>
             </div>
             <div className="stats">
               {stats.map(([n, l]) => (
@@ -126,7 +128,7 @@ export default async function HomePage() {
               Seekor ayam yang baik bukan sekadar menang di laga — ia membawa nama baik pemiliknya. Maka kami memelihara dengan kehormatan.
             </blockquote>
             <figcaption>
-              <span className="who">{SITE.pemilik}</span> · <span className="role">Pemilik {SITE.nama}, Klaten</span>
+              <span className="who">{site.pemilik}</span> · <span className="role">Pemilik {site.nama}, Klaten</span>
             </figcaption>
           </figure>
         </div>
@@ -149,9 +151,9 @@ export default async function HomePage() {
                 <div className="loc-body">
                   <h3>Alamat</h3>
                   <address>
-                    <b>{SITE.nama}</b>, Pedan, Kab. Klaten
+                    <b>{site.nama}</b>, {site.alamatBaris1.replace(/,\s*$/, "")}
                     <br />
-                    Jawa Tengah, Indonesia
+                    {site.alamatBaris2}
                   </address>
                   <p className="loc-tip">Jalur Solo–Yogyakarta, parkir tersedia.</p>
                 </div>
@@ -163,7 +165,7 @@ export default async function HomePage() {
                 </span>
                 <div className="loc-body">
                   <h3>Jam Kunjungan</h3>
-                  <p className="jam">{SITE.jamLayanan}</p>
+                  <p className="jam">{site.jamLayanan}</p>
                   <p className="loc-tip">Layanan kunjungan hanya dengan reservasi.</p>
                 </div>
               </div>
@@ -187,7 +189,7 @@ export default async function HomePage() {
               <MapSvg />
               <div className="loc-map-meta">
                 <b>Pedan, Klaten, Jawa Tengah</b>
-                <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer">Buka di Google Maps →</a>
+                <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer">Buka di Google Maps →</a>
               </div>
             </div>
           </div>

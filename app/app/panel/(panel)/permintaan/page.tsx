@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { cekModulHalaman } from "@/lib/izin";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { waLink } from "@/lib/config";
+import { waLinkDari } from "@/lib/config";
+import { getSite } from "@/lib/site";
 import AutoFormSelect from "@/components/AutoFormSelect";
 import { formatWaktu } from "@/lib/format";
 
@@ -22,12 +23,15 @@ export default async function PermintaanPage({
 }) {
   if (!(await cekModulHalaman("permintaan"))) redirect("/panel");
 
+  const [site, rows] = await Promise.all([
+    getSite(),
+    prisma.permintaan.findMany({
+      include: { ayam: { select: { id: true, nama: true, slug: true, kodeRing: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 200,
+    }),
+  ]);
   const filter = searchParams.st || "";
-  const rows = await prisma.permintaan.findMany({
-    include: { ayam: { select: { id: true, nama: true, slug: true, kodeRing: true } } },
-    orderBy: { createdAt: "desc" },
-    take: 200,
-  });
   const data = filter ? rows.filter((r) => r.status === filter) : rows;
   const flash = searchParams.ok ? (
     <p className="flash flash-ok">{searchParams.ok}</p>
@@ -88,7 +92,7 @@ export default async function PermintaanPage({
                   <td><span className={`st ${st.cls}`}><i />{st.label}</span></td>
                   <td>
                     <div className="aksi" style={{ alignItems: "center" }}>
-                      <a className="u" href={waLink(`Halo ${p.namaPengunjung}, saya ${"pemilik"} dari ${"Kandang"} — menanggapi minat Anda untuk ${p.ayam?.nama ?? "ayam"} di website.`)} target="_blank" rel="noopener" style={{ color: "#2f6b4f" }}>WA</a>
+                      <a className="u" href={waLinkDari(site.waNumber, `Halo ${p.namaPengunjung}, saya ${site.pemilik} dari ${site.nama} — menanggapi minat Anda untuk ${p.ayam?.nama ?? "ayam"} di website.`)} target="_blank" rel="noopener" style={{ color: "#2f6b4f" }}>WA</a>
                       <form action={`/api/panel/permintaan/${p.id}`} method="post" style={{ display: "inline" }}>
                         <AutoFormSelect name="status" defaultValue={p.status} style={{ padding: "4px 6px", fontSize: 12, border: "1px solid var(--krem-300)", borderRadius: 5, background: "var(--paper)" }}>
                           <option value="BARU">Baru</option>

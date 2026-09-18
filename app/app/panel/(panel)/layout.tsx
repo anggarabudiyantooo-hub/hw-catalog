@@ -26,6 +26,8 @@ const NAV: ItemNav[] = [
   { group: "Catatan" },
   { href: "/panel/log", label: "Log Aktivitas", icon: "M3 5h18v16H3zM3 9h18M8 3v4M16 3v4", exact: false, mod: "log" },
   { group: "Kelola" },
+  { href: "/panel/papan", label: "Papan Pengumuman", icon: "M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM16 8a5 5 0 0 1 0 8M18.5 5.5a9 9 0 0 1 0 13", pemilikOnly: true },
+  { href: "/panel/kontak", label: "Kontak & Info Situs", icon: "M4 5h16v11H8.8L4 20V5zM8 9h8M8 12h5", pemilikOnly: true },
   { href: "/panel/pengguna", label: "Pengguna & Hak Akses", icon: "M12 5.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM5 20c.8-2.7 3.6-4 7-4s6.2 1.3 7 4", pemilikOnly: true },
 ];
 

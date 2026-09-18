@@ -71,6 +71,81 @@ ul { list-style: none; }
 .brand-name { font-size: 21px; letter-spacing: 0.16em; color: var(--bata-700); font-weight: 700; line-height: 1.05; white-space: nowrap; }
 .brand-sub { font-size: 9px; letter-spacing: 0.26em; color: var(--ink-muted); text-transform: uppercase; margin-top: 4px; white-space: nowrap; }
 
+/* ---------- Papan pengumuman (peringatan / iklan / info) ----------
+   Pita kaca (frosted glass) bergaya Apple di bagian paling atas halaman
+   pengunjung. Isi dikelola pemilik dari panel; .kedip = titik indikator
+   kedap-kedip. Jenis: j-PERINGATAN (gelap), j-IKLAN (krem-emas), j-INFO
+   (netral terang). */
+.papan { padding-top: 12px; }
+.papan-in { max-width: 1180px; margin: 0 auto; padding: 0 24px; display: flex; flex-direction: column; gap: 10px; }
+.papan-item {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex; align-items: center; gap: 13px;
+  padding: 13px 14px 13px 18px;
+  border-radius: 15px;
+  background: linear-gradient(180deg, rgba(56, 16, 9, 0.93), rgba(41, 10, 6, 0.9));
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  backdrop-filter: saturate(180%) blur(18px);
+  border: 1px solid rgba(219, 164, 84, 0.3);
+  box-shadow: 0 12px 30px -18px rgba(46, 11, 8, 0.6), inset 0 1px 0 rgba(255, 235, 200, 0.08);
+}
+.papan-item .p-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: #ffb54d; box-shadow: 0 0 10px 1px rgba(255, 181, 77, 0.6); }
+.papan-item .p-ikon { flex: none; width: 20px; height: 20px; color: #e8b95f; opacity: 0.9; }
+.papan-item.kedip .p-dot { animation: papanKedip 1.4s ease-in-out infinite; }
+.papan-item.kedip .papan-judul { animation: papanRedup 1.4s ease-in-out infinite; }
+@keyframes papanKedip { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+@keyframes papanRedup { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+.papan-teks { flex: 1 1 auto; min-width: 0; }
+.papan-judul { display: block; font-size: 13.5px; font-weight: 650; letter-spacing: 0.03em; color: #ffe9c4; }
+.papan-pesan { display: block; margin-top: 2px; font-size: 13px; line-height: 1.55; color: rgba(240, 220, 185, 0.82); overflow-wrap: anywhere; }
+.papan-tutup {
+  flex: none; width: 30px; height: 30px; display: grid; place-items: center;
+  border: 0; border-radius: 50%; cursor: pointer; background: transparent;
+  color: rgba(255, 233, 196, 0.6); transition: background 0.15s, color 0.15s;
+}
+.papan-tutup:hover { background: rgba(255, 233, 196, 0.14); color: #ffe9c4; }
+.papan-tutup svg { width: 13px; height: 13px; }
+/* variasi jenis */
+.papan-item.j-IKLAN {
+  background: linear-gradient(180deg, rgba(255, 235, 194, 0.96), rgba(250, 224, 170, 0.93));
+  border-color: rgba(150, 100, 30, 0.28);
+  box-shadow: 0 12px 30px -18px rgba(120, 80, 20, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.papan-item.j-IKLAN .papan-judul { color: #4a2c07; }
+.papan-item.j-IKLAN .papan-pesan { color: rgba(74, 44, 7, 0.78); }
+.papan-item.j-IKLAN .p-ikon { color: #a1731d; }
+.papan-item.j-IKLAN .p-dot { background: #b4831f; box-shadow: 0 0 10px 1px rgba(180, 131, 31, 0.5); }
+.papan-item.j-IKLAN .papan-tutup { color: rgba(74, 44, 7, 0.55); }
+.papan-item.j-IKLAN .papan-tutup:hover { background: rgba(74, 44, 7, 0.1); color: #4a2c07; }
+.papan-item.j-INFO {
+  background: linear-gradient(180deg, rgba(250, 246, 238, 0.96), rgba(243, 237, 226, 0.94));
+  border-color: rgba(120, 90, 55, 0.24);
+  box-shadow: 0 12px 30px -18px rgba(90, 65, 35, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.papan-item.j-INFO .papan-judul { color: #3f2a12; }
+.papan-item.j-INFO .papan-pesan { color: rgba(63, 42, 18, 0.8); }
+.papan-item.j-INFO .p-ikon { color: #8a7455; }
+.papan-item.j-INFO .p-dot { background: #8a7455; box-shadow: none; }
+.papan-item.j-INFO .papan-tutup { color: rgba(63, 42, 18, 0.5); }
+.papan-item.j-INFO .papan-tutup:hover { background: rgba(63, 42, 18, 0.08); color: #3f2a12; }
+@media (prefers-reduced-motion: reduce) {
+  .papan-item.kedip .p-dot, .papan-item.kedip .papan-judul { animation: none; }
+}
+/* lencana jenis papan di tabel panel */
+.st.peringatan { background: rgba(146, 34, 22, 0.12); color: #92221a; }
+.st.iklan { background: rgba(143, 106, 31, 0.14); color: #8f6a1f; }
+.st.info { background: rgba(88, 88, 72, 0.13); color: #585848; }
+@media (max-width: 600px) {
+  .papan { padding-top: 10px; }
+  .papan-in { padding: 0 16px; }
+  .papan-item { padding: 11px 10px 11px 14px; gap: 10px; border-radius: 13px; }
+  .papan-item .p-ikon { width: 17px; height: 17px; }
+  .papan-judul { font-size: 12.8px; }
+  .papan-pesan { font-size: 12.3px; }
+  .papan-tutup { width: 26px; height: 26px; }
+}
+
 /* ---------- Header publik ---------- */
 .pub-nav { position: sticky; top: 0; z-index: 60; background: rgba(249, 240, 223, 0.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--krem-300); }
 .pub-nav .inner { display: flex; align-items: center; gap: 30px; padding: 13px 0; }

@@ -1,6 +1,7 @@
 import type { Ayam, AyamImage, Kategori, RiwayatTarung } from "@prisma/client";
 import { formatRupiah, formatTanggal, usiaInfo, rekapDari, labelJenisFoto } from "@/lib/format";
-import { waLink } from "@/lib/config";
+import { waLinkDari } from "@/lib/config";
+import { getSite } from "@/lib/site";
 import GalleryView from "./GalleryView";
 
 type AyamFull = Ayam & {
@@ -12,7 +13,8 @@ type AyamFull = Ayam & {
 const JALU: Record<string, string> = { BELUM: "Belum tumbuh", TUNGGAL: "Tunggal", GANDA: "Ganda" };
 
 /** Replika tampilan halaman publik (detail ayam) untuk pratinjau di panel. */
-export default function PublicPreviewContent({ ayam }: { ayam: AyamFull }) {
+export default async function PublicPreviewContent({ ayam }: { ayam: AyamFull }) {
+  const site = await getSite();
   const isBetina = ayam.jenisKelamin === "BETINA";
   const sold = ayam.statusJual === "TERJUAL";
   const usia = usiaInfo(ayam.tanggalMenetas);
@@ -97,7 +99,7 @@ export default function PublicPreviewContent({ ayam }: { ayam: AyamFull }) {
             {!sold && (
               <a
                 className="btn btn-primary btn-sm"
-                href={waLink(`Halo, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di situs Anda.`)}
+                href={waLinkDari(site.waNumber, `Halo, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di situs Anda.`)}
                 target="_blank"
                 rel="noopener"
               >

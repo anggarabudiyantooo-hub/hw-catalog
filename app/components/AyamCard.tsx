@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Ayam, AyamImage, Kategori, RiwayatTarung } from "@prisma/client";
 import { formatRupiah, rekapDari, usiaInfo, formatTanggal } from "@/lib/format";
-import { waLink } from "@/lib/config";
+import { waLinkDari, SITE } from "@/lib/config";
 import LaporTrigger from "./LaporTrigger";
 
 type AyamWith = Ayam & { images: AyamImage[]; kategori: Kategori | null; riwayat: RiwayatTarung[] };
@@ -32,7 +32,7 @@ function MetaIcon({ kind }: { kind: "kal" | "berat" | "map" }) {
   );
 }
 
-export default function AyamCard({ ayam }: { ayam: AyamWith }) {
+export default function AyamCard({ ayam, waNumber }: { ayam: AyamWith; waNumber?: string }) {
   const img = ayam.images.find((i) => i.isPrimary) || ayam.images[0];
   const usia = usiaInfo(ayam.tanggalMenetas);
   const rekap = rekapDari(ayam.riwayat);
@@ -105,7 +105,7 @@ export default function AyamCard({ ayam }: { ayam: AyamWith }) {
             </div>
           )}
           <div className="bc-cta">
-            <a className="ic ic-wa" href={waLink(`Halo, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di katalog Anda.`)} target="_blank" rel="noopener" aria-label="Hubungi via WhatsApp" title="Hubungi pemilik">
+            <a className="ic ic-wa" href={waLinkDari(waNumber ?? SITE.waNumber, `Halo, saya tertarik dengan ${ayam.nama} (${ayam.kodeRing ?? ayam.slug}) di katalog Anda.`)} target="_blank" rel="noopener" aria-label="Hubungi via WhatsApp" title="Hubungi pemilik">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.7-.8L3 20l1-5.2a8.4 8.4 0 1 1 17-3.3z" /><path d="M8.6 8.9c.5 2.7 3.6 5.7 6.3 6.2l.6-1.6-1.9-1.2-.9.5c-.9-.5-2.4-2-2.9-2.9l.5-.9-1.2-1.9z" /></svg>
             </a>
             <Link className="btn btn-outline btn-sm" href={`/ayam/${ayam.slug}`}>Detail</Link>

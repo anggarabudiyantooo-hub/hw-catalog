@@ -125,19 +125,52 @@ model RiwayatTarung {
 }
 
 model Log {
-  id         Int      @id @default(autoincrement())
-  userId     Int?
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  aksi       String // LOGIN | LOGIN_GAGAL | LOGOUT | CREATE | UPDATE | DELETE | ARSIP | PULIHKAN | UBAH_STATUS | UBAH_IZIN | LAINNYA
-  entitas    String
-  entitasId  Int?
-  detail     String?
-  email      String?   // email pelaku (untuk login gagal yg tak punya userId)
-  ip         String?
-  negara     String?
-  kota       String?
-  perangkat  String?   // ringkas: mis. "HP · Android" / "PC · Windows"
-  browser    String?
-  os         String?
-  createdAt  DateTime  @default(now())
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  aksi      String // LOGIN | LOGIN_GAGAL | LOGOUT | CREATE | UPDATE | DELETE | ARSIP | PULIHKAN | UBAH_STATUS | UBAH_IZIN | LAINNYA
+  entitas   String
+  entitasId Int?
+  detail    String?
+  email     String?   // email pelaku (untuk login gagal yg tak punya userId)
+  ip        String?
+  negara    String?
+  kota      String?
+  perangkat String?   // ringkas: mis. "HP · Android" / "PC · Windows"
+  browser   String?
+  os        String?
+  createdAt DateTime  @default(now())
 }
+
+// Papan pengumuman publik (peringatan / iklan / info) — pita di bagian paling
+// atas halaman pengunjung. Dikelola sepenuhnya dari panel pemilik.
+model PapanInfo {
+  id        Int      @id @default(autoincrement())
+  jenis     String   @default("PERINGATAN") // PERINGATAN | IKLAN | INFO
+  judul     String
+  pesan     String
+  aktif     Boolean  @default(false)
+  kedip     Boolean  @default(true) // indikator titik kedap-kedip
+  urutan    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// SATU-SATUNYA sumber data kontak & info situs (baris id = 1).
+// Nilai di sini dipakai semua halaman pengunjung (footer, beranda, katalog,
+// detail ayam, form minat) dan diedit lewat panel pemilik — tanpa sentuh kode.
+model SiteSetting {
+  id               Int      @id @default(1)
+  pemilik          String   @default("Pemilik Demo")
+  waNumber         String   @default("6280000000000") // format internasional: 62…
+  waDisplay        String   @default("+62 800-0000-0000")
+  email            String   @default("") // kosong = "segera menyusul"
+  sosmed           String   @default("") // URL lengkap, mis. https://instagram.com/…
+  alamatBaris1     String   @default("Pedan, Kab. Klaten,")
+  alamatBaris2     String   @default("Jawa Tengah, Indonesia")
+  mapsUrl          String   @default("https://maps.google.com/?q=Pedan+Klaten+Jawa+Tengah")
+  jamLayanan       String   @default("08:00 – 17:00 WIB")
+  catatanKunjungan String   @default("Kunjungan wajib reservasi (janji temu). Chat WhatsApp dulu untuk mencocokkan jadwal pemilik — tanpa janji, mohon tidak datang langsung.")
+  updatedAt        DateTime @updatedAt
+}
+

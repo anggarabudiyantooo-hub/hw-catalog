@@ -25,6 +25,14 @@ export const SITE = {
 };
 
 export function waLink(pesan?: string): string {
-  const base = `https://wa.me/${SITE.waNumber}`;
+  return waLinkDari(SITE.waNumber, pesan);
+}
+
+/**
+ * Tautan WhatsApp dari nomor tertentu — dipakai bersama nilai yang dibaca
+ * dari database (getSite di lib/site.ts) agar nomor bisa diubah dari panel.
+ */
+export function waLinkDari(waNumber: string, pesan?: string): string {
+  const base = `https://wa.me/${waNumber}`;
   return pesan ? `${base}?text=${encodeURIComponent(pesan)}` : base;
 }
