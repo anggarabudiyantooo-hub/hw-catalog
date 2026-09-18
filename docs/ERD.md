@@ -322,3 +322,23 @@ Contoh: *Bangkok Tulen, Bangkok Birma, Bangkok Thailand F1, Bangkok Lokal, Betin
 
 ---
 *Bersama [`schema.sql`](schema.sql) sebagai sumber DDL definitif.*
+
+---
+
+## 6. Addendum — Perubahan Pasca-Desain (implementasi berjalan)
+
+> Sumber kebenaran: **`app/prisma/schema.prisma`** (PostgreSQL/Prisma).
+> `schema.sql` di folder ini tetap sebagai artefak desain MySQL lama.
+
+Delta terhadap dokumen desain di atas:
+
+| Tabel | Perubahan |
+|---|---|
+| `User` | + `role` (PEMILIK/ADMIN), `izin TEXT[]` (modul yang boleh diakses ADMIN), `aktif` (bool), `avatarUrl` |
+| `Log` | + metadata: `email`, `ip`, `negara`, `kota`, `perangkat`, `browser`, `os` |
+| `PapanInfo` **(baru)** | Papan pengumuman publik: `jenis` (PERINGATAN/IKLAN/INFO), `judul`, `pesan`, `aktif`, `kedip`, `urutan`, `createdAt`, `updatedAt` |
+| `SiteSetting` **(baru)** | Satu baris (id=1) sumber kontak & info situs: `pemilik`, `waNumber`, `waDisplay`, `email`, `sosmed`, `alamatBaris1/2`, `mapsUrl`, `jamLayanan`, `catatanKunjungan`, `updatedAt` — diedit lewat panel, nilai default repo = dummy |
+| `Ayam` | + `isArsip` (soft delete), `statusTampil` (DRAFT/PUBLIKASI), `publishedAt` |
+
+Relasi tambahan: `User 1—N Log` (siapa mencatat); `PapanInfo` dan
+`SiteSetting` berdiri sendiri (tabel konfigurasi, tanpa relasi).

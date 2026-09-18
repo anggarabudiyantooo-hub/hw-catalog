@@ -59,7 +59,7 @@ export default async function KontakPage({
         </div>
         <div className="card-body">
           <form method="post" action="/api/panel/kontak" style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-            <F label="Nama pemilik" name="pemilik" ph="mis. Pemilik Demo" lebar={220} />
+            <F label="Nama pemilik" name="pemilik" ph="mis. Nama Anda" lebar={220} />
             <F
               label="Nomor WhatsApp (untuk tautan)"
               name="waNumber"

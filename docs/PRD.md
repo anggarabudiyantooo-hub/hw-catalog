@@ -237,3 +237,42 @@ Detil atribut & relasi → [`docs/ERD.md`](ERD.md) · diagram → [`docs/diagram
 ---
 
 *Dokumen ini hidup (living document); perubahan dicatat versinya.*
+
+---
+
+## 13. Addendum — Kondisi Implementasi Terkini
+
+> Bagian ini menambahkan dokumen desain di atas agar tetap sesuai kondisi
+> implementasi yang berjalan. Sumber kebenaran struktur data kini:
+> **`app/prisma/schema.prisma`** (PostgreSQL/Prisma), bukan `docs/schema.sql`
+> (artefak desain MySQL lama).
+
+**Diterapkan melebihi PRD awal (v1):**
+
+1. **Akun multi-peran** — `User.role` (`PEMILIK` | `ADMIN`) + `User.izin[]`
+   (izin per-modul: ayam, kategori, riwayat, permintaan, laporan, log),
+   `User.aktif`, `User.avatarUrl`; modul **Pengguna & Hak Akses** untuk pemilik.
+2. **Papan pengumuman publik** (`PapanInfo`) — modular: jenis **PERINGATAN**
+   (jendela di tengah layar ala dialog Windows — judul merah + pesan + OK,
+   muncul setiap kali halaman dimuat) dan **IKLAN/INFO** (pita di atas
+   halaman); dikelola penuh dari panel (aktif/nonaktif, kedip, urutan).
+3. **Kontak & info situs terpusat** (`SiteSetting`, satu baris) — nama pemilik,
+   nomor & tampilan WA, email, sosmed, alamat, peta, jam layanan, catatan
+   kunjungan; diedit lewat panel, dipakai seluruh halaman publik. Repo hanya
+   memuat nilai **dummy**.
+4. **Log menyeluruh** — `Log` + metadata (email pelaku, IP, negara/kota
+   perkiraan, perangkat, browser, OS), mencatat login (sukses/gagal) dan
+   seluruh aksi CRUD.
+5. **Foto** — kompresi otomatis **WebP** (foto ayam & avatar) + **watermark
+   tunggal** logo (±20% sisi pendek, opasitas 0.05); penyimpanan Vercel Blob
+   dengan fallback lokal.
+6. **Waktu** — disimpan UTC, ditampilkan WIB; usia ayam selalu dihitung ulang.
+7. **UI** — footer full-bleed simetris rasio emas; menu hamburger mobile;
+   pratinjau publik di panel; ISR + purge cache otomatis.
+8. **Login** — sesi cookie HMAC HttpOnly (7 hari) + fallback token `?s=`;
+   Firebase Auth opsional; tautan login pemilik "discreet" di footer.
+
+**Jawaban pertanyaan terbuka (no. 12):** (1) brand final = **HW Catalog**,
+nomor WhatsApp diatur dari panel (tidak di-hardcode); (2) betina ditampilkan
+(kategori Betina/Indukan); (3) v1 cukup foto; (4) hosting = Vercel + Neon +
+Vercel Blob; (5) peluncuran memakai data contoh (seed demo).

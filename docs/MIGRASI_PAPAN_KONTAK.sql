@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS "PapanInfo" (
 );
 
 -- 2) Tabel pengaturan kontak & info situs (satu baris, id = 1)
+--    DEFAULT = DUMMY (repo publik). Setelah migrasi, isi data asli lewat
+--    Panel Pengelola → Kontak & Info Situs — bukan lewat SQL.
 CREATE TABLE IF NOT EXISTS "SiteSetting" (
     "id" INTEGER NOT NULL DEFAULT 1,
     "pemilik" TEXT NOT NULL DEFAULT 'Pemilik Demo',
@@ -48,11 +50,13 @@ INSERT INTO "SiteSetting" ("id", "updatedAt")
 VALUES (1, CURRENT_TIMESTAMP)
 ON CONFLICT ("id") DO NOTHING;
 
--- 4) Papan peringatan awal (ubah/nonaktifkan lewat panel pemilik)
+-- 4) Contoh papan pengumuman (TIDAK aktif) — ubah/aktifkan lewat panel:
+--    Panel Pengelola → Papan Pengumuman. Jenis PERINGATAN tampil sebagai
+--    jendela di tengah layar; IKLAN/INFO sebagai pita di atas halaman.
 INSERT INTO "PapanInfo" ("jenis", "judul", "pesan", "aktif", "kedip", "urutan")
-SELECT 'PERINGATAN', 'PERINGATAN',
-       'Situs sedang dalam pemeliharaan sementara - mohon hubungi lewat WhatsApp untuk info terbaru.',
-       true, true, 1
+SELECT 'PERINGATAN', 'Contoh Papan Peringatan',
+       'Ini contoh papan peringatan. Ubah judul, pesan, dan jenisnya — atau nonaktifkan — dari Panel Pengelola → Papan Pengumuman.',
+       false, true, 1
 WHERE NOT EXISTS (SELECT 1 FROM "PapanInfo");
 
 -- 5) Cek hasil

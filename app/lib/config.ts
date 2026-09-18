@@ -1,13 +1,16 @@
 // ============================================================
-// KONFIGURASI KANDANG — satu tempat untuk data kontak/lokasi.
-// Ubah sesuai data asli Anda sebelum produksi.
+// KONFIGURASI KANDANG — nilai DUMMY (aman untuk repo publik).
+// Data asli (nama pemilik, nomor WA, email, alamat, peta, jam layanan)
+// TIDAK ada di repo: produksi mengambilnya dari database (tabel
+// SiteSetting) yang diedit lewat Panel → Kontak & Info Situs.
+// Nilai di bawah hanya fallback bila database belum terisi.
 // ============================================================
 
 export const SITE = {
   nama: "HW Catalog",
   brand: "HW Catalog",
   tagline: "Galeri Ayam Bangkok · Klaten",
-  // Pemilik / pengelola tunggal
+  // Pemilik / pengelola — contoh dummy
   pemilik: "Pemilik Demo",
   waDisplay: "+62 800-0000-0000",
   // Nomor WhatsApp internasional (awali 62, tanpa + dan tanda baca)

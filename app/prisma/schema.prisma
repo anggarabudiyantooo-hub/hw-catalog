@@ -159,6 +159,7 @@ model PapanInfo {
 // SATU-SATUNYA sumber data kontak & info situs (baris id = 1).
 // Nilai di sini dipakai semua halaman pengunjung (footer, beranda, katalog,
 // detail ayam, form minat) dan diedit lewat panel pemilik — tanpa sentuh kode.
+// Default = DUMMY (aman untuk repo publik); data asli diisi lewat panel.
 model SiteSetting {
   id               Int      @id @default(1)
   pemilik          String   @default("Pemilik Demo")
