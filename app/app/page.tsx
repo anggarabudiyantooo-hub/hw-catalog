@@ -88,7 +88,7 @@ export default async function HomePage() {
           {featured.length > 0 ? (
             <div className="cards">
               {featured.map((a) => (
-                <AyamCard key={a.id} ayam={a} />
+                <AyamCard key={a.id} ayam={a} waNumber={site.waNumber} />
               ))}
             </div>
           ) : (

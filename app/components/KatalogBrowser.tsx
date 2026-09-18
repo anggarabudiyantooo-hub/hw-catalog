@@ -161,7 +161,7 @@ export default function KatalogBrowser({
           ) : (
             <div className="cards">
               {list.map((a) => (
-                <AyamCard key={a.id} ayam={a} />
+                <AyamCard key={a.id} ayam={a} waNumber={waNumber} />
               ))}
             </div>
           )}
