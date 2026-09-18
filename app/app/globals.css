@@ -146,6 +146,69 @@ ul { list-style: none; }
   .papan-tutup { width: 26px; height: 26px; }
 }
 
+/* ---------- Jendela peringatan di tengah layar (jenis PERINGATAN) ----------
+   Gaya dialog peringatan Windows: muncul di tengah viewport di atas latar
+   gelap; judul MERAH di tengah, pesan di bawahnya, tombol OK.
+   Selalu tampil setiap kali halaman dimuat (penutupan tidak diingat). */
+.papan-modal { position: fixed; inset: 0; z-index: 1200; display: grid; place-items: center; padding: 22px; }
+.papan-modal-veil { position: absolute; inset: 0; background: rgba(30, 10, 4, 0.52); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+.papan-kotak {
+  position: relative;
+  width: min(560px, 100%);
+  background: linear-gradient(180deg, #fffdf8, #faf3e4);
+  border: 1px solid rgba(150, 62, 40, 0.35);
+  border-top: 4px solid #b3261e;
+  border-radius: 12px;
+  box-shadow: 0 34px 90px -22px rgba(30, 8, 4, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  padding: 26px 26px 22px;
+  text-align: center;
+  animation: papanMuncul 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+@keyframes papanMuncul { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: none; } }
+.papan-jendela-isi + .papan-jendela-isi { margin-top: 18px; border-top: 1px dashed rgba(150, 62, 40, 0.3); padding-top: 18px; }
+.papan-simbol {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(179, 38, 30, 0.09); color: #b3261e;
+  margin-bottom: 12px;
+}
+.papan-simbol svg { width: 25px; height: 25px; }
+.papan-simbol.kedip { animation: papanKedip 1.4s ease-in-out infinite; }
+.papan-jendela-judul {
+  margin: 0; text-align: center;
+  font-family: var(--sans);
+  font-size: 18px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #b3261e;
+}
+.papan-jendela-pesan {
+  margin: 12px auto 0; max-width: 46ch;
+  font-size: 14.5px; line-height: 1.75;
+  color: #4a3418; white-space: pre-line; overflow-wrap: anywhere;
+}
+.papan-jendela-ok {
+  margin-top: 20px; padding: 10px 34px;
+  border: 0; border-radius: 8px; cursor: pointer;
+  background: #b3261e; color: #fff9ef;
+  font-family: var(--sans); font-size: 12.5px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  box-shadow: 0 8px 18px -10px rgba(179, 38, 30, 0.85);
+  transition: background 0.15s, transform 0.15s;
+}
+.papan-jendela-ok:hover { background: #99201a; transform: translateY(-1px); }
+.papan-jendela-ok:focus-visible { outline: 2px solid #b3261e; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .papan-modal { padding: 14px; }
+  .papan-kotak { padding: 20px 16px 16px; }
+  .papan-jendela-judul { font-size: 15.5px; letter-spacing: 0.09em; }
+  .papan-jendela-pesan { font-size: 13.5px; }
+  .papan-simbol { width: 40px; height: 40px; margin-bottom: 9px; }
+  .papan-jendela-ok { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .papan-kotak { animation: none; }
+  .papan-simbol.kedip { animation: none; }
+}
+
 /* ---------- Header publik ---------- */
 .pub-nav { position: sticky; top: 0; z-index: 60; background: rgba(249, 240, 223, 0.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--krem-300); }
 .pub-nav .inner { display: flex; align-items: center; gap: 30px; padding: 13px 0; }

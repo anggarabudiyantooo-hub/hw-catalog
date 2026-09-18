@@ -48,10 +48,10 @@ INSERT INTO "SiteSetting" ("id", "updatedAt")
 VALUES (1, CURRENT_TIMESTAMP)
 ON CONFLICT ("id") DO NOTHING;
 
--- 4) Contoh papan peringatan aktif (ubah/nonaktifkan lewat panel pemilik)
+-- 4) Papan peringatan awal (ubah/nonaktifkan lewat panel pemilik)
 INSERT INTO "PapanInfo" ("jenis", "judul", "pesan", "aktif", "kedip", "urutan")
-SELECT 'PERINGATAN', 'Waspada Penipuan',
-       'Transaksi resmi hanya melalui nomor WhatsApp dan rekening atas nama pemilik yang tertera di situs ini. Kami tidak bertanggung jawab atas pihak lain yang mengatas-namakan kandang.',
+SELECT 'PERINGATAN', 'PERINGATAN',
+       'Situs sedang dalam pemeliharaan sementara - mohon hubungi lewat WhatsApp untuk info terbaru.',
        true, true, 1
 WHERE NOT EXISTS (SELECT 1 FROM "PapanInfo");
 

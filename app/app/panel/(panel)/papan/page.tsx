@@ -13,9 +13,9 @@ export const dynamic = "force-dynamic";
  */
 
 const JENIS: Record<string, { label: string; ket: string }> = {
-  PERINGATAN: { label: "Peringatan", ket: "Pita gelap + titik emas kedap-kedip — untuk hal mendesak (penipuan, pengumuman penting)." },
-  IKLAN: { label: "Iklan / Promo", ket: "Pita krem-emas — untuk promosi / penawaran." },
-  INFO: { label: "Info", ket: "Pita netral terang — untuk kabar biasa (jam layanan, libur, dsb.)." },
+  PERINGATAN: { label: "Peringatan", ket: "Jendela peringatan di TENGAH layar (gaya dialog Windows): judul merah di tengah + pesan + tombol OK. Muncul setiap kali halaman dimuat ulang." },
+  IKLAN: { label: "Iklan / Promo", ket: "Pita krem-emas di bagian atas halaman — untuk promosi / penawaran." },
+  INFO: { label: "Info", ket: "Pita netral terang di bagian atas halaman — untuk kabar biasa (jam layanan, libur, dsb.)." },
 };
 
 export default async function PapanPage({
@@ -52,7 +52,7 @@ export default async function PapanPage({
       <div className="card">
         <div className="card-h">
           <h2>Tambah Papan</h2>
-          <span className="sub">Tampil di bagian paling atas seluruh halaman pengunjung, segera saat situs dibuka</span>
+          <span className="sub">Peringatan tampil sebagai jendela di tengah layar saat situs dibuka; Iklan/Info tampil sebagai pita di atas halaman</span>
         </div>
         <div className="card-body">
           <form method="post" action="/api/panel/papan" style={{ display: "grid", gap: 12 }}>
